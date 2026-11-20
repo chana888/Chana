@@ -234,6 +234,60 @@ func (db *DB) GetProjectWorkspaceBinding(projectID string) (*WorkspaceProjectBin
 	return &binding, err
 }
 
+// PurgeDetachedWorkspaceProjects 删除已解除连接（workspace 消失）的工作区项目及其业务数据。
+// 与归档不同：这里的语义是“工作区删除 = 项目删除”，漏洞/资产/事实/队列等一并删除，
+// 避免漏洞管理里残留空项目分组。
+func (db *DB) PurgeDetachedWorkspaceProjects() (int, error) {
+	if err := db.ensureWorkspaceProjectTable(); err != nil {
+		return 0, err
+	}
+	rows, err := db.Query(`SELECT project_id FROM workspace_project_bindings WHERE state != 'active'`)
+	if err != nil {
+		return 0, err
+	}
+	var ids []string
+	for rows.Next() {
+		var id string
+		if err := rows.Scan(&id); err != nil {
+			rows.Close()
+			return 0, err
+		}
+		ids = append(ids, id)
+	}
+	rows.Close()
+	if err := rows.Err(); err != nil {
+		return 0, err
+	}
+	purged := 0
+	for _, projectID := range ids {
+		stmts := []string{
+			`DELETE FROM project_fact_edges WHERE project_id = ?`,
+			`DELETE FROM project_facts WHERE project_id = ?`,
+			`DELETE FROM vulnerabilities WHERE project_id = ?`,
+			`DELETE FROM assets WHERE project_id = ?`,
+			`DELETE FROM batch_task_queues WHERE project_id = ?`,
+			`UPDATE webshell_connections SET project_id = NULL WHERE project_id = ?`,
+			`UPDATE c2_listeners SET project_id = NULL WHERE project_id = ?`,
+			`UPDATE workflow_runs SET project_id = NULL WHERE project_id = ?`,
+			`UPDATE conversations SET project_id = NULL WHERE project_id = ?`,
+			`DELETE FROM rbac_resource_assignments WHERE resource_type = 'project' AND resource_id = ?`,
+			`DELETE FROM workspace_project_bindings WHERE project_id = ?`,
+			`DELETE FROM projects WHERE id = ?`,
+		}
+		for _, q := range stmts {
+			if _, err := db.Exec(q, projectID); err != nil {
+				if strings.Contains(strings.ToLower(err.Error()), "no such table") {
+					continue
+				}
+				return purged, err
+			}
+		}
+		db.removeProjectScopedDirs(projectID)
+		purged++
+	}
+	return purged, nil
+}
+
 // 完整工作区快照提交后，撤下没有工作区的独立旧项目，保留原始成果。
 func (db *DB) ArchiveProjectsOutsideWorkspaces() error {
 	_, err := db.Exec(`UPDATE projects SET status = 'archived', updated_at = ?

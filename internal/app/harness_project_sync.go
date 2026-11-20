@@ -74,6 +74,9 @@ func syncHarnessWorkspaceFeed(db *database.DB, data []byte, username string) err
 			}
 		}
 	}
+	if _, err := db.PurgeDetachedWorkspaceProjects(); err != nil {
+		return err
+	}
 	return db.ArchiveProjectsOutsideWorkspaces()
 }
 
