@@ -1,0 +1,22 @@
+[Unit]
+Description=可视化 Chrome
+After=network.target chana-browser-display.service chana-browser-wm.service
+Requires=chana-browser-display.service chana-browser-wm.service
+[Service]
+Type=simple
+User=chana-browser
+Group=chana-browser
+WorkingDirectory=/opt/chana-vps-browser
+Environment=HOME=/var/lib/chana-browser
+Environment=DISPLAY=:97
+Environment=XAUTHORITY=/var/lib/chana-browser/.Xauthority
+ExecStart=/opt/chana-vps-browser/chrome-linux64/chrome --no-sandbox --disable-dev-shm-usage --disable-gpu --no-first-run --no-default-browser-check --disable-session-crashed-bubble --password-store=basic --window-size=1400,850 --remote-debugging-port=9223 --remote-debugging-address=127.0.0.1 --enable-logging=stderr --v=1 --user-data-dir=/var/lib/chana-browser/chrome-profile --load-extension=/opt/chana-mcp-ext/extension --disable-extensions-except=/opt/chana-mcp-ext/extension about:blank
+Restart=always
+RestartSec=3
+TimeoutStopSec=8
+MemoryMax=1000M
+TasksMax=256
+UMask=0077
+NoNewPrivileges=true
+[Install]
+WantedBy=multi-user.target

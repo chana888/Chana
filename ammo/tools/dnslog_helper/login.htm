@@ -1,0 +1,677 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><script src=/sf-webproxy/api/vpn-config></script><script src=/sf-webproxy/resource/web_proxy.js?v=1.4.8></script><script src=/sf-webproxy/resource/postMessage.js></script>
+	<meta http-equiv="pragma" content="no-cache" />
+	<meta http-equiv="cache-control" content="no-cache" />
+	<meta http-equiv="expires" content="0" />
+	<!-- <script>
+		var wechatUA = "MicroMessenger";
+		if (navigator.userAgent.indexOf(wechatUA) >= 0) {
+			proxyLoc(window.location).href = "/EIP/login-focus.html";
+		}
+	</script> -->
+	<title>成都航空职业技术大学</title>
+	<link href="/EIP/style/css/allPageStyles.css" rel="stylesheet"
+		type="text/css" />
+	<link href="/EIP/style/css/login-page.css" rel="stylesheet"
+		type="text/css" />
+	<script type="text/javascript" src="/EIP/core/boot.js"></script>
+	<script type="text/javascript" src="/EIP/core/script/md5.js"></script>
+	<script type="text/javascript" src="/EIP/core/miniui/jquery.cookie.js?1719484332000"></script>
+	
+	<script type="text/javascript">
+		var _IS_VALID_CAPTCHA = false;
+		if (window != top) {
+			proxyLocation(top).href = window.location;
+		}
+
+		$(function() {
+			mini.parse();
+			var userName = getCNAME();
+			$('#username').val(userName);
+			
+			isValidCaptcha(userName);
+			ewmmHover();
+		});
+
+		//判断是否需要显示验证码
+		function isValidCaptcha(userName){
+			var url = '/EIP/nonlogin/login/captcha/isvalid.htm';
+			$.post(url, {username:userName}, function(valid){
+				if (valid) {
+					_IS_VALID_CAPTCHA = true;
+					$('.img-boxes').show();
+					changeimg();
+				} else {
+					$('.img-boxes').hide();
+				}
+			});
+		}
+		
+		//回车事件
+		$(document).keydown(function(event) {
+			if (event.keyCode == 13) {
+				login();
+			}
+		});
+
+		//重置方法
+		function resetForm() {
+			if (loginPending) {
+				return;
+			}
+			var loginForm = document.getElementById("loginForm");
+			loginForm.reset();
+		}
+
+		//更换验证码
+		function changeimg() {
+			var myimg = document.getElementById("code");
+			now = new Date();
+			myimg.src = "/EIP/nonlogin/login/captcha.htm?code="+now.getTime();
+		}
+
+		function validation() {
+			var value = $("#password").val();
+			if(""!=value) {
+				var intScore = checkPassword(value);
+				if(intScore< 50){
+					alert("当前密码过于简单，存在安全风险。\n\n一个安全的密码应该是至少6位，并且由大小写字母、数字、特殊符号所组成的，建议您尽快更改密码!");
+				}
+			}
+		}
+		
+		var loginPending = false;
+		function login() {
+			if (loginPending) {
+				return;
+			}
+
+			var username = $("#username").val();
+			var password = $("#password").val();
+			var verification = $("#verification").val();
+			if (!username) {
+				alert("请输入用户名");
+				$("#username").focus();
+				return;
+			}
+			if (!password) {
+				alert("请输入密码");
+				$("#password").focus();
+				return;
+			}
+			
+			if(!$('.img-boxes').is(":hidden")){
+				if (_IS_VALID_CAPTCHA && !verification) {
+					alert("请输入验证码");
+					$("#verification").focus();
+					return;
+				}
+			}
+			$("#loading").show();
+			loginPending = true;
+			
+			
+			
+			if($('.img-boxes').is(":hidden")){
+				var url = '/EIP/nonlogin/login/captcha/isvalid.htm';
+				$.post(url,{username:username}, function(valid){
+					console.log(valid);
+					if (valid) {
+						_IS_VALID_CAPTCHA = true;
+						$('.img-boxes').show();
+						changeimg();
+						loginPending = false;
+						$("#loading").hide();
+					} else {
+						needChangePwd(username,password,verification);
+					}
+				});
+			}else{
+				needChangePwd(username,password,verification);
+			}
+			
+		}
+
+		function needChangePwd(username,password,verification) {
+			$.ajax({
+				type : 'get',
+				url : '/EIP/nonlogin/firstLogin/needChangePwd.htm?userName=' + username,
+				success : function (result) {userLogin(username,password,verification,result);},
+				dataType : 'text'
+			});
+		}
+		
+		function userLogin(username,password,verification,checkPwd){
+			$.ajax({
+				url : "/EIP/login/Login.htm",
+				data : {
+					username : username,
+					password : hex_md5(password),
+					verification : verification
+				},
+				cache : false,
+				type : "post",
+				dataType : 'html',
+				success : function(text) {
+					loginPending = false;
+					if (text != "") {
+						if(text.indexOf("ukey-") != -1){
+							var textArr = text.split("-");
+							var userId = textArr[1];
+							mini.prompt("请输入令牌口令：", "请输入", function(action, value) {
+								if (action == 'ok') {
+									$.post('/EIP/nonlogin/login/ukeyLogin.htm', {username: username,password: password, userId: userId, opt : value}, function(message) {
+										if (message != "") {
+											alert('动态令牌口令错误。');
+											changeimg();
+										} else {
+											var pwdstr={"number":true,"lowercase":true,"uppercase":true,"special":true,"min":8}; //是否开启密码强度检测
+											if(pwdstr=="enable") {
+												validation();
+											}
+											setCookie("username", username);
+											//登陆后清空miniui历史标签
+											$.cookie("historyTabs", null,{path:"/"});
+											if (checkPwd == 'true') {
+												proxyLocation(window).href = "/EIP/firstLogin/getPage.htm";
+											} else {
+												proxyLocation(window).href = "/EIP/user/index.htm";
+											}
+										}
+									});
+									$("#loading").hide();
+								} else {
+									$("#loading").hide();
+									changeimg();
+								}
+							});
+						}else{
+							alert(text);
+							changeimg();
+							$("#loading").hide(); 
+						}
+					} else {
+						var pwdstr={"number":true,"lowercase":true,"uppercase":true,"special":true,"min":8}; //是否开启密码强度检测
+						if(pwdstr=="enable") {
+							validation();
+						}
+						setCookie("username", username);
+						//登陆后清空miniui历史标签
+						$.cookie("historyTabs", null,{path:"/"});
+						if (checkPwd == 'true') {
+							proxyLocation(window).href = "/EIP/firstLogin/getPage.htm";
+						} else {
+							proxyLocation(window).href = "/EIP/user/index.htm";
+						}
+					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					$("#loading").hide();
+					loginPending = false;
+					alert(jqXHR.responseText);
+				}
+			});
+		}
+
+		function hide(){
+			$('.img-boxes').hide();
+		}
+		
+		//写cookies
+		function setCookie(name, value, path) {
+			var Days = 30;
+			var exp = new Date();
+			exp.setTime(exp.getTime() + Days * 24 * 60 * 60 * 1000);
+			var cookie = name + "=" + escape(value) + ";expires="
+					+ exp.toGMTString();
+			if (path) {
+				cookie += ";path=" + path;
+			}
+			document.cookie = cookie;
+		}
+
+		//计算网页正文高度
+		var winHt;
+		var halfHt;
+		var clientHt;
+		function winHeight() {
+			winHt = $(window).height();
+			clientHt = $(document.body).height();
+			halfHt = (winHt - clientHt) / 4;
+		}
+
+		function webShow() {
+			winHeight();
+			$(".login-content").height(clientHt-80-120-2);
+			$(".login-content-box").height(clientHt-80-120-2);
+		}
+		
+		/* var winHt = $(window).height();;
+		var clientHt = $(document.body).height();
+		function webShow() {
+			$(".login-content").height(clientHt-100-150);
+		} */
+
+		$(window).resize(function() {
+			winHeight();
+			webShow();
+		});
+
+		var waitInterval = 0;
+		function longConnect() {
+			$.ajax({
+				url : "/EIP/nonlogin/qrlogin/connect.htm",
+				cache : false,
+				type : "get",
+				dataType : "text",
+				success : function(status) {
+					if ("scan" == status) {
+						$(".login-ewm-ts").css("display", "none");
+						$(".login-ewm-ok").css("display", "block");
+						$(".login-ewm-no").css("display", "none");
+					} else if ("cancel" == status) {
+						$(".login-ewm-ts").css("display", "none");
+						$(".login-ewm-ok").css("display", "none");
+						$(".login-ewm-no").css("display", "block");
+					} else if ("login" == status) {
+						$.cookie("historyTabs", null,{path:"/"}); 
+						proxyLocation(window).href = "/EIP/user/index.htm";
+					}
+
+					if ("" == status || "fail" == status) {
+						setTimeout(longConnect, waitInterval);
+						waitInterval += 1000;
+					} else {
+						longConnect();
+					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					setTimeout(longConnect, waitInterval);
+					waitInterval += 1000;
+				}
+			});
+		}
+		
+		
+		function ewmmHover(){
+			$(".login-footer-ewmm").hover(function(){
+				$(".login-footer-ewmm-pc").show();
+			},function(){
+				$(".login-footer-ewmm-pc").hide();
+			})
+		}
+		
+	</script>
+	
+	<style>
+		body{
+			background: #3f51b5;
+		}
+		
+		.login-header {
+		    width: 100%;
+		    background: none;
+		    border-top: 0;
+		}
+		
+		.login-header-box {
+		    width: 1000px;
+		    height:80px;
+		}
+		
+		.login-content {
+		    background: url(/EIP//style/images/banner-bg-ht.jpg) no-repeat center center;
+			background-size: cover;
+		    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(
+		    src='/EIP//style/images/banner-bg-ht.jpg',
+		    sizingMethod='scale');
+		    /*兼容IE8 background-size属性*/
+			border-top: 1px solid #5870F5;
+    		border-bottom: 1px solid #5870F5;
+		}
+		
+		.login-content-box {
+		    width: 1000px;
+		    margin: 0 auto;
+		    position: relative;
+		}
+		
+		.login-content-box-boxes {
+		    float: none;
+		    width: 320px;
+		    position: absolute;
+		    top: 50%;
+		    margin:0;
+		    margin-top: -150px;
+		    right: 0;
+		    width: 320px;
+		    background:none;
+		    background-color:#FFF;
+		    background-color: rgba(255, 255, 255, .7);
+		    border-radius: 0px;
+		    -moz-border-radius: 0px;
+		    -webkit-border-radius: 0px;
+		}
+		
+		.login-Switch {
+		    background-color: rgba(255, 255, 255, .2);
+		    position: relative;
+		}
+		
+		.login-Switch li {
+		    width: 160px;
+		    font-size: 14px;
+		}
+		
+		.login-infor {
+		    width: 320px;
+		}
+		
+		.login-infor li {
+		    padding: 10px 30px;
+		}
+		
+		.login-Switch-focus {
+		    border-bottom: 1px solid #828282;
+		    color: #333;
+		    font-weight: normal;
+		}
+		
+		.sy-auth-icon-user{
+		    background: url(/EIP//style/images/sy-icons.png) 7px -73px no-repeat;
+		}
+		
+		.sy-auth-icon-pwd{
+		    background: url(/EIP//style/images/sy-icons.png) -19px -73px no-repeat;
+		}
+		
+		.sy-auth-icon-yzm{
+			background: url(/EIP//style/images/sy-icons.png) -43px -73px no-repeat;
+		}
+		
+		.sy-auth-icon-user, .sy-auth-icon-pwd, .sy-auth-icon-yzm{
+			background-color: #F2F2F2;
+		    border: 1px solid #ccc;
+		    border-right: none;
+		    width: 32px;
+		    height: 32px;
+		    float: left;
+		}
+		
+		.login-infor input {
+	        height: 16px;
+		    line-height: 16px;
+		    border: 1px solid #ccc;
+		    padding: 8px 10px;
+		    font-size: 14px;
+		    border-radius: 0;
+		    width: 204px;
+		    margin: 0;
+		    float: left;
+		}
+		
+		.img-boxes .validate-type {
+		    right: 31px;
+		}
+		
+		.login-btn{
+			background-color: #3f51b5;
+	        color: #fff;
+		    padding: 6px 0;
+		    font-size: 14px;
+		    font-weight: 400;
+		    line-height: 1.42857143;
+		    text-align: center;
+		    white-space: nowrap;
+		    vertical-align: middle;
+		    border-radius: 3px;
+		    text-decoration: none;
+		    border: 1px solid #344498;
+		    width: 100%;
+		    display: block;
+		}
+		
+		.login-form {
+		    overflow: hidden;
+		    padding-bottom: 0; 
+		}
+		
+		.login-ewm {
+		    width: 320px;
+		    padding:0;
+		    background: none;
+		    border-radius: 0px;
+		    background-color: rgba(255, 255, 255, .1);
+		}
+		
+		.login-load-bg {
+		    position: absolute;
+		    top: 0px;
+		    left: 0px;
+		    bottom: 0;
+		    right: 0;
+		    width: inherit;
+    		height: inherit;
+    		background-color: rgba(255, 255, 255, .9);
+		}
+		
+		.login-text{
+			color: #666;
+	    	font-size: 14px;
+		}
+		
+		.login-logo {
+		    font-size: 28px;
+		    line-height: 80px;
+		    color: #FFFFFF;
+		    padding-left: 0;
+		}
+		
+		.login-logo-text {
+		    font-size: 20px;
+		    color:#FFF;
+		    color: rgba(255,255,255,0.8);
+		    padding-left: 10px;
+		    display: block;
+		    float: left;
+		    padding-top: 35px;
+			line-height: 20px;
+		}
+		
+		.login-footer {
+		    padding: 10px 0px;
+		}
+		
+		.login-footer-info{
+			display: block; 
+			color: #FFF; 
+			font-size: 14px; 
+			line-height: 20px;
+		}
+		
+		.login-footer-gzqyh{
+		 	color:#FFF;
+			color: rgba(255,255,255,0.8); 
+			font-size: 14px; 
+			line-height:20px;
+		}
+		
+		.login-footer-ewmm-pc{
+			width: 200px;
+		    height: 200px;
+		    position: absolute;
+		    bottom: 42px;
+		    left: 50%;
+		    margin-left: -100px;
+		}
+		
+		.login-footer-ewmm-pc img{
+			width:200px;
+			height:200px;
+			display:block;
+		}
+		
+	</style>
+
+</head>
+<body onload="changeimg();webShow();">
+	<div class="login-box">
+		<!-- header -->
+		<div class="login-header">
+			<div class="login-header-box">
+				<span class="login-logo">成都航空职业技术大学</span> <span class="login-logo-text">成都航空职业技术学院学院一网通办平台</span>
+			</div>
+		</div>
+		<!-- content -->
+		<div class="login-content">
+			<div class="login-content-box">
+				<!-- 登录 -->
+				<div class="login-content-box-boxes">
+					<!--切换登录 -->
+					<ul class="login-Switch">
+						<li id="loginZ" class="login-Switch-focus">账号登录</li>
+						<li id="loginE">二维码登录</li>
+					</ul>
+					<!--账号登录 -->
+					<div class="login-form">
+						<form id="loginForm">
+							<ul class="login-infor">
+							
+								<!-- 
+								<li>
+									<label>用户名：</label> <input id="username" name="username" onchange="hide()"/>
+								</li>
+								<li>
+									<label>密<span class="nbsp"></span>码：</label> <input  type="password" id="password" name="password"/>
+								</li> 
+								<li class="img-boxes" style="display: none;">
+									<label>验证码：</label> 
+									<input id="verification" name="verification" class="yzm-Type" /> 
+									<span class="validate-type"> <img border=0 id="code"
+										style="cursor: pointer; font-size: 0px; padding: 8px 0px 9px;"
+										onclick="javascript:changeimg()" src="/EIP/nonlogin/login/captcha.htm"
+										title="点击更换验证码" />
+									</span>
+								</li>
+								-->
+								
+								<li>
+									<i class="sy-auth-icon-user"></i>
+									<input id="username" name="username" onchange="hide()" placeholder="用户名" />
+								</li>
+								<li>
+									<i class="sy-auth-icon-pwd"></i>
+									<input type="password" id="password" name="password" placeholder="密码" />
+								</li>
+								<li class="img-boxes" style="display: none;">
+									<i class="sy-auth-icon-yzm"></i>
+									<input id="verification" style="width:70px;" name="verification" placeholder="验证码" class="yzm-Type" /> 
+								    <span class="validate-type"> 
+								    	<img border=0 id="code" style=" height:34px; display:block; cursor: pointer; font-size: 0px; padding: 0;"
+										onclick="javascript:changeimg()" src="/EIP/nonlogin/login/captcha.htm"
+										title="点击更换验证码" />
+									</span>
+								</li>
+								<li>
+									<a href="javascript: void(0);" class="login-btn" onclick="login()">登录</a> 
+								</li>
+							</ul>
+							
+							
+						</form>
+					</div>
+					<!-- 二维码登陆 -->
+					<div class="login-ewm">
+						<img class="login-ewm-img"
+							src="/EIP/nonlogin/qrlogin/code.htm" /> <span
+							class="login-ewm-ts">用微信“扫一扫”登录系统<br />
+						</span>
+						<!-- 扫描成功 -->
+						<div class="login-ewm-ok">
+							<img src="/EIP/style/loginpage/login-check_alt.png" /> <span>扫描成功。请在微信中点击确认登录</span>
+						</div>
+						<!-- 取消登录 -->
+						<div class="login-ewm-no">
+							<img src="/EIP/style/loginpage/login-check_c.png" /> <span>您已取消此次登录。您可再次扫描登录，或关闭窗口</span>
+						</div>
+					</div>
+					
+					<div id="loading" class="login-load-bg" style="display:none;">
+						<div class="login-load-box">
+							<span class="login-text">登录中，请稍候......</span> 
+							<img class="login-load" src="/EIP/style/images/login-loading.gif" />
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+		<!-- footer 隐藏登陆页下方二维码 -->
+		<div class="login-footer" style="width: 1000px; margin: 0 auto; position: relative;">
+			<span class="login-footer-info">©2006-2017 Huatech, Inc. All rights reserved.</span>
+			<table class="login-footer-ewmm" cellpadding="0" cellspacing="0" border="0" style="width:200px; margin:10px auto 0; border: 1px solid #FFF; cursor: pointer;">
+				<tr>
+					<td width="30">
+						<img style="display:block; width:30px; height:30px;;" 
+							src="/EIP/style/images/ht-icon-ewm.png" />
+					</td>
+					<td class="login-footer-gzqyh">微信扫一扫关注企业号</td>
+				</tr>
+			</table>
+			
+			<div class="login-footer-ewmm-pc" style="display:none;">
+				<img src="/EIP/style/images/ht-icon-ewm.png" />
+			</div>
+			
+				
+			
+		</div>
+	</div>
+	<script>
+		webShow();
+		$(document).ready(function() {
+			$(".login-Switch li").click(function() {
+				$(".login-Switch li").removeClass();
+				$(this).addClass("login-Switch-focus");
+			});
+			$("#loginZ").click(function() {
+				$(".login-ewm").css("display", "none");
+				$(".login-form").css("display", "block");
+			});
+			$("#loginE").click(function() {
+				$(".login-form").css("display", "none");
+				$(".login-ewm").css("display", "block");
+			});
+
+			longConnect(); // 创建二维码登录的长连接
+			// window.setInterval("longConnect()", 1000);
+		});
+
+		var qrcodeDisplay = false;
+		$("#loginPic").hover(function() {
+			$("#login-focus-img-max").show();
+			qrcodeDisplay = true;
+		}, function() {
+			$("#login-focus-img-max").hide();
+			qrcodeDisplay = false;
+		});
+		$("#loginPic").click(function() {
+			if (qrcodeDisplay) {
+				$("#login-focus-img-max").hide();
+
+				qrcodeDisplay = false;
+			} else {
+				$("#login-focus-img-max").show();
+				qrcodeDisplay = true;
+			}
+		});
+	</script>
+</body>
+</html>

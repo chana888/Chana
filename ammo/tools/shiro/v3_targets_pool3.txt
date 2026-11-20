@@ -1,0 +1,9 @@
+http://119.147.202.25:8090
+http://202.100.92.229:8090
+http://css110.com:8090
+http://gis.chinabdc.com.cn:8090
+http://meeting.css110.com:8090
+http://cp.chinabdc.com.cn:8090
+http://api-callback-admin.tt.cn:8090
+http://www.css110.cn:8090
+http://pmis.chinabdc.com.cn:8090

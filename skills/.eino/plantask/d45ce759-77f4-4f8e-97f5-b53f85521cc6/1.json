@@ -1,0 +1,1 @@
+{"id":"1","subject":"目标资产基础侦察（DNS/端口/指纹）","description":"对 8 个目标（sarpa.cn、arpa.ntocc56.com、ntocc OBS、xrlib.manager.pan-xiang.com、8.142.105.57:8888、api.sszm.club、8.142.105.94:9100）做 DNS 解析、端口扫描、Web 指纹识别，写入项目黑板。","status":"pending","blocks":[],"blockedBy":[],"activeForm":"正在进行目标资产基础侦察"}

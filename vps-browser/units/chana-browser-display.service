@@ -1,0 +1,22 @@
+[Unit]
+Description=虚拟浏览器显示器
+After=network.target 
+
+[Service]
+Type=simple
+User=chana-browser
+Group=chana-browser
+WorkingDirectory=/opt/chana-vps-browser
+Environment=HOME=/var/lib/chana-browser
+Environment=DISPLAY=:97
+Environment=XAUTHORITY=/var/lib/chana-browser/.Xauthority
+ExecStart=/usr/bin/Xvfb :97 -screen 0 1440x900x24 -nolisten tcp -noreset -auth /var/lib/chana-browser/.Xauthority
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=8
+MemoryMax=180M
+TasksMax=256
+UMask=0077
+NoNewPrivileges=true
+[Install]
+WantedBy=multi-user.target

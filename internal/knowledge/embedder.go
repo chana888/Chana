@@ -1,0 +1,263 @@
+package knowledge
+
+import (
+	"context"
+	"crypto/sha256"
+	"database/sql"
+	"fmt"
+	"net/http"
+	"strings"
+	"sync"
+	"time"
+
+	"chana/internal/config"
+
+	einoembedopenai "github.com/cloudwego/eino-ext/components/embedding/openai"
+	"github.com/cloudwego/eino/components/embedding"
+	"go.uber.org/zap"
+	"golang.org/x/time/rate"
+)
+
+// Embedder 使用 CloudWeGo Eino 的 OpenAI Embedding 组件，并保留速率限制与重试。
+type Embedder struct {
+	eino   embedding.Embedder
+	config *config.KnowledgeConfig
+	logger *zap.Logger
+
+	rateLimiter    *rate.Limiter
+	rateLimitDelay time.Duration
+	maxRetries     int
+	retryDelay     time.Duration
+	mu             sync.Mutex
+	callSlot       chan struct{}
+	configID       string
+	stateDB        *sql.DB
+	blocked        *EmbeddingBlockedError
+}
+
+// NewEmbedder 基于 Eino eino-ext OpenAI Embedder；openAIConfig 用于在知识库未单独配置 key 时回退 API Key。
+func NewEmbedder(ctx context.Context, cfg *config.KnowledgeConfig, openAIConfig *config.OpenAIConfig, logger *zap.Logger) (*Embedder, error) {
+	if cfg == nil {
+		return nil, fmt.Errorf("knowledge config is nil")
+	}
+
+	var rateLimiter *rate.Limiter
+	var rateLimitDelay time.Duration
+	if cfg.Indexing.MaxRPM > 0 {
+		rpm := cfg.Indexing.MaxRPM
+		rateLimiter = rate.NewLimiter(rate.Every(time.Minute/time.Duration(rpm)), rpm)
+		if logger != nil {
+			logger.Info("知识库索引速率限制已启用", zap.Int("maxRPM", rpm))
+		}
+	} else if cfg.Indexing.RateLimitDelayMs > 0 {
+		rateLimitDelay = time.Duration(cfg.Indexing.RateLimitDelayMs) * time.Millisecond
+		if logger != nil {
+			logger.Info("知识库索引固定延迟已启用", zap.Duration("delay", rateLimitDelay))
+		}
+	}
+
+	maxRetries := 3
+	retryDelay := 1000 * time.Millisecond
+	if cfg.Indexing.MaxRetries > 0 {
+		maxRetries = cfg.Indexing.MaxRetries
+	}
+	if cfg.Indexing.RetryDelayMs > 0 {
+		retryDelay = time.Duration(cfg.Indexing.RetryDelayMs) * time.Millisecond
+	}
+
+	model := strings.TrimSpace(cfg.Embedding.Model)
+	if model == "" {
+		model = "text-embedding-3-small"
+	}
+
+	baseURL := strings.TrimSpace(cfg.Embedding.BaseURL)
+	baseURL = strings.TrimSuffix(baseURL, "/")
+	if baseURL == "" {
+		baseURL = "https://api.openai.com/v1"
+	}
+
+	apiKey := strings.TrimSpace(cfg.Embedding.APIKey)
+	if apiKey == "" && openAIConfig != nil {
+		apiKey = strings.TrimSpace(openAIConfig.APIKey)
+	}
+	if apiKey == "" {
+		return nil, fmt.Errorf("embedding API key 未配置")
+	}
+
+	timeout := 120 * time.Second
+	if cfg.Indexing.RequestTimeoutSeconds > 0 {
+		timeout = time.Duration(cfg.Indexing.RequestTimeoutSeconds) * time.Second
+	}
+	httpClient := &http.Client{Timeout: timeout}
+
+	inner, err := einoembedopenai.NewEmbedder(ctx, &einoembedopenai.EmbeddingConfig{
+		APIKey:     apiKey,
+		BaseURL:    baseURL,
+		ByAzure:    false,
+		Model:      model,
+		HTTPClient: httpClient,
+	})
+	if err != nil {
+		return nil, fmt.Errorf("eino OpenAI embedder: %w", err)
+	}
+
+	return &Embedder{
+		eino:           inner,
+		config:         cfg,
+		logger:         logger,
+		callSlot:       make(chan struct{}, 1),
+		configID:       fmt.Sprintf("%x", sha256.Sum256([]byte(baseURL+"\x00"+model+"\x00"+apiKey))),
+		rateLimiter:    rateLimiter,
+		rateLimitDelay: rateLimitDelay,
+		maxRetries:     maxRetries,
+		retryDelay:     retryDelay,
+	}, nil
+}
+
+// EmbeddingModelName 返回配置的嵌入模型名（用于 tiktoken 分块与向量行元数据）。
+func (e *Embedder) EmbeddingModelName() string {
+	if e == nil || e.config == nil {
+		return ""
+	}
+	s := strings.TrimSpace(e.config.Embedding.Model)
+	if s != "" {
+		return s
+	}
+	return "text-embedding-3-small"
+}
+
+func (e *Embedder) waitRateLimiter(ctx context.Context) error {
+	if e.rateLimiter != nil {
+		if err := e.rateLimiter.Wait(ctx); err != nil {
+			return err
+		}
+	}
+	if e.rateLimitDelay > 0 {
+		select {
+		case <-ctx.Done():
+			return ctx.Err()
+		case <-time.After(e.rateLimitDelay):
+		}
+	}
+	return nil
+}
+
+// EmbedText 单条嵌入（float32，与历史存储格式一致）。
+func (e *Embedder) EmbedText(ctx context.Context, text string) ([]float32, error) {
+	vecs, err := e.EmbedStrings(ctx, []string{text})
+	if err != nil {
+		return nil, err
+	}
+	if len(vecs) != 1 {
+		return nil, fmt.Errorf("unexpected embedding count: %d", len(vecs))
+	}
+	return vecs[0], nil
+}
+
+// EmbedStrings 批量嵌入，带重试；实现 [embedding.Embedder]，可供 Eino Indexer 使用。
+func (e *Embedder) EmbedStrings(ctx context.Context, texts []string, opts ...embedding.Option) ([][]float32, error) {
+	if e == nil || e.eino == nil {
+		return nil, fmt.Errorf("embedder not initialized")
+	}
+	if len(texts) == 0 {
+		return nil, nil
+	}
+	if err := ctx.Err(); err != nil {
+		return nil, err
+	}
+	// 同一通道串行判定，避免并发批次在永久错误后继续消耗请求。
+	select {
+	case e.callSlot <- struct{}{}:
+		defer func() { <-e.callSlot }()
+	case <-ctx.Done():
+		return nil, ctx.Err()
+	}
+	if state := e.BlockedState(); state != nil {
+		return nil, state
+	}
+
+	var lastErr error
+	for attempt := 0; attempt < e.maxRetries; attempt++ {
+		if attempt > 0 {
+			wait := e.retryDelay * time.Duration(attempt)
+			if e.logger != nil {
+				e.logger.Debug("嵌入重试前等待", zap.Int("attempt", attempt+1), zap.Duration("wait", wait))
+			}
+			select {
+			case <-ctx.Done():
+				return nil, ctx.Err()
+			case <-time.After(wait):
+			}
+		}
+		if err := e.waitRateLimiter(ctx); err != nil {
+			return nil, err
+		}
+
+		raw, err := e.eino.EmbedStrings(ctx, texts, opts...)
+		if err == nil {
+			out := make([][]float32, len(raw))
+			for i, row := range raw {
+				out[i] = make([]float32, len(row))
+				for j, v := range row {
+					out[i][j] = float32(v)
+				}
+			}
+			return out, nil
+		}
+		lastErr = err
+		if reason, _ := classifyEmbeddingError(err); reason != "" {
+			return nil, e.block(reason)
+		}
+		if !e.isRetryableError(err) {
+			return nil, err
+		}
+		if e.logger != nil {
+			e.logger.Debug("嵌入失败，将重试", zap.Int("attempt", attempt+1), zap.Error(err))
+		}
+	}
+	return nil, fmt.Errorf("达到最大重试次数 (%d): %w", e.maxRetries, lastErr)
+}
+
+// EmbedTexts 批量 float32 嵌入（兼容旧调用；单次请求批量以减小延迟）。
+func (e *Embedder) EmbedTexts(ctx context.Context, texts []string) ([][]float32, error) {
+	return e.EmbedStrings(ctx, texts)
+}
+
+func (e *Embedder) isRetryableError(err error) bool {
+	_, retryable := classifyEmbeddingError(err)
+	return retryable
+}
+
+// einoFloatEmbedder adapts [][]float32 embedder to Eino's [][]float64 [embedding.Embedder] for Indexer.Store.
+type einoFloatEmbedder struct {
+	inner *Embedder
+}
+
+func (w *einoFloatEmbedder) EmbedStrings(ctx context.Context, texts []string, opts ...embedding.Option) ([][]float64, error) {
+	vec32, err := w.inner.EmbedStrings(ctx, texts, opts...)
+	if err != nil {
+		return nil, err
+	}
+	out := make([][]float64, len(vec32))
+	for i, row := range vec32 {
+		out[i] = make([]float64, len(row))
+		for j, v := range row {
+			out[i][j] = float64(v)
+		}
+	}
+	return out, nil
+}
+
+func (w *einoFloatEmbedder) GetType() string {
+	return "CyberStrikeKnowledgeEmbedder"
+}
+
+func (w *einoFloatEmbedder) IsCallbacksEnabled() bool {
+	return false
+}
+
+// EinoEmbeddingComponent returns an [embedding.Embedder] that uses the same retry/rate-limit path
+// and produces float64 vectors expected by generic Eino indexer helpers.
+func (e *Embedder) EinoEmbeddingComponent() embedding.Embedder {
+	return &einoFloatEmbedder{inner: e}
+}

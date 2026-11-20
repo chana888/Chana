@@ -1,0 +1,26 @@
+name: "xiaolanben-search"
+command: 'D:\app\chana\chana\venv\Scripts\python.exe'
+args: ['D:\app\chana\chana\recon\xiaolanben_search_helper.py']
+enabled: true
+short_description: "小蓝本股权穿透搜索 helper（公司名 → 预热/搜索 URL + Chrome 步骤）"
+description: |
+  小蓝本（sou.xiaolanben.com）股权穿透搜索辅助工具。输入公司名/关键词，
+  输出：预热 URL + 搜索 URL（已 URL 编码）+ initScript + Chrome DevTools MCP 完整导航步骤。
+
+  **为什么需要 helper（签名 err002 铁律）：** 小蓝本搜索页路由签名 SDK 未初始化时
+  所有请求 h_sign 降级为 err002 → 403 验签错误。必须先整页导航到公司详情页（预热）再搜索。
+
+  **用法：**
+  1. 调 `xiaolanben-search keyword="百盛商业"` 拿到预热URL/搜索URL/initScript
+  2. 用 chrome-devtools__navigate_page 按步骤导航（预热 → 搜索）
+  3. 从搜索结果页提取公司 → 股权穿透 → 域名/邮箱资产
+
+  **用途：** 被动信息收集 Mode12（下级单位/子公司攻击面收集）— 从目标公司出发
+  递归遍历对外投资（≥51%控股），提取每层公司网站域名、邮箱、资产。
+parameters:
+  - name: "keyword"
+    type: "string"
+    description: "公司名或搜索关键词"
+    required: true
+    position: 0
+    format: "positional"

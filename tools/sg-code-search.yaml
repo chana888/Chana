@@ -1,0 +1,39 @@
+name: "sg-code-search"
+command: 'D:\app\chana\chana\venv\Scripts\python.exe'
+args: ['D:\app\chana\chana\recon\sg_code_search.py']
+enabled: true
+short_description: "代码搜索（GitHub 代码/仓库泄露关键词搜索）— 被动信息收集"
+description: |
+  代码/仓库泄露搜索工具。搜索 GitHub 等代码平台中与目标相关的泄露（源码、密钥、
+  配置文件、内部域名）。用于被动信息收集 Mode5（信息泄露搜索）。
+
+  **用法示例：**
+  - `sg-code-search query="example.com password"` → 搜索关键词
+  - `sg-code-search query="example.com" pattern="fork:yes archived:yes"` → 额外过滤
+  - `sg-code-search list="D:\keywords.txt"` → 批量关键词文件
+  - `sg-code-search query="example.com" output="D:\result.txt"` → 结果落地文件
+parameters:
+  - name: "query"
+    type: "string"
+    description: "搜索关键词"
+    required: false
+    position: 0
+    format: "positional"
+  - name: "list"
+    type: "string"
+    description: "批量关键词文件路径（每行一个）"
+    required: false
+    flag: "--list"
+    format: "flag"
+  - name: "pattern"
+    type: "string"
+    description: "额外过滤条件，如 fork:yes archived:yes"
+    required: false
+    flag: "--pattern"
+    format: "flag"
+  - name: "output"
+    type: "string"
+    description: "结果落地文件路径"
+    required: false
+    flag: "--output"
+    format: "flag"

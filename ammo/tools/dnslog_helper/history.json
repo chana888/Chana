@@ -1,0 +1,112 @@
+[
+ {
+  "domain": "sfhzqr.dnslog.cn",
+  "backend": "dnslog",
+  "time": "2026-08-29 15:57:38",
+  "records": []
+ },
+ {
+  "domain": "xvdeps.dnslog.cn",
+  "backend": "dnslog",
+  "time": "2026-08-29 15:57:57",
+  "records": []
+ },
+ {
+  "domain": "5cp141.dnslog.cn",
+  "backend": "dnslog",
+  "time": "2026-08-29 15:58:10",
+  "records": []
+ },
+ {
+  "domain": "flmmyp.dnslog.cn",
+  "backend": "dnslog",
+  "time": "2026-08-29 16:10:59",
+  "records": []
+ },
+ {
+  "domain": "elej25.dnslog.cn",
+  "backend": "dnslog",
+  "time": "2026-09-13 06:27:40",
+  "records": []
+ },
+ {
+  "domain": "hpjvrf.dnslog.cn",
+  "backend": "dnslog",
+  "time": "2026-09-13 06:49:20",
+  "records": [
+   [
+    "hpjvrf.dnslog.cn",
+    "39.156.146.85",
+    "2026-09-13 06:49:56"
+   ],
+   [
+    "hpjvrf.dnslog.cn",
+    "111.13.102.7",
+    "2026-09-13 06:49:56"
+   ],
+   [
+    "hpjvrf.dnslog.cn",
+    "39.156.146.58",
+    "2026-09-13 06:49:56"
+   ],
+   [
+    "hpjvrf.dnslog.cn",
+    "111.13.102.6",
+    "2026-09-13 06:49:56"
+   ]
+  ]
+ },
+ {
+  "domain": "duhnsg.dnslog.cn",
+  "backend": "dnslog",
+  "time": "2026-09-13 07:07:32",
+  "records": []
+ },
+ {
+  "domain": "dbtbyd.dnslog.cn",
+  "backend": "dnslog",
+  "time": "2026-09-16 03:33:30",
+  "records": []
+ },
+ {
+  "domain": "ek6bgl.dnslog.cn",
+  "backend": "dnslog",
+  "time": "2026-09-19 22:46:08",
+  "records": []
+ },
+ {
+  "domain": "os09jy.dnslog.cn",
+  "backend": "dnslog",
+  "time": "2026-09-19 22:46:27",
+  "records": []
+ },
+ {
+  "domain": "ov3xuo.dnslog.cn",
+  "backend": "dnslog",
+  "time": "2026-10-13 13:12:04",
+  "records": []
+ },
+ {
+  "domain": "nntmgo.dnslog.cn",
+  "backend": "dnslog",
+  "time": "2026-11-12 17:38:50",
+  "records": [
+   [
+    "nntmgo.dnslog.cn",
+    "3.209.84.206",
+    "2026-11-12 17:40:30"
+   ],
+   [
+    "nntmgo.dnslog.cn",
+    "3.209.84.228",
+    "2026-11-12 17:40:30"
+   ]
+  ]
+ },
+ {
+  "domain": "4nfqrd.dnslog.cn",
+  "backend": "dnslog",
+  "time": "2026-11-15 11:44:20",
+  "records": []
+ }
+]

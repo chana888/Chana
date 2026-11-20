@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 · chana</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico?v=20261027-vshell3">
+    <link rel="stylesheet" href="/static/login/login.css?v=20261010-login1">
+    <script src="/static/login/login.js?v=20261010-login1" defer></script>
+</head>
+<body>
+    <main class="login-card">
+        <div class="brand" aria-label="chana">cha<span>na</span></div>
+        <h1>登录</h1>
+        <p id="login-status" class="status" role="status" aria-live="polite">正在检查登录状态…</p>
+        <form id="login-form" hidden>
+            <label for="login-username">用户名</label>
+            <input id="login-username" name="username" autocomplete="username" maxlength="128" required>
+            <label for="login-password">密码</label>
+            <input id="login-password" name="password" type="password" autocomplete="current-password" placeholder="输入登录密码" required>
+            <label class="remember"><input id="login-remember-device" name="remember_device" type="checkbox" checked><span>记住此设备</span></label>
+            <p id="login-error" class="error" role="alert" hidden></p>
+            <button id="login-submit" type="submit">登录</button>
+        </form>
+        <noscript><p class="error">请启用 JavaScript 后登录。</p></noscript>
+    </main>
+</body>
+</html>

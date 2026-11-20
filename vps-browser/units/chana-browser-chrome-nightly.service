@@ -1,0 +1,6 @@
+[Unit]
+Description=计划内重启可视化 Chrome（停机清会话存量，钉死标签基线 1 个 blank）
+After=chana-browser-display.service chana-browser-wm.service
+[Service]
+Type=oneshot
+ExecStart=/bin/bash -c 'systemctl stop chana-browser-chrome.service; rm -rf "/var/lib/chana-browser/chrome-profile/Default/Sessions" "/var/lib/chana-browser/chrome-profile/Default/Current Session" "/var/lib/chana-browser/chrome-profile/Default/Current Tabs" "/var/lib/chana-browser/chrome-profile/Default/Last Session" "/var/lib/chana-browser/chrome-profile/Default/Last Tabs"; systemctl start chana-browser-chrome.service'

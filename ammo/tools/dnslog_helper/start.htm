@@ -1,0 +1,1021 @@
+
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>办事大厅_业务介绍</title>
+    <!-- 启用360浏览器的极速模式(webkit) -->
+    <meta name="renderer" content="webkit"/>
+
+    <!-- 避免IE使用兼容模式 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"><script src=/sf-webproxy/api/vpn-config></script><script src=/sf-webproxy/resource/web_proxy.js?v=1.4.8></script><script src=/sf-webproxy/resource/postMessage.js></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="pragma" content="no-cache" />
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta http-equiv="expires" content="0" />
+    <script type="text/javascript" src="/EIP/core/boot.js?1719484331000"></script>
+    <script type="text/javascript" src="/EIP/core/underscore/underscore-min.js"></script>
+    <link rel="stylesheet" href="/EIP/resources/css/elobby/handle-center-introduction.css?1719484339000">
+    <link rel="stylesheet" type="text/css" href="/EIP/resources/css/elobby/elobby.css?1719484339000" />
+    <link rel="stylesheet" href="/EIP/resources/css/onewebsitehandle/theme-skin.css?1719484339000">
+
+    <script>
+        var collect = '收藏服务';
+        var cancelCollect ='取消收藏';
+    </script>
+    <script type="text/javascript" src="/EIP/resources/js/elobby/elobby.js?1719484342000"></script>
+    
+    <script type="text/javascript" src="/EIP/resources/js/changeTheme/css-vars-ponyfill.min.js?1719484342000"></script>
+    <script type="text/javascript">
+        // 避免underscore模板语法与jsp冲突
+        _.templateSettings = {
+            evaluate: /\{\{(.+?)\}\}/g,
+            interpolate: /\{\{=(.+?)\}\}/g,
+            escape: /\{\{-(.+?)\}\}/g
+        };
+        var basePath = "/EIP/";
+        var portalType = '3';
+        var isLogin="false";
+        var quanziId;
+        var itemId;
+        var loginPageParam = '{id:"thirdParty",url:"https://authserver.cap.edu.cn/authserver/login?service=https://ywtb.cap.edu.cn/EIP/caslogin.jsp"}';	//跳转登录页面参数
+        
+        if(portalType == 3) {
+        	document.write('<script type="text/javascript" src="/EIP/resources/js/changeTheme/variable.js"><\/script>');
+        }else{
+        	document.write('<script type="text/javascript" src="/EIP/resources/js/mix-portal/variable.js"><\/script>');
+        }
+        
+        $(function() {
+            mini.parse();
+            $.ajax({url:basePath + 'nonlogin/login/isLogin.htm',async:false,success:function(result){
+                isLogin = result
+            }});
+            quanziId= '';
+            itemId='hdmyxpxcyxnmmc5cdjqbft6kidm7mdms';
+            favoritePraise();
+            removeTransparentSkin();
+            var auth = '{ "roleId" : "402881156757c38f016757ffb4a50abc;7;角色,66;7;角色,99;7;角色" , "roleName" : "学校管理员,教师,学生" , "orgId" : "" , "orgName" : "" , "groupId" : "" , "groupName" : ""}';
+            var authObj = mini.decode(auth);
+            if(auth && (authObj.orgName || authObj.groupName)){
+                $("#authOrg").css("display","");
+            }
+
+            //浏览次数
+            var count = parseCount(30316);
+            $("#count").html(count+" 次访问");
+            $("#otherContent").show();
+            $("#otherContent table").css("max-width", ($("#otherContent").width()-60)+"px");
+            $("#otherContent img").css("max-width", ($("#otherContent").width()-60)+"px");
+            $(window).resize(function(){
+                $("#otherContent table").css("max-width", ($("#otherContent").width()-60)+"px");
+                $("#otherContent img").css("max-width", ($("#otherContent").width()-60)+"px");
+            });
+            /* if('<ol class=" list-paddingleft-2" style="list-style-type: decimal;"><li><p>如何查看流程进度：点击上方附件栏【如何查看流程进度.pdf】右侧“<img src="http://ywtb-cap-edu-cn-s.webvpn.cap.edu.cn:8180/EIP/nonlogin/fileupload/downloadfile.htm?id=b528d765e17644788431a8b11ce36ec3.png&path=public.files.editor.upload&name=icon-flow-preview.png" width="20" height="20" border="0" vspace="0" title="" alt="" style="width: 20px; height: 20px;"/>”图标可在线查看。</p></li><li><p>学分置换申请流程目前正在测试中，未正式使用。</p></li><li><p>实践经历类申请只能进行线下申请，申请通过后的数据管理员将直接导入系统，学生可在“创新学分申请记录”服务中查询。</p></li><li><p>《成都航空职业技术学院学分银行管理办法（试行）》自2024年3月起施行。</p></li><li><p>创新学分存储在获得创新成果及荣誉称号后即可申请。</p></li><li><p>自2024年3月起获得的创新成果、荣誉称号在一网通办申请认定，此前获得的采用单独线下申请审批方式认定。</p></li><li><p>在校期间已考试后获得成绩的课程都可以进行申请学分置换，置换的成绩由二级学院按照学分银行转换标准给出。</p></li><li><p>学分置换流程同时只能发起一次，只有流程审核完成后才能进行下一次申请。</p></li><li><p>若进行置换时一个成果可使用学分不足可自由添加多行进行组合使用，如下图所示。</p><p><img src="http://ywtb-cap-edu-cn-s.webvpn.cap.edu.cn:8180/EIP/nonlogin/fileupload/downloadfile.htm?id=80e2475160704413a60466e81b1c0152.png&path=public.files.editor.upload&name=1.png"/></p></li><li><p>进行置换时注意不同成果可转换课程不同，只有可转换课程包含当前课程类型才能进行转换，否则审核人员会将流程驳回。<br/></p><p><br/></p></li></ol>'){
+	            $("#otherContent").show();
+	            $("#otherContent table").css("max-width", ($("#otherContent").width()-60)+"px");
+	            $("#otherContent img").css("max-width", ($("#otherContent").width()-60)+"px");
+	            $(window).resize(function(){
+	                $("#otherContent table").css("max-width", ($("#otherContent").width()-60)+"px");
+	                $("#otherContent img").css("max-width", ($("#otherContent").width()-60)+"px");
+	            });
+            }else{
+                $("#otherContent").show();
+                $("#item-desc").css("padding-top","80px").append("<div class='default-icon'><span><img src='/EIP/resources/images/elobby/service-description-default-icon.png'></span><p>暂无其他说明</p></div>");
+            } */
+            initFunctionOpration();
+            var _blArr = '[{"id":"H7S3aTh42HMGw2DQ4iY3BcMTk5zd2eiK","blname":"学生竞赛类(个人)","displayorder":0,"color":"var(--main-color)","role":"","org":"","group":"","manualAuto":"1","blpcurl":"cooperative/openCooperative.htm?flowId=8ae980188d20f46f018d438b603c0e90","blpctext":"学分银行-学生竞赛类","flowid":"8ae980188d20f46f018d438b603c0e90","mmid":"","smid":"","restypeid":"","blpcurlm":"","openType":"0","manualAutom":"1","blmurl":"weixin/weui/cooperate.html#new/form/58317","blmtext":"学分银行-学生竞赛类","mflowid":"58317","blmurlm":"","auth":{"roleId":";7;角色","roleName":"","orgId":"","orgName":"","groupId":"","groupName":""}},{"id":"3sFzrbCZCKY4RdBwKNhDdi2Z4PGNntrk","blname":"学生竞赛类（团体）","displayorder":0,"color":"var(--main-color)","role":"","org":"","group":"","manualAuto":"1","blpcurl":"cooperative/openCooperative.htm?flowId=8ae9800e91c619c90191e1a717f46d96","blpctext":"学分银行-学生竞赛（团体）","flowid":"8ae9800e91c619c90191e1a717f46d96","mmid":"","smid":"","restypeid":"","blpcurlm":"","openType":"0","manualAutom":"1","blmurl":"weixin/weui/cooperate.html#new/form/16609","blmtext":"学分银行-学生竞赛（团体）","mflowid":"16609","blmurlm":"","auth":{"roleId":";7;角色","roleName":"","orgId":"","orgName":"","groupId":"","groupName":""}},{"id":"aRwpHASnSftwpt3ch6e4becemEFwQKpY","blname":"实践经历类","displayorder":0,"color":"var(--main-color)","role":"","org":"","group":"","manualAuto":"1","blpcurl":"cooperative/openCooperative.htm?flowId=8ae980178d627130018dc759896202e2","blpctext":"学分银行-实践经历类","flowid":"8ae980178d627130018dc759896202e2","mmid":"","smid":"","restypeid":"","blpcurlm":"","openType":"0","manualAutom":"1","blmurl":"weixin/weui/cooperate.html#new/form/52915","blmtext":"学分银行-实践经历类","mflowid":"52915","blmurlm":"","auth":{"roleId":";7;角色","roleName":"","orgId":"","orgName":"","groupId":"","groupName":""}},{"id":"46eFEfwnYYAkbPR2ftTpZtpzd7pwtrpz","blname":"证书成果类","displayorder":1,"color":"var(--main-color)","role":"","org":"","group":"","manualAuto":"1","blpcurl":"cooperative/openCooperative.htm?flowId=8ae980178d627130018dc74398800243","blpctext":"学分银行-证书成果类","flowid":"8ae980178d627130018dc74398800243","mmid":"","smid":"","restypeid":"","blpcurlm":"","openType":"0","manualAutom":"1","blmurl":"weixin/weui/cooperate.html#new/form/93651","blmtext":"学分银行-证书成果类","mflowid":"93651","blmurlm":"","auth":{"roleId":";7;角色","roleName":"","orgId":"","orgName":"","groupId":"","groupName":""}},{"id":"enQY5Me6yZGNPbzfC5TrZraCT33DjSN4","blname":"嘉奖荣誉类","displayorder":2,"color":"var(--main-color)","role":"","org":"","group":"","manualAuto":"1","blpcurl":"cooperative/openCooperative.htm?flowId=8ae980178d20f499018d392aa9ec03ca","blpctext":"学分银行-嘉奖荣誉类","flowid":"8ae980178d20f499018d392aa9ec03ca","mmid":"","smid":"","restypeid":"","blpcurlm":"","openType":"0","manualAutom":"1","blmurl":"weixin/weui/cooperate.html#new/form/83466","blmtext":"学分银行-嘉奖荣誉类","mflowid":"83466","blmurlm":"","auth":{"roleId":";7;角色","roleName":"","orgId":"","orgName":"","groupId":"","groupName":""}},{"id":"mrtTBjdiKyyT4WBXCD6f4CctzsdQTtPn","blname":"创新学分申请记录查询","displayorder":5,"color":"var(--main-color)","role":"402881156757c38f016757ffb4a50abc,66,99","org":"","group":"","manualAuto":"2","blpcurl":"https://ywtb.cap.edu.cn/EIP/maindatabase/querymanage/queryResult.htm?queryCode=rnxzxmzhar5jrrgefgftbmcqkbbmxeht","blpctext":"","flowid":"","mmid":"","smid":"","restypeid":"","blpcurlm":"https://ywtb.cap.edu.cn/EIP/maindatabase/querymanage/queryResult.htm?queryCode=rnxzxmzhar5jrrgefgftbmcqkbbmxeht","openType":"2","manualAutom":"1","blmurl":"","blmtext":"","mflowid":"","blmurlm":"","auth":{"roleId":"402881156757c38f016757ffb4a50abc;7;角色,66;7;角色,99;7;角色","roleName":"学校管理员,教师,学生","orgId":"","orgName":"","groupId":"","groupName":""}},{"id":"jSTHcPCQEw2Gca82MTDQYDmbW4Aa8TJm","blname":"创新学分使用记录查询","displayorder":7,"color":"var(--main-color)","role":"","org":"","group":"","manualAuto":"2","blpcurl":"https://ywtb.cap.edu.cn/EIP/maindatabase/querymanage/queryResult.htm?queryCode=g4cygzk6bsdwrfnfyjxfw527pqnjd5zd","blpctext":"","flowid":"","mmid":"","smid":"","restypeid":"","blpcurlm":"https://ywtb.cap.edu.cn/EIP/maindatabase/querymanage/queryResult.htm?queryCode=g4cygzk6bsdwrfnfyjxfw527pqnjd5zd","openType":"2","manualAutom":"1","blmurl":"","blmtext":"","mflowid":"","blmurlm":"","auth":{"roleId":";7;角色","roleName":"","orgId":"","orgName":"","groupId":"","groupName":""}}]';
+            var blArr = mini.decode(_blArr);
+            initOnLineBusinessBtn(blArr);
+            initExtendsData('true');
+            
+        });
+
+        function initExtendsData(isOpenExtends) {
+            if(isOpenExtends != 'true') {
+                $('#basic').hide();
+                $('#other').hide();
+                $('#basicContent').hide();
+            }
+            $.ajax({
+                url: '/EIP/nonlogin/elobby/service/introduction/extends.htm',
+                data: {
+                    serviceId: 'hdmyxpxcyxnmmc5cdjqbft6kidm7mdms'
+                },
+                success: function(response) {
+                    if(response.code == 200) {
+                        var extendz = response.data;
+                        $('#applyType').text(extendz.applyType);
+                        $('#applyType').attr('title', extendz.applyType);
+                        $('#entry').text(extendz.entry);
+                        $('#entry').attr('title', extendz.entry);
+                        $('#serviceType').text(extendz.serviceType);
+                        $('#serviceType').attr('title', extendz.serviceType);
+                        $('#serviceRoutine').text(extendz.serviceRoutine);
+                        $('#serviceRoutine').attr('title', extendz.serviceRoutine);
+                        $('#contactNumber').text(parseNullText(extendz.contactNumber));
+                        $('#contactNumber').attr('title', parseNullText(extendz.contactNumber));
+                        $('#supervisionNumber').text(parseNullText(extendz.supervisionNumber));
+                        $('#supervisionNumber').attr('title', parseNullText(extendz.supervisionNumber));
+                        $('#serviceTime').text(extendz.serviceTime);
+                        $('#serviceCode').text('事项编号：' + extendz.serviceCode);
+                        if(isOpenExtends != 'false' && (extendz.promise == 'true' || extendz.promise == true)) {
+                            $('#promise').show();
+                            $('#presentTimeText').show();
+                            $('#presentTime').text(extendz.presentTime);
+                            $('#presentDescTitle').show();
+                            $('#presentDesc').show();
+                            if(extendz.presentDesc != null && extendz.presentDesc != '') {
+                                $('#presentDesc').text(extendz.presentDesc);
+                            } else {
+                                $('#presentDesc').text('暂无');
+                            }
+                            $('#promiseTime').text(extendz.promiseTime);
+                            $('#promiseTimeType').text(extendz.promiseTimeType);
+                            $('#promiseTimeDesc').text(extendz.promiseTimeDesc);
+                        }
+                        if(extendz.extends != null && isOpenExtends != 'false') {
+                            initExtendsTabs(extendz.extends);
+                        }
+                    }
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            })
+
+        }
+
+        function initExtendsTabs(extendz) {
+            for(var i = 0; i < extendz.length; i ++) {
+                var extendsI = extendz[i];
+                if(extendsI.detail != null && extendsI.detail.length > 0) {
+                    parseSingleExtendsTab(extendsI);
+                }
+            }
+            initNav();
+        }
+
+        function parseSingleExtendsTab(single) {
+            var name = single.name;
+            var id = single.id;
+            var content = '';
+            var detail = single.detail;
+
+            if(single.type == 'text') {
+                content = parseTextGrids(single.detail);
+            } else if(single.type == 'table') {
+                content = parseTableGrids(single);
+            } else if(single.type == 'attach') {
+                content = parseAttachGrids(single.detail);
+            }
+            content = parseGridImage(single.img, content);
+            $('.nav-anchor').after('<li class="nav-anchor"><a class=""  id="' + id + '">' + name + '</a></li>')
+                .removeClass('nav-anchor');
+            if(name == "视频介绍"){
+            	var hq= '<div class="service-guide-item content-anchor" id="' + id + 'Content">';
+            	var hh = '<div class="service-guide-title">' +'<h2><a name="' + name + '">' + name + '</a></h2>' +'</div>';
+            	var ht = '';
+            	for(var i=0; i<detail.length; i++){
+            		if(detail[i].detail.fileType=='mp4'){
+		            		var downloadUrl = detail[i].detail.downloadUrl;
+		            		ht = ht+ '<div class="item-desc"><video src="/EIP/'+'/nonlogin/'+downloadUrl+'" controls="controls" preload="preload" width="300px">您的浏览器不支持 video 标签。</video></div>';
+            			}
+            	}
+            	$('.content-anchor').after(hq+hh+ht+'</div>').removeClass('content-anchor');
+            }else{
+	            $('.content-anchor').after('<div class="service-guide-item content-anchor" id="' + id + 'Content">' +
+	                    '<div class="service-guide-title">' +
+	                        '<h2><a name="' + name + '">' + name + '</a></h2>' +
+	                    '</div>' +
+	                    '<div class="item-desc">' + content +
+	                    '</div>' +
+	                '</div>').removeClass('content-anchor');
+            }
+        }
+
+        function parseTextGrids(grid) {
+            var result = '';
+            for(var i = 0; i < grid.length; i ++) {
+                var row = grid[i];
+                result += '<p>' + (i + 1) + '.' + row.text + '</p>'
+            }
+            return result;
+        }
+
+        function parseAttachGrids(grid) {
+            var result = '';
+            for (var i = 0; i < grid.length; i++) {
+                var row = grid[i];
+                var icon = 'unkown';
+                var downloadUrl = 'noUrl';
+                var previewUrl = '';
+                if (row.detail != null) {
+                    var avilableIcons = [
+                        'doc',
+                        'docx',
+                        'gif',
+                        'jpg',
+                        'pdf',
+                        'png',
+                        'ppt',
+                        'pptx',
+                        'rar',
+                        'txt',
+                        'xls',
+                        'xlsx',
+                        'zip'
+                    ];
+                    if (avilableIcons.contains(row.detail.fileType)) {
+                        icon = row.detail.fileType;
+                    }
+                    downloadUrl = row.detail.downloadUrl;
+                    previewUrl = downloadUrl;
+                    var fileType = row.detail.fileType;
+                    if (/^\.?(doc|docx|ppt|pptx|xls|xlsx)$/i.test(fileType)) {
+                        previewUrl = downloadUrl.replace(/downloadfile/g, "convertfile");
+                    }
+                }
+                result += '<p><span style="cursor: pointer; display:block; float:left;" onclick="downLoadFile(\'' + downloadUrl + '\')"' +
+                    '><img style="width: 16px; height: 16px;display: inline-block; float:left; padding: 4px;" ' +
+                    'src="/EIP/core/miniui/themes/default/images/document/' + icon + '.gif"/>&nbsp;'
+                    + row.text + '</span>' + toDoFilePreviewDOM("." + fileType, previewUrl) + '</p>';
+            }
+            return result;
+        }
+
+        function downLoadFile(url) {
+            if (url == null || url == 'noUrl') {
+                mini.alert('当前附件不可下载！');
+                return;
+            }
+            proxyLoc(parent.window.location).href = "/EIP/nonlogin/" + url + "&mode=download";
+        }
+
+        /**
+         * 生成文件预览DOM，格式如："<a href='...' target='_blank'><img src='...'></a>"
+         * @param fileType    必传，文件类型，目前支持office和pdf。预览office要求80端口。
+         * @param fileUrl    必传，文件下载url
+         * @param linkClass    可选，a标签class，用于控制样式
+         * @param iconClass 可选，img标签class，用于控制样式
+         * @param iconUrl    可选，默认"resources/images/flow/icon-flow-preview.png"，可自定义
+         */
+        function toDoFilePreviewDOM(fileType, fileUrl, linkClass, iconClass, iconUrl) {
+            var basePath = toDoGetBasePath();
+
+            // 处理参数
+            if (!/^http/.test(fileUrl)) fileUrl = basePath + 'nonlogin/' + fileUrl;
+            if (!iconUrl) iconUrl = 'resources/images/flow/icon-flow-preview.png';
+
+            // office
+            if (/^\.?(doc|docx|ppt|pptx|xls|xlsx)$/i.test(fileType)) {
+                /*return "<a style=\"border:none; padding-right: 5px;\" target='_blank' class='" + linkClass + "'"
+                + "href='http://view-officeapps-live-com-s.webvpn.cap.edu.cn:8180/op/view.aspx?src="
+                + encodeURIComponent(fileUrl) + "'>"
+                + "<img style=\"vertical-align:middle; cursor:pointer; margin-left:8px;width:16px;height:16px;\""
+                + " class='" + linkClass + "'"
+                + " src=\"" + basePath + iconUrl +  "\"/></a>";*/
+                return "<a style=\"border:none; padding-right: 5px; float: left; height: 24px; padding: 4px;box-sizing:border-box; \" target='_blank' class='" + linkClass + "'"
+                    + "href=" + fileUrl + ">"
+                    + "<img style=\"vertical-align:middle; cursor:pointer; margin-left:8px;width:16px;height:16px;\""
+                    + " class='" + linkClass + "'"
+                    + " src=\"" + basePath + iconUrl +  "\"/></a>";
+            }
+
+            // pdf
+            if (/^\.?(pdf)$/i.test(fileType)) {
+                return "<a style=\"border:none; padding-right: 5px; float: left; height: 24px; padding: 4px; box-sizing:border-box;\" target='_blank' class='" + linkClass + "'"
+                    + "href='" + basePath + "core/pdfjs/pdfjs-2.1.266-dist/web/viewer.html?file="
+                    + encodeURIComponent(fileUrl) + "'>"
+                    + "<img style=\"vertical-align:middle; cursor:pointer; margin-left:8px;width:16px;height:16px;\" "
+                    + " class='" + linkClass + "'"
+                    + "src=\"" + basePath + iconUrl + "\"/></a>";
+            }
+
+            // 图片预览
+            if(/^\.?(gif|png|jpg|jpeg|jpe|bmp|dib|jfif|tif|tiff){1}$/i.test(fileType) && window.top.previewImage){
+                return "<a style=\"border:none; padding-right: 5px; float: left; height: 24px; padding: 4px; box-sizing:border-box;\" class='" + linkClass + "'"
+                    + "href='javascript:window.top.previewImage([{url: \""+ fileUrl +"\"}])'>"
+                    + "<img style=\"vertical-align:middle; cursor:pointer; margin-left:8px;width:16px;height:16px;\" "
+                    + " class='" + linkClass + "'"
+                    + "src=\"" + basePath + iconUrl + "\"/></a>";
+            }
+
+            return "";
+        }
+
+        /**
+         * 功能：获取basePath
+         * @author xingmin
+         * @param e 操作的树对象
+         * @date 2013-03-13
+         */
+        function toDoGetBasePath(){
+            var js="boot.js";
+            var scripts = document.getElementsByTagName("script");
+            var path = "";
+            for (var i = 0, l = scripts.length; i < l; i++) {
+                var src = scripts[i].src;
+                if (src.indexOf(js) != -1) {
+                    var ss = src.split(js);
+                    path = ss[0];
+                    break;
+                }
+            }
+            var href = proxyLoc(location).href;
+            href = href.split("#")[0];
+            href = href.split("?")[0];
+            var ss = href.split("/");
+            ss.length = ss.length - 1;
+            href = ss.join("/");
+            if (path.indexOf("https:") == -1 && path.indexOf("http:") == -1 && path.indexOf("file:") == -1 && path.indexOf("\/") != 0) {
+                path = href + "/" + path;
+            }
+            path=path.substring(0,path.length-5);
+            return path;
+        }
+
+        function parseTableGrids(grid) {
+            var header = grid.header;
+            var tableStr = '<table><tr>';
+            for(var i = 0; i < header.length; i ++) {
+                var width = '';
+                if(header[i].width != null) {
+                    width = ' style="width:' + header[i].width + ';" ';
+                }
+                tableStr += '<th style="background: #F6F6F6;"' + width + '>' + header[i].name + '</th>';
+            }
+            tableStr += '</tr>';
+            var detail = grid.detail;
+            for(var i = 0; i < detail.length; i ++) {
+                var row = detail[i];
+                tableStr += '<tr>';
+
+                for(var j = 0; j < header.length; j ++) {
+                    tableStr += '<td>' + row[header[j].key] + '</td>';
+                }
+                tableStr += '</tr>';
+            }
+            tableStr += '</table>';
+            return tableStr;
+        }
+
+        function parseGridImage(img, content) {
+            var result = '';
+            if(img != null) {
+                result = '<img src="/EIP/nonlogin/' + img.url + '"></img>';
+                if(img.position == 'top') {
+                    result = result + content;
+                } else {
+                    result = content + result;
+                }
+            } else {
+                result = content;
+            }
+            return result;
+        }
+
+        function parseNullText(text) {
+            if(text == null || text == '') {
+                return '暂无';
+            }
+            return text;
+        }
+
+        function initOnLineBusinessBtn(blArr){
+            if('253237' == 'visitor'){
+                if('true'!='false'){
+                    $(".service-entrance ul").append(_.template($('#bl-tpl').html())({blArr: blArr}));
+                    //20210715 bug#2226 故增加按 hasAuth 校验
+                    /*if('true'!='false'){*/
+                        $(".bl-link").addClass('active').click(function(){
+                            var blurl = $(this).data('blpcurl');
+                            var desc = '学分银行申请';
+                            var id = "hdmyxpxcyxnmmc5cdjqbft6kidm7mdms";
+                            var openType =  $(this).data('opentype');
+                            var flowid = $(this).data('flowid');
+                            var loginUserId = "253237";
+                            serviceStartFromIntroductionPage(blurl, desc, id, openType, flowid,loginUserId);  //serviceStartPage在elobby.js中
+                        });
+                    /*}else{
+                        $(".bl-link").removeClass('active').addClass("without-permission");
+                        $(".bl-link").css("background-color","");
+                        $(".bl-link .arrow-icon img").attr("src","/EIP/resources/images/elobby/servicehall-nodrop-icon.png");
+                    }*/
+                }
+            }else{
+
+                if('true'!='false'){
+                    $(".service-entrance ul").append(_.template($('#bl-tpl').html())({blArr: blArr}));
+                    if('true'!='false'){
+                        $(".bl-link").addClass('active').click(function(){
+                            var blurl = $(this).data('blpcurl');
+                            var openType =  $(this).data('opentype');
+                            var blname =  $(this).data('blname');
+                            var status = '1';
+                            if(status == "0"){
+                                top.mini.alert("该服务已停用");
+                                return;
+                            }
+                            var newWindow="";
+                            if(openType == '3'){
+                                newWindow = window.open();
+                            }
+                            if(isLogin == 'true'){
+                                var validUrl = '/EIP/elobby/auth/valid/hdmyxpxcyxnmmc5cdjqbft6kidm7mdms.htm';
+                                $.post(validUrl, function(result){
+                                    var statusCode = result.statusCode;
+                                    var statusText = result.statusText;
+                                    if(statusCode == 200){
+                                        if(blurl){
+                                            var flag = isValidateService(result.data);
+                                            if(flag){
+                                                blurl = convertMacroDefine(blurl);
+                                                if(blurl.startWith("elobby/service/elobbyServicesMenu")){
+                                                    blurl = blurl+"?serviceId=hdmyxpxcyxnmmc5cdjqbft6kidm7mdms";
+                                                }
+                                                //var openType = '';
+                                                if (openType == '1') {
+                                                    window.open("/EIP/"+blurl);
+                                                } else if (openType == '2') {
+                                                    top.openNewTab(blurl, blname, blname);
+                                                } else if (openType == '3') {
+                                                    proxyLoc(newWindow.location).href = blurl;
+                                                }else{
+                                                    top.openNewTab("/EIP/"+blurl, blname, blname);
+                                                }
+                                            }else{
+                                                promptingService(result.data);
+                                            }
+
+                                        }else{
+                                            top.mini.alert("无法打开办理页面，请联系业务管理员");
+                                            console.error("办理地址："+blurl);
+                                            if(openType == '3'){
+                                                newWindow.close();
+                                            }
+                                        }
+                                    }else{
+                                        top.mini.alert(statusText);
+                                        if(openType == '3'){
+                                            newWindow.close();
+                                        }
+                                    }
+                                });
+
+                            }else{
+                                top.topLogin();
+                                if(openType == '3'){
+                                    newWindow.close();
+                                }
+                            }
+                        });
+                    }else{
+                        $(".bl-link").removeClass('active').addClass("without-permission");
+                        $(".bl-link").css("background-color","");
+                        $(".bl-link .arrow-icon img").attr("src","/EIP/resources/images/elobby/servicehall-nodrop-icon.png");
+                    }
+                }
+            }
+
+        }
+
+        /**
+         *收藏与点赞
+         */
+        function favoritePraise(){
+            var newOrHot = "newOrHot";
+            var itemId = 'hdmyxpxcyxnmmc5cdjqbft6kidm7mdms';
+            if(isLogin=='true'){
+                $.post(basePath+"elobby/service/queryIsFavoriteBySidUid.htm",{itemId:itemId}, function(e){
+                    if(e){
+                        // 收藏不收藏的提示信息
+                        $('.collection-box a')
+                            .attr('id', newOrHot + 'fa_' + itemId)
+                            .addClass(newOrHot + 'fa_' + itemId)
+                            .attr('title', '取消收藏')
+                            .attr('href', "javascript:nofavNew('"+itemId+"','"+newOrHot+"')");
+                        // 收藏不收藏的图标
+                        $('#shoucang')
+                            .attr('id', newOrHot + 'fimg_' + itemId)
+                            .addClass(newOrHot + 'fimg_' + itemId)
+                            .attr('src', '/EIP/resources/images/elobby/servicehall-stars-solid.png');
+                        $('#sc-text').text('取消收藏');
+                    }else {
+                        // 收藏不收藏的提示信息
+                        $('.collection-box a')
+                            .attr('id', newOrHot + 'fa_' + itemId)
+                            .addClass(newOrHot + 'fa_' + itemId)
+                            .attr('title', '收藏服务')
+                            .attr('href', "javascript:favNew('"+itemId+"','"+newOrHot+"')");
+                        $('#shoucang')
+                            .attr('id', newOrHot + 'fimg_' + itemId)
+                            .addClass(newOrHot + 'fimg_' + itemId)
+                            .attr('src', '/EIP/resources/images/elobby/servicehall-stars-empty.png');
+                        $('#sc-text').text('收藏服务');
+                    }
+                })
+            }else{
+                $('.collection-box a')
+                    .attr('id', newOrHot + 'fa_' + itemId)
+                    .addClass(newOrHot + 'fa_' + itemId)
+                    .attr('title', '收藏服务')
+                    .attr('href', "javascript:favNew('"+itemId+"','"+newOrHot+"')");
+                $('#shoucang')
+                    .attr('id', newOrHot + 'fimg_' + itemId)
+                    .addClass(newOrHot + 'fimg_' + itemId)
+                    .attr('src', '/EIP/resources/images/elobby/servicehall-stars-empty.png');
+                $('#sc-text').text('收藏服务');
+            }
+        }
+
+        //初始化反馈，咨询，预约功能按钮
+        function initFunctionOpration(){
+            // 通过参数控制 ‘意见反馈’和‘在线咨询’按钮是否显示。参数位置：服务大厅-服务大厅门户portal页面参数-是否显示意见反馈和在线咨询按钮
+            var isShowButton = {"feedBack":"false","onlineConsult":"false"};
+
+            if(isShowButton.feedBack == "true"){
+                $("#feedback").show();
+                if('false'!='false'){
+                    $("#fk-img").attr("src","/EIP/resources/images/elobby/servicehall-feedback-icon01.png");
+                    if('true'!='false'){
+                        $("#fk-img").attr("src","/EIP/resources/images/elobby/servicehall-feedback-icon.png");
+                        $("#fk-link").addClass('active').click(openfk);
+                    }else{
+                        $("#fk-link").removeClass('active').addClass("disable");
+                    }
+                }else{
+                    $("#fk-img").attr("src","/EIP/resources/images/elobby/servicehall-feedback-icon01.png");
+                    $("#fk-link").removeClass('active').addClass("disable");
+                }
+            }else{
+                $("#feedback").hide();
+            }
+
+            if(isShowButton.onlineConsult == "true"){
+                $("#onlineConsult").show();
+                if('false'!='false' ){
+                    $("#zx-img").attr("src","/EIP/resources/images/elobby/servicehall-consulting-icon01.png");
+                    if('true'!='false'){
+                        $("#zx-img").attr("src","/EIP/resources/images/elobby/servicehall-consulting-icon.png");
+                        $(".service-detail-header-zx").addClass("active").click(openYj);
+                    }else{
+                        $(".service-detail-header-zx").removeClass('active').addClass("disable");
+                    }
+                }else{
+                    $("#zx-img").attr("src","/EIP/resources/images/elobby/servicehall-consulting-icon01.png");
+                    $(".service-detail-header-zx").removeClass('active').addClass("disable");
+                }
+            }else{
+                $("#onlineConsult").hide();
+            }
+
+            //通过参数控制 '在线预约'按钮是否显示 参数位置：公共资源-公共资源预约参数-是否隐藏服务原有预约
+            var isHideReservation = 'true';
+            if(isHideReservation == 'true') {
+                $('#onlineAppointment').hide();
+            }else{
+                $('#onlineAppointment').show();
+                if('false'!='false'){
+                    $("#onlineAppointment").show();
+                    $("#yy-img").attr("src","/EIP/resources/images/elobby/servicehall-order-icon01.png");
+                    if('true'!='false'){
+                        $("#yy-img").attr("src","/EIP/resources/images/elobby/servicehall-order-icon.png");
+                        $("#yy-link").addClass('active').click(openyy);
+                    }else{
+                        $("#yy-link").removeClass('active').addClass("disable");
+                    }
+                }else{
+                    $("#onlineAppointment").show();
+                    $("#yy-img").attr("src","/EIP/resources/images/elobby/servicehall-order-icon01.png");
+                    $("#yy-link").removeClass('active').addClass("disable");
+                }
+            }
+
+        }
+
+
+        var searchControls = [];
+        function serchTypeChange(e){
+            for(var i=0;i<searchControls.length;i++){
+                searchControls[i].destroy(); // 先销毁全部搜索控件
+            }
+            searchControls = []; // 清空控件数组
+            $("#serachArea").html(""); // 再清空搜索条件区域
+
+            var type = e.value; // 获取搜索类型，1、标题，2、发布人，3、发布时间
+            if(type == 1 || type == 2){
+                var textBox = new mini.TextBox();
+                textBox.setId("searchTextBox");
+                $("#serachArea").append(textBox.getEl());
+                searchControls.push(textBox);
+            }
+        }
+
+
+        /**
+         *打开意见反馈
+         */
+        function openfk(){
+            /* if(isLogin == 'true'){
+                var uri = '/EIP/elobby/item/toFeedBackView.htm?taskTypeId=&receiverId=&titleName=学分银行申请';
+				top.openNewTab(uri, '学分银行申请意见反馈','hdmyxpxcyxnmmc5cdjqbft6kidm7mdmsfk');
+	    	}else{
+	    		top.topLogin();
+	    	} */
+
+            var openType = '0';
+            var status = '1';
+            if(status == "0"){
+                top.mini.alert("该服务已停用");
+                return;
+            }
+            var newWindow="";
+            if(openType == '3'){
+                newWindow = window.open();
+            }
+            if(isLogin == 'true'){
+                var validUrl = '/EIP/elobby/auth/valid/hdmyxpxcyxnmmc5cdjqbft6kidm7mdms.htm';
+                $.post(validUrl, function(result){
+                    var statusCode = result.statusCode;
+                    var statusText = result.statusText;
+                    if(statusCode == 200){
+                        var blurl = "";
+                        if(blurl){
+                            if(blurl.startWith("elobby/service/elobbyServicesMenu")){
+                                blurl = blurl+"?serviceId=hdmyxpxcyxnmmc5cdjqbft6kidm7mdms";
+                            }
+                            if (openType == '1') {
+                                window.open("/EIP/"+blurl);
+                            } else if (openType == '2') {
+                                top.openNewTab(blurl, '学分银行申请', '学分银行申请');
+                            } else if (openType == '3') {
+                                //window.open(blurl);
+                                proxyLoc(newWindow.location).href = blurl;
+                            }else{
+                                top.openNewTab("/EIP/"+blurl, '学分银行申请', '学分银行申请');
+                            }
+                        }else{
+                            top.mini.alert("无法打开办理页面，请联系业务管理员");
+                            console.error("办理地址："+blurl);
+                            if(openType == '3'){
+                                newWindow.close();
+                            }
+                        }
+                    }else{
+                        top.mini.alert(statusText);
+                        if(openType == '3'){
+                            newWindow.close();
+                        }
+                    }
+                    /*else if(status == 401){
+                        mini.alert("您没有权限使用该服务。");
+                    }else if(status == 402){
+                        mini.alert("该服务只提供移动端访问。")
+                    }else if(status == 403){
+                        mini.alert("该服务不在有效期内，已停止使用");
+                    }*/
+                });
+
+            }else{
+                top.topLogin();
+                if(openType == '3'){
+                    newWindow.close();
+                }
+            }
+        }
+
+        /**
+         *打开在线预约
+         */
+        function openyy(){
+            var status = '1';
+            if(status == "0"){
+                top.mini.alert("该服务已停用");
+                return;
+            }
+            if(isLogin == 'true'){
+                var uri = '/EIP/elobby/appointment/appointment.htm?sid=hdmyxpxcyxnmmc5cdjqbft6kidm7mdms';
+                top.openNewTab(uri, '学分银行申请'+'在线预约','hdmyxpxcyxnmmc5cdjqbft6kidm7mdmsyy');
+            }else{
+                top.topLogin();
+            }
+        }
+
+        function ondrawcell(e) {
+            var field = e.field;
+            var value = e.value;
+            if(field == "publishTime") {
+                e.cellHtml = mini.formatDate(new Date(value),"yyyy-MM-dd HH:mm:ss");
+            }
+        }
+
+        function titleRenderer(e) {
+            var stickHTML = "";
+            if(e.record.stick == "1"){
+                stickHTML = '<span class="red-tip">[置顶]</span>&nbsp;';
+            }
+            return stickHTML+'<a href="#" onclick="openDetail(\''+e.record.id+'\');" style="color:blue;">'+ e.value+'</a>';
+        }
+
+        function openYj(){
+            var status = '1';
+            if(status == "0"){
+                top.mini.alert("该服务已停用");
+                return;
+            }
+            if(quanziId !=null && quanziId !='' ){
+                top.openNewTab("/EIP/quanzi/circle/queryPost.htm?cid="+quanziId+"&itemId="+itemId,"我要咨询");
+            }
+        }
+
+        //第三方平台接入服务页面页时，移除服务介绍页透明化皮肤效果
+        function removeTransparentSkin(){
+            if($("#topBox",parent.document).length < 1){
+                $('.service-introduction-container').parent('body').removeClass('transparency-design-bg');
+            }
+        }
+    </script>
+    <style>
+        body {
+            background: #f7f7f7;
+        }
+        /*去掉 mini-grid 样式*/
+        .list-Row .mini-grid-row-selected,
+        .list-Row .mini-grid-row-hover {
+            background: #fff;
+        }
+
+        .list-Row .mini-grid-cell {
+            border: none;
+        }
+
+        .list-Row .mini-grid-cell-inner a {
+            line-height: 36px;
+            font-size: 14px;
+            /*color: #666 !important;*/
+        }
+
+        .list-Row .mini-grid-cell-inner a:hover {
+            /*color: #999 !important;*/
+            /*text-decoration: none;*/
+        }
+
+        .list-Row .mini-grid-emptyText {
+            padding-left: 15px;
+        }
+
+        .list-Row .mini-grid-emptyText .fontQuery {
+            font-size: 14px;
+        }
+
+        .service-guide-item .elobby-txts p {
+            line-height: 30px;
+            /*text-align: center;*/
+            padding: 8px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="service-introduction-container handle-center-overflow-show">
+    
+    <div class="service-left-sidebar handle-center-overflow-show">
+        <div class="service-name">
+            <p class="content-header-text-title elobby-texts">学分银行申请</p>
+        </div>
+
+        <div class="collection-box">
+            <a>
+                <img id="shoucang"/>
+            </a>
+        </div>
+
+        <div class="line-box">
+            <div class="content-header-browse-num" style="" id="serviceCode"></div>
+            <div class="content-header-browse-num" id="count"></div>
+            <div class="content-header-browse">
+                <div class="content-header-browse-Thumb" style="display: none;">
+                    <a>
+                        <img alt="" />
+                    </a>
+                </div>
+            </div>
+            <div class="other-service">
+                <ul>
+                    <li id="feedback" style="display: none;">
+                        <a id="fk-link" href="javascript:void(0);">
+                            <span class="other-service-icon"><img id="fk-img"/></span>
+                            <span>意见反馈</span>
+                        </a>
+                    </li>
+                    <li id="onlineConsult" style="display: none;">
+                        <a id="" class="service-detail-header-zx" href="javascript:void(0);">
+                            <span class="other-service-icon"><img id="zx-img"/></span>
+                            <span>我要咨询</span>
+                        </a>
+                    </li>
+                    <li id="onlineAppointment" style="display: none;">
+                        <a id="yy-link" href="javascript:void(0);">
+                            <span class="other-service-icon"><img id="yy-img" /></span>
+                            <span>在线预约</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="divider-line">
+            <span></span>
+        </div>
+        <div class="service-guide-fixed-nav">
+            <ul>
+                <li class="nav-anchor"><a class="active" id="basic">基本信息</a></li>
+                <li><a class="" id="other">其它说明</a></li>
+            </ul>
+        </div>
+        <div>
+
+            <div id="basicContent" class="service-guide-item basic-info content-anchor">
+                <div class="service-guide-title">
+                    <h2><a name="基本信息">基本信息</a></h2>
+                </div>
+                <div class="basic-info-desc">
+                    <table>
+                        <tbody>
+                        <tr>
+                            <td class="service-item-table-header"><span>办理方式</span></td>
+                            <td><span id="applyType"></span></td>
+                            <td class="service-item-table-header"><span>事项性质</span></td>
+                            <td><span id="serviceType"></span></td>
+                        </tr>
+                        <tr>
+                            <td class="service-item-table-header"><span>办理途径</span></td>
+                            <td><span id="entry"></span></td>
+                            <td class="service-item-table-header"><span>办理时间</span></td>
+                            <td><span id="serviceRoutine"></span></td>
+                        </tr>
+                        <tr>
+                            <td class="service-item-table-header"><span>咨询电话</span></td>
+                            <td><span id="contactNumber"></span></td>
+                            <td class="service-item-table-header"><span>监督电话</span></td>
+                            <td><span id="supervisionNumber"></span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="otherContent" class="service-guide-item">
+                <div class="service-guide-title">
+                    <h2><a name="其他说明">其它说明</a></h2>
+                </div>
+                <div id="item-desc" class="elobby-txts"><ol class=" list-paddingleft-2" style="list-style-type: decimal;"><li><p>如何查看流程进度：点击上方附件栏【如何查看流程进度.pdf】右侧“<img src="http://ywtb-cap-edu-cn-s.webvpn.cap.edu.cn:8180/EIP/nonlogin/fileupload/downloadfile.htm?id=b528d765e17644788431a8b11ce36ec3.png&path=public.files.editor.upload&name=icon-flow-preview.png" width="20" height="20" border="0" vspace="0" title="" alt="" style="width: 20px; height: 20px;"/>”图标可在线查看。</p></li><li><p>学分置换申请流程目前正在测试中，未正式使用。</p></li><li><p>实践经历类申请只能进行线下申请，申请通过后的数据管理员将直接导入系统，学生可在“创新学分申请记录”服务中查询。</p></li><li><p>《成都航空职业技术学院学分银行管理办法（试行）》自2024年3月起施行。</p></li><li><p>创新学分存储在获得创新成果及荣誉称号后即可申请。</p></li><li><p>自2024年3月起获得的创新成果、荣誉称号在一网通办申请认定，此前获得的采用单独线下申请审批方式认定。</p></li><li><p>在校期间已考试后获得成绩的课程都可以进行申请学分置换，置换的成绩由二级学院按照学分银行转换标准给出。</p></li><li><p>学分置换流程同时只能发起一次，只有流程审核完成后才能进行下一次申请。</p></li><li><p>若进行置换时一个成果可使用学分不足可自由添加多行进行组合使用，如下图所示。</p><p><img src="http://ywtb-cap-edu-cn-s.webvpn.cap.edu.cn:8180/EIP/nonlogin/fileupload/downloadfile.htm?id=80e2475160704413a60466e81b1c0152.png&path=public.files.editor.upload&name=1.png"/></p></li><li><p>进行置换时注意不同成果可转换课程不同，只有可转换课程包含当前课程类型才能进行转换，否则审核人员会将流程驳回。<br/></p><p><br/></p></li></ol></div>
+            </div>
+        </div>
+    </div>
+    
+    
+    <div style="float: right;width: 350px;">
+        <div class="service-right-sidebar" style="margin-bottom: 30px;">
+            <div class="list-Row">
+                <div class="title-box">
+                    <span></span>
+                    <div class="elobby-t1">办理入口</div>
+                </div>
+            </div>
+            <div class="service-entrance">
+                <ul>
+
+                </ul>
+            </div>
+            <div  style="padding: 0 15px;">
+                <div class="divider-line">
+                    <span></span>
+                </div>
+                <div class="service-info-list">
+                    <dl>
+                        <dt>服务人群：</dt>
+                        <dd id="handler" title="学校管理员,教师,学生">学校管理员,教师,学生</dd>
+                    </dl>
+                    <dl id="authOrg" style=" display: none;">
+                        <dt>服务仅限：</dt>
+                        <dd title="使用">使用</dd>
+                    </dl>
+                    <dl>
+                        <dt>所属部门：</dt>
+                        <dd id="handler" title="教务处">教务处</dd>
+                    </dl>
+                    <dl class="content-header-text-time">
+                        <dt>服务日期：</dt>
+                        <dd id="serviceTime" style="overflow:revert;white-space:normal;height: auto"></dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+        <div class="service-right-sidebar" id="promise" style="display: none;margin-bottom: 30px;">
+            <div class="list-Row">
+                <div class="title-box">
+                    <span></span>
+                    <div class="elobby-t1">服务承诺</div>
+                </div>
+            </div>
+
+            <div style="padding: 0 15px;">
+                <div class="divider-line">
+                    <span></span>
+                </div>
+                <div class="service-info-list">
+                    <p id="presentTimeText" style="display: none">到现场次数&nbsp;<span id="presentTime"  style="font-weight: bold; color:#ef4f4f;font-size: 22px; "></span>&nbsp;次</p>
+                    <p id="presentDescTitle" style="display: none">必须到场说明</p>
+                    <p id="presentDesc" style="margin-left: 30px;color: #999;display: none"></p>
+                    <p>承诺办结时限&nbsp;<span id="promiseTime" style="font-weight: bold; color:#ef4f4f; font-size: 22px;"></span>&nbsp;个<span id="promiseTimeType"></span></p>
+                    <p id="promiseTimeDescTitle">承诺办结时限说明</p>
+                    <p id="promiseTimeDesc" style="margin-left: 30px;color: #999""></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+<script type="text/template" id="bl-tpl">
+    {{ for(var i=0; i<blArr.length; i++){ var blItem=blArr[i]; if(blItem.blpcurl){ }}
+    <li class="bl-item bl-link"  data-opentype={{=blItem.openType}} data-flowid="{{=blItem.flowid}}" data-blpcurl="{{=blItem.blpcurl}}" data-blname="{{=blItem.blname}}" style="background-color: {{=blItem.color}};">
+        <span class="business-btn-text" title="{{=blItem.blname}}">{{=blItem.blname}}</span>
+        <span class="arrow-icon">
+                <img src="/EIP/resources/images/elobby/servicehall-enter-icon.png" alt="" />
+            </span>
+    </li>
+    {{ } }}
+    {{ } }}
+</script>
+<script type="text/javascript">
+$(function() {
+    recalculateSideBar();
+    $(window).resize(function() {
+        recalculateSideBar();
+    });
+});
+
+function recalculateSideBar() {
+    var $sideBar = $('.service-left-sidebar');
+    var left = $sideBar.offset().left;
+    console.log(left);
+    if(left > 100) {
+        var offset = left - 100;
+        $('.service-guide-fixed-nav').show();
+        $('.service-guide-fixed-nav').css('left', offset + 'px');
+    } else {
+        $('.service-guide-fixed-nav').hide();
+    }
+
+}
+
+/**
+ * 功能：左侧分类导航固定定位以及锚点事件
+ * @author:
+ * @date: 2020.06.11
+ */
+var durTime = 500; //动画延时时间
+var navClickStatus = false;
+function initNav(){
+    $(".service-guide-fixed-nav ul li a").on("click", function() {
+        var id = $(this).attr('id');
+        var $content = $('#' + id + 'Content');
+        $(this).addClass("active").parent().siblings().find('a').removeClass("active");
+        navClickStatus = true;
+        $("html, body").stop().animate({
+            scrollTop: $content.prop("offsetTop") + 'px'
+        }, 500, function(){
+            navClickStatus = false;
+        });
+    });
+    $(window).on("scroll", navScroll);
+}
+function navScroll(e){
+    if(navClickStatus){
+        return;
+    }
+    //滚动到标杆位置,左侧导航加active
+    $(".service-guide-item").each(function(){
+        var top = parseInt($(this).offset().top - $(window).scrollTop());
+        var bottom = parseInt($(this).offset().top - $(window).scrollTop() - $(window).height());
+        var id = $(this).attr('id');
+        var totalNumber = $(".service-guide-item").length;
+        var isHalf = $(window).scrollTop() > ($('.service-left-sidebar').height() - 80*totalNumber);
+        id = id.replaceAll('Content', '');
+        var $nav = $('#' + id);
+        if ( top <= 0 || (isHalf && bottom <= 0)) {
+            $(".service-guide-fixed-nav ul li a").removeClass("active");
+            $nav.addClass("active");
+        }else if($(document).height()==$(window).scrollTop()+$(window).height()){
+            //如果到达页面底部，给左侧导航最后一个加active
+            $(".service-guide-fixed-nav ul li a").removeClass("active");
+            $(".service-guide-fixed-nav ul li a").eq($(".hall-detail-nav .hall-detail-nav-menu a").length-1).addClass("active");
+        }
+    });
+}
+
+</script>
+</body>
+</html>

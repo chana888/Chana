@@ -1,0 +1,338 @@
+{
+   "aboutTitle": {
+      "message": "情報"
+   },
+   "accuratePerformance": {
+      "message": "高精度"
+   },
+   "activeTabsLabel": {
+      "message": "アクティブなタブ"
+   },
+   "advancedSettingsLabel": {
+      "message": "詳細設定"
+   },
+   "autoTheme": {
+      "message": "自動"
+   },
+   "balancedPerformance": {
+      "message": "バランス"
+   },
+   "betterThanSmallDescription": {
+      "message": "e5-smallよりわずかに大きいが、性能は向上"
+   },
+   "bookmarksBarLabel": {
+      "message": "ブックマークバー"
+   },
+   "bytesUnit": {
+      "message": "バイト"
+   },
+   "cacheDetailsLabel": {
+      "message": "キャッシュ詳細"
+   },
+   "cacheEntriesLabel": {
+      "message": "キャッシュエントリ"
+   },
+   "cacheSizeLabel": {
+      "message": "キャッシュサイズ"
+   },
+   "cancelButton": {
+      "message": "キャンセル"
+   },
+   "cleanExpiredCacheButton": {
+      "message": "期限切れキャッシュをクリーンアップ"
+   },
+   "cleaningStatus": {
+      "message": "クリーンアップ中..."
+   },
+   "clearAllCacheButton": {
+      "message": "全キャッシュをクリア"
+   },
+   "clearAllDataButton": {
+      "message": "全データをクリア"
+   },
+   "clearDataIrreversibleWarning": {
+      "message": "この操作は元に戻せません！クリア後、再度ウェブページを閲覧してインデックスを再構築する必要があります。"
+   },
+   "clearDataList1": {
+      "message": "すべてのウェブページテキストコンテンツインデックス"
+   },
+   "clearDataList2": {
+      "message": "ベクトル埋め込みデータ"
+   },
+   "clearDataList3": {
+      "message": "検索履歴とキャッシュ"
+   },
+   "clearDataWarningMessage": {
+      "message": "この操作は、インデックス化されたすべてのウェブページコンテンツとベクトルデータをクリアします。これには以下が含まれます："
+   },
+   "clearingStatus": {
+      "message": "クリア中..."
+   },
+   "closeButton": {
+      "message": "閉じる"
+   },
+   "configCopiedNotification": {
+      "message": "設定がクリップボードにコピーされました"
+   },
+   "confirmButton": {
+      "message": "確認"
+   },
+   "confirmClearButton": {
+      "message": "クリアを確認"
+   },
+   "confirmClearDataTitle": {
+      "message": "データクリアの確認"
+   },
+   "connectButton": {
+      "message": "接続"
+   },
+   "connectedServiceNotStartedStatus": {
+      "message": "接続済み、サービス未起動"
+   },
+   "connectedStatus": {
+      "message": "接続済み"
+   },
+   "connectingStatus": {
+      "message": "接続中..."
+   },
+   "connectionPortLabel": {
+      "message": "接続ポート"
+   },
+   "connectionStatusLabel": {
+      "message": "接続ステータス"
+   },
+   "copyConfigButton": {
+      "message": "設定をコピー"
+   },
+   "currentPageLabel": {
+      "message": "現在のページ"
+   },
+   "darkTheme": {
+      "message": "ダーク"
+   },
+   "dataClearedNotification": {
+      "message": "データが正常にクリアされました"
+   },
+   "debugModeLabel": {
+      "message": "デバッグモード"
+   },
+   "detectingStatus": {
+      "message": "検出中..."
+   },
+   "disconnectButton": {
+      "message": "切断"
+   },
+   "disconnectedStatus": {
+      "message": "未接続"
+   },
+   "downloadingModelStatus": {
+      "message": "モデルをダウンロード中... $1%",
+      "placeholders": {
+         "progress": {
+            "content": "$1",
+            "example": "50"
+         }
+      }
+   },
+   "downloadingStatus": {
+      "message": "ダウンロード中..."
+   },
+   "embeddingModelLabel": {
+      "message": "埋め込みモデル"
+   },
+   "expiredLabel": {
+      "message": "期限切れ"
+   },
+   "exportDataButton": {
+      "message": "データのエクスポート"
+   },
+   "extensionDescription": {
+      "message": "ChromeをMCPサーバーに変換。Claude/CodexなどのAIアシスタントがブラウザを制御 - ナビゲート、クリック、フォーム入力、スクリーンショット。"
+   },
+   "extensionName": {
+      "message": "MCP Chrome Extension - AI ブラウザ制御"
+   },
+   "fastPerformance": {
+      "message": "高速"
+   },
+   "gigabytesUnit": {
+      "message": "GB"
+   },
+   "helpTitle": {
+      "message": "ヘルプ"
+   },
+   "importDataButton": {
+      "message": "データのインポート"
+   },
+   "indexDataManagementLabel": {
+      "message": "インデックスデータ管理"
+   },
+   "indexSizeLabel": {
+      "message": "インデックスサイズ"
+   },
+   "indexedPagesLabel": {
+      "message": "インデックス化されたページ"
+   },
+   "infoNotification": {
+      "message": "情報"
+   },
+   "initSemanticEngineButton": {
+      "message": "セマンティックエンジンを初期化"
+   },
+   "initializingStatus": {
+      "message": "初期化中..."
+   },
+   "itemsUnit": {
+      "message": "項目"
+   },
+   "kilobytesUnit": {
+      "message": "KB"
+   },
+   "languageSelectorLabel": {
+      "message": "言語"
+   },
+   "lastUpdatedLabel": {
+      "message": "最終更新:"
+   },
+   "lightTheme": {
+      "message": "ライト"
+   },
+   "lightweightModelDescription": {
+      "message": "軽量多言語モデル"
+   },
+   "loadingCacheInfoStatus": {
+      "message": "キャッシュ情報を読み込み中..."
+   },
+   "loadingStatus": {
+      "message": "読み込み中..."
+   },
+   "mainContentLabel": {
+      "message": "メインコンテンツ"
+   },
+   "mcpServerConfigLabel": {
+      "message": "MCPサーバー設定"
+   },
+   "megabytesUnit": {
+      "message": "MB"
+   },
+   "menuLabel": {
+      "message": "メニュー"
+   },
+   "modelCacheManagementLabel": {
+      "message": "モデルキャッシュ管理"
+   },
+   "modelCorruptedErrorMessage": {
+      "message": "モデルファイルが破損しているか不完全です。再ダウンロードしてください"
+   },
+   "modelFailedStatus": {
+      "message": "モデルの読み込みに失敗しました"
+   },
+   "modelLoadedStatus": {
+      "message": "モデル読み込み完了"
+   },
+   "multilingualModelDescription": {
+      "message": "多言語対応セマンティックモデル"
+   },
+   "nativeServerConfigLabel": {
+      "message": "ネイティブサーバー設定"
+   },
+   "navigationLabel": {
+      "message": "ナビゲーション"
+   },
+   "networkErrorMessage": {
+      "message": "ネットワーク接続エラーです。ネットワークを確認して再試行してください"
+   },
+   "newTabLabel": {
+      "message": "新しいタブ"
+   },
+   "noCacheDataMessage": {
+      "message": "キャッシュデータがありません"
+   },
+   "pagesUnit": {
+      "message": "ページ"
+   },
+   "permissionDeniedErrorMessage": {
+      "message": "権限が拒否されました"
+   },
+   "processingCacheStatus": {
+      "message": "キャッシュを処理中..."
+   },
+   "processingStatus": {
+      "message": "処理中..."
+   },
+   "refreshStatusButton": {
+      "message": "ステータス更新"
+   },
+   "reinitializeButton": {
+      "message": "再初期化"
+   },
+   "resetButton": {
+      "message": "リセット"
+   },
+   "retryButton": {
+      "message": "再試行"
+   },
+   "runningStatusLabel": {
+      "message": "実行ステータス"
+   },
+   "saveButton": {
+      "message": "保存"
+   },
+   "semanticEngineInitFailedStatus": {
+      "message": "セマンティックエンジンの初期化に失敗しました"
+   },
+   "semanticEngineInitializingStatus": {
+      "message": "セマンティックエンジン初期化中..."
+   },
+   "semanticEngineLabel": {
+      "message": "セマンティックエンジン"
+   },
+   "semanticEngineNotInitStatus": {
+      "message": "セマンティックエンジン未初期化"
+   },
+   "semanticEngineReadyStatus": {
+      "message": "セマンティックエンジン準備完了"
+   },
+   "serviceNotConnectedStatus": {
+      "message": "サービス未接続"
+   },
+   "serviceRunningStatus": {
+      "message": "サービス実行中 (ポート: $1)",
+      "placeholders": {
+         "port": {
+            "content": "$1",
+            "example": "12306"
+         }
+      }
+   },
+   "settingsTitle": {
+      "message": "設定"
+   },
+   "statusLabel": {
+      "message": "ステータス"
+   },
+   "successNotification": {
+      "message": "操作が正常に完了しました"
+   },
+   "switchingModelStatus": {
+      "message": "モデルを切り替え中..."
+   },
+   "themeLabel": {
+      "message": "テーマ"
+   },
+   "timeoutErrorMessage": {
+      "message": "操作がタイムアウトしました"
+   },
+   "unknownErrorMessage": {
+      "message": "不明なエラーです。ネットワークがHuggingFaceにアクセスできるか確認してください"
+   },
+   "vectorDocumentsLabel": {
+      "message": "ベクトルドキュメント"
+   },
+   "verboseLoggingLabel": {
+      "message": "詳細ロギング"
+   },
+   "warningNotification": {
+      "message": "警告：続行する前に確認してください"
+   }
+}

@@ -1,0 +1,587 @@
+[
+  {
+    "name": "get_windows_and_tabs",
+    "description": "已安装 MCP Chrome Extension 0.0.19 工具；页面操作作用于当前活跃标签。先确认页面来源。",
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "chrome_navigate",
+    "description": "已安装 MCP Chrome Extension 0.0.19 工具；页面操作作用于当前活跃标签。先确认页面来源。",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "description": "URL to navigate to. Special values: \"back\" or \"forward\" to navigate browser history in the target tab."
+        },
+        "newWindow": {
+          "type": "boolean",
+          "description": "Create a new window to navigate to the URL or not. Defaults to false"
+        },
+        "width": {
+          "type": "number",
+          "description": "Window width in pixels (default: 1280). When width or height is provided, a new window will be created."
+        },
+        "height": {
+          "type": "number",
+          "description": "Window height in pixels (default: 720). When width or height is provided, a new window will be created."
+        },
+        "refresh": {
+          "type": "boolean",
+          "description": "Refresh the current active tab instead of navigating to a URL. When true, the url parameter is ignored. Defaults to false"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "chrome_screenshot",
+    "description": "已安装 MCP Chrome Extension 0.0.19 工具；页面操作作用于当前活跃标签。先确认页面来源。",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name for the screenshot, if saving as PNG"
+        },
+        "selector": {
+          "type": "string",
+          "description": "CSS selector for element to screenshot"
+        },
+        "width": {
+          "type": "number",
+          "description": "Width in pixels (default: 800)"
+        },
+        "height": {
+          "type": "number",
+          "description": "Height in pixels (default: 600)"
+        },
+        "storeBase64": {
+          "type": "boolean",
+          "description": "return screenshot in base64 format (default: false) if you want to see the page, recommend set this to be true"
+        },
+        "fullPage": {
+          "type": "boolean",
+          "description": "Store screenshot of the entire page (default: true)"
+        },
+        "savePng": {
+          "type": "boolean",
+          "description": "Save screenshot as PNG file (default: true)，if you want to see the page, recommend set this to be false, and set storeBase64 to be true"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "chrome_close_tabs",
+    "description": "已安装 MCP Chrome Extension 0.0.19 工具；页面操作作用于当前活跃标签。先确认页面来源。",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "tabIds": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Array of tab IDs to close. If not provided, will close the active tab."
+        },
+        "url": {
+          "type": "string",
+          "description": "Close tabs matching this URL. Can be used instead of tabIds."
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "chrome_switch_tab",
+    "description": "已安装 MCP Chrome Extension 0.0.19 工具；页面操作作用于当前活跃标签。先确认页面来源。",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "tabId": {
+          "type": "number",
+          "description": "The ID of the tab to switch to."
+        },
+        "windowId": {
+          "type": "number",
+          "description": "The ID of the window where the tab is located."
+        }
+      },
+      "required": [
+        "tabId"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "chrome_get_web_content",
+    "description": "MCP Chrome Extension 0.0.19（VPS 已修补）：读取指定标签与单个 frame 的文本或 HTML；frameId 省略为顶层 0，不自动读取 iframe。明确 tabId/frameId 时不要同时传 url。",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "description": "URL to fetch content from. If not provided, uses the current active tab"
+        },
+        "htmlContent": {
+          "type": "boolean",
+          "description": "Get the visible HTML content of the page. If true, textContent will be ignored (default: false)"
+        },
+        "textContent": {
+          "type": "boolean",
+          "description": "Get the visible text content of the page with metadata. Ignored if htmlContent is true (default: true)"
+        },
+        "selector": {
+          "type": "string",
+          "description": "CSS selector to get content from a specific element. If provided, only content from this element will be returned"
+        },
+        "tabId": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "来自 get_windows_and_tabs 的真实标签 ID；省略时使用活跃标签。"
+        },
+        "frameId": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "来自快照的真实 frame ID；省略为顶层 0。"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "chrome_network_request",
+    "description": "已安装 MCP Chrome Extension 0.0.19 工具；页面操作作用于当前活跃标签。先确认页面来源。",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "description": "URL to send the request to"
+        },
+        "method": {
+          "type": "string",
+          "description": "HTTP method to use (default: GET)"
+        },
+        "headers": {
+          "type": "object",
+          "description": "Headers to include in the request"
+        },
+        "body": {
+          "type": "string",
+          "description": "Body of the request (for POST, PUT, etc.)"
+        },
+        "timeout": {
+          "type": "number",
+          "description": "Timeout in milliseconds (default: 30000)"
+        },
+        "formData": {
+          "type": "object",
+          "description": "Multipart/form-data descriptor. If provided, overrides body and builds FormData with optional file attachments. Shape: { fields?: Record<string,string|number|boolean>, files?: Array<{ name: string, fileUrl?: string, filePath?: string, base64Data?: string, filename?: string, contentType?: string }> }. Also supports a compact array form: [ [name, fileSpec, filename?], ... ] where fileSpec may be url:, file:, or base64:."
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "chrome_click_element",
+    "description": "MCP Chrome Extension 0.0.19（VPS 已修补）：通过完整 ref、选择器或实测坐标发送原生鼠标点击，支持 iframe 和新标签入口；ref 自动定位 frame，selector 省略 frameId 仅顶层。成功只表示点击已发送，随后读取标签与快照确认生效。",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "selector": {
+          "type": "string",
+          "description": "CSS selector or XPath for the element to click."
+        },
+        "selectorType": {
+          "type": "string",
+          "enum": [
+            "css",
+            "xpath"
+          ],
+          "description": "Type of selector (default: \"css\")."
+        },
+        "ref": {
+          "type": "string",
+          "description": "来自 chrome_page_snapshot 的完整 ref，含标签、frame 和当前文档标识。"
+        },
+        "coordinates": {
+          "type": "object",
+          "description": "Viewport coordinates to click at.",
+          "properties": {
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "x",
+            "y"
+          ]
+        },
+        "waitForNavigation": {
+          "type": "boolean",
+          "description": "Wait for navigation to complete after click (default: false)."
+        },
+        "timeout": {
+          "type": "number",
+          "description": "Timeout in milliseconds for waiting (default: 5000)."
+        },
+        "useCDP": {
+          "type": "boolean",
+          "description": "旧顶层坐标模式；常规 ref/selector 点击已默认原生输入，不需要设置。"
+        },
+        "fromScreenshot": {
+          "type": "boolean"
+        },
+        "tabId": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "来自 get_windows_and_tabs 的真实标签 ID；省略时使用活跃标签。"
+        },
+        "frameId": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "来自快照的真实 frame ID；完整 ref 自动定位；selector/坐标省略时仅顶层 0。"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "chrome_fill_or_select",
+    "description": "MCP Chrome Extension 0.0.19（VPS 已修补）：填写指定标签/frame 的控件；完整 ref 自动定位 frame，selector 省略 frameId 仅顶层。导航后重新读取 ref。",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "selector": {
+          "type": "string",
+          "description": "CSS selector or XPath for the form element."
+        },
+        "selectorType": {
+          "type": "string",
+          "enum": [
+            "css",
+            "xpath"
+          ],
+          "description": "Type of selector (default: \"css\")."
+        },
+        "ref": {
+          "type": "string",
+          "description": "来自 chrome_page_snapshot 的完整 ref，含标签、frame 和当前文档标识。"
+        },
+        "value": {
+          "description": "Value to fill. For text inputs: string. For checkboxes/radios: boolean. For selects: option value or text.",
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "boolean"
+            }
+          ]
+        },
+        "useCDP": {
+          "type": "boolean"
+        },
+        "pierceShadow": {
+          "type": "boolean"
+        },
+        "tabId": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "来自 get_windows_and_tabs 的真实标签 ID；省略时使用活跃标签。"
+        },
+        "frameId": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "来自快照的真实 frame ID；完整 ref 自动定位；selector/坐标省略时仅顶层 0。"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "chrome_keyboard",
+    "description": "已安装 MCP Chrome Extension 0.0.19 工具；页面操作作用于当前活跃标签。先确认页面来源。",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "keys": {
+          "type": "string",
+          "description": "Keys or key combinations to simulate. Examples: \"Enter\", \"Tab\", \"Ctrl+C\", \"Shift+Tab\", \"Hello World\"."
+        },
+        "selector": {
+          "type": "string",
+          "description": "CSS selector or XPath for target element to receive keyboard events."
+        },
+        "selectorType": {
+          "type": "string",
+          "enum": [
+            "css",
+            "xpath"
+          ],
+          "description": "Type of selector (default: \"css\")."
+        },
+        "delay": {
+          "type": "number",
+          "description": "Delay between keystrokes in milliseconds (default: 50)."
+        }
+      },
+      "required": [
+        "keys"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "chrome_console",
+    "description": "已安装 MCP Chrome Extension 0.0.19 工具；页面操作作用于当前活跃标签。先确认页面来源。",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "description": "URL to navigate to and capture console from. If not provided, uses the current active tab"
+        },
+        "includeExceptions": {
+          "type": "boolean",
+          "description": "Include uncaught exceptions in the output (default: true)"
+        },
+        "maxMessages": {
+          "type": "number",
+          "description": "Maximum number of console messages to capture in snapshot mode (default: 100). If limit is provided, it takes precedence."
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "snapshot",
+            "buffer"
+          ],
+          "description": "Console capture mode: snapshot (default; waits ~2s for messages) or buffer (persistent per-tab buffer; reads from memory instantly)."
+        },
+        "buffer": {
+          "type": "boolean",
+          "description": "Alias for mode=\"buffer\" (default: false)."
+        },
+        "clear": {
+          "type": "boolean",
+          "description": "Buffer mode only: clear the buffered logs for this tab before reading (default: false). Use clearAfterRead instead to clear after reading (mcp-tools.js style)."
+        },
+        "clearAfterRead": {
+          "type": "boolean",
+          "description": "Buffer mode only: clear the buffered logs for this tab AFTER reading, to avoid duplicate messages on subsequent calls (default: false). This matches mcp-tools.js behavior."
+        },
+        "pattern": {
+          "type": "string",
+          "description": "Optional regex filter applied to message/exception text. Supports /pattern/flags syntax."
+        },
+        "onlyErrors": {
+          "type": "boolean",
+          "description": "Only return error-level console messages (and exceptions when includeExceptions=true). Default: false."
+        },
+        "limit": {
+          "type": "number",
+          "description": "Limit returned console messages. In snapshot mode this is an alias for maxMessages; in buffer mode it limits returned messages from the buffer."
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "chrome_upload_file",
+    "description": "已安装 MCP Chrome Extension 0.0.19 工具；页面操作作用于当前活跃标签。先确认页面来源。",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "selector": {
+          "type": "string",
+          "description": "CSS selector for the file input element (input[type=\"file\"])"
+        },
+        "filePath": {
+          "type": "string",
+          "description": "Local file path to upload"
+        },
+        "fileUrl": {
+          "type": "string",
+          "description": "URL to download file from before uploading"
+        },
+        "base64Data": {
+          "type": "string",
+          "description": "Base64 encoded file data to upload"
+        },
+        "fileName": {
+          "type": "string",
+          "description": "Optional filename when using base64 or URL (default: \"uploaded-file\")"
+        },
+        "multiple": {
+          "type": "boolean",
+          "description": "Whether the input accepts multiple files (default: false)"
+        }
+      },
+      "required": [
+        "selector"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "chrome_page_snapshot",
+    "description": "MCP Chrome Extension 0.0.19（VPS 已修补）：读取指定标签的页面结构与文档限定 ref；省略 frameId 遍历所有可访问 frame，省略 tabId 使用活跃标签。",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "selector": {
+          "type": "string"
+        },
+        "format": {
+          "type": "string",
+          "enum": [
+            "yaml",
+            "json"
+          ]
+        },
+        "includeRefs": {
+          "type": "boolean"
+        },
+        "tabId": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "来自 get_windows_and_tabs 的真实标签 ID；省略时使用活跃标签。"
+        },
+        "frameId": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "来自快照的真实 frame ID；省略时遍历所有可访问 frame。"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "chrome_get_interactive_elements",
+    "description": "MCP Chrome Extension 0.0.19（VPS 已修补）：在指定标签的可访问 frame 中按文字寻找控件和选择器；坐标是各 frame 的 viewport 坐标，不可直接当顶层坐标。",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "textQuery": {
+          "type": "string"
+        },
+        "selector": {
+          "type": "string"
+        },
+        "includeCoordinates": {
+          "type": "boolean"
+        },
+        "types": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "tabId": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "来自 get_windows_and_tabs 的真实标签 ID；省略时使用活跃标签。"
+        },
+        "frameId": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "来自快照的真实 frame ID；省略时遍历所有可访问 frame。"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "chrome_network_capture_start",
+    "description": "开始当前活跃页网络捕获。debugger 模式可读取可用响应正文；在正常功能动作前开始，避免刷新真实页面补包。",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string"
+        },
+        "maxCaptureTime": {
+          "type": "number"
+        },
+        "inactivityTimeout": {
+          "type": "number"
+        },
+        "includeStatic": {
+          "type": "boolean"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "chrome_network_debugger_start",
+    "description": "开始当前活跃页网络捕获。debugger 模式可读取可用响应正文；在正常功能动作前开始，避免刷新真实页面补包。",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string"
+        },
+        "maxCaptureTime": {
+          "type": "number"
+        },
+        "inactivityTimeout": {
+          "type": "number"
+        },
+        "includeStatic": {
+          "type": "boolean"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "chrome_network_capture_stop",
+    "description": "停止本轮捕获并返回已记录请求；可用字段和截断必须核实，不伪造缺失原包。",
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "chrome_network_debugger_stop",
+    "description": "停止抓包；文本为摘要，structuredContent 返回扩展实际采集的请求/响应字段和正文，共同头单独列出。缺失、截断、pending 必须按实记录；不得声称完整 HAR。只操作当前活跃标签的 capture。",
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  }
+]

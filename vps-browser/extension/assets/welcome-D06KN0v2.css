@@ -1,0 +1,199 @@
+
+:root {
+  --bg: #faf9f5;
+  --card: #ffffff;
+  --border: #e6e3da;
+  --soft: #f0efea;
+  --text: #1f1e1b;
+  --muted: #6b6a65;
+  --accent: #d97757;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --serif: Georgia, 'Times New Roman', serif;
+}
+@media (prefers-color-scheme: dark) {
+:root {
+    --bg: #1f1e1b;
+    --card: #2a2925;
+    --border: #3a3934;
+    --soft: #33322d;
+    --text: #f0efea;
+    --muted: #a8a69e;
+}
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  line-height: 1.5;
+}
+
+.page[data-v-162148b2] {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 16px 48px;
+}
+.header[data-v-162148b2] {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 28px 0;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.brand[data-v-162148b2] {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.logo[data-v-162148b2] {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--accent);
+  display: grid;
+  place-items: center;
+}
+h1[data-v-162148b2],
+h2[data-v-162148b2],
+h3[data-v-162148b2] {
+  font-family: var(--serif);
+  font-weight: 500;
+  margin: 0;
+}
+h1[data-v-162148b2] {
+  font-size: 22px;
+}
+h2[data-v-162148b2] {
+  font-size: 26px;
+  margin-bottom: 6px;
+}
+h3[data-v-162148b2] {
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+.muted[data-v-162148b2] {
+  color: var(--muted);
+  margin: 0;
+}
+.docs-btn[data-v-162148b2] {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--text);
+  text-decoration: none;
+  border: 1px solid var(--border);
+  background: var(--card);
+  padding: 10px 16px;
+  border-radius: 8px;
+}
+.docs-btn[data-v-162148b2]:hover {
+  border-color: var(--accent);
+}
+.main[data-v-162148b2] {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-top: 32px;
+}
+.card[data-v-162148b2] {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px 32px;
+}
+.title-code[data-v-162148b2] {
+  font-family: var(--mono);
+  font-size: 0.9em;
+}
+.cmd[data-v-162148b2] {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-top: 16px;
+  min-width: 0;
+}
+.cmd code[data-v-162148b2] {
+  font-family: var(--mono);
+  font-size: 15px;
+  word-break: break-all;
+}
+.cmd.alt[data-v-162148b2] {
+  background: var(--soft);
+  margin-top: 0;
+}
+.cmd.compact[data-v-162148b2] {
+  margin-top: 0;
+  padding: 10px 16px;
+}
+.cmd-grid[data-v-162148b2] {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+.cmd-tag[data-v-162148b2] {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+.cmd button[data-v-162148b2] {
+  flex-shrink: 0;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+.cmd button[data-v-162148b2]:hover {
+  color: var(--accent);
+}
+.step[data-v-162148b2] {
+  margin-top: 20px;
+}
+.note[data-v-162148b2] {
+  margin-top: 12px;
+  background: var(--soft);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 20px;
+  color: var(--muted);
+  font-size: 14px;
+}
+.inline[data-v-162148b2] {
+  font-family: var(--mono);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1px 6px;
+  color: var(--text);
+}
+hr[data-v-162148b2] {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 28px 0;
+}
+.tip[data-v-162148b2] {
+  color: var(--muted);
+  font-size: 13px;
+  margin: 12px 0 0;
+}
+.trouble[data-v-162148b2] {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}

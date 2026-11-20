@@ -1,0 +1,175 @@
+# src-wiki 中间件漏洞 POC 索引
+
+> 共 171 篇 | 来自 src-wiki.com 全库抓取
+
+- [`4725`](4725.md) Apache Tomcat - EncryptInterceptor RCE - CVE-2026-34486
+- [`593`](593.md) ACME Mini_httpd 任意文件读取漏洞 CVE-2018-18778
+- [`594`](594.md) Adobe ColdFusion XML 反序列化命令执行漏洞 CVE-2023-29300
+- [`595`](595.md) Adobe ColdFusion 反序列化漏洞 CVE-2017-3066
+- [`596`](596.md) Adobe ColdFusion 文件读取漏洞 CVE-2010-2861
+- [`597`](597.md) Adobe ColdFusion 本地文件包含漏洞 CVE-2023-26360
+- [`598`](598.md) Apache ActiveMQ Console 控制台默认弱口令
+- [`599`](599.md) Apache ActiveMQ Jolokia API 未授权访问漏洞 CVE-2024-32114
+- [`600`](600.md) Apache ActiveMQ Jolokia 后台远程代码执行漏洞 CVE-2022-41678
+- [`601`](601.md) Apache ActiveMQ Jolokia 远程代码执行漏洞 CVE-2026-34197
+- [`602`](602.md) Apache ActiveMQ OpenWire 协议反序列化命令执行漏洞 CVE-2023-46604
+- [`603`](603.md) Apache ActiveMQ 任意文件写入漏洞 CVE-2016-3088
+- [`604`](604.md) Apache ActiveMQ 信息泄漏漏洞 CVE-2017-15709
+- [`605`](605.md) Apache ActiveMQ 反序列化漏洞 CVE-2015-5254
+- [`606`](606.md) Apache ActiveMQ 远程代码执行漏洞 CVE-2023-46604
+- [`607`](607.md) Apache Axis 远程代码执行漏洞 CVE-2019-0227
+- [`608`](608.md) Apache Cocoon XML注入 CVE-2020-11991
+- [`609`](609.md) Apache HTTP Server 2.4.48 mod_proxy SSRF漏洞 CVE-2021-40438
+- [`610`](610.md) Apache HTTP Server 2.4.49 路径穿越漏洞 CVE-2021-41773
+- [`611`](611.md) Apache HTTP Server 2.4.50 路径穿越漏洞 CVE-2021-42013
+- [`612`](612.md) Apache HTTPd 多后缀解析漏洞
+- [`613`](613.md) Apache HTTPd 换行解析漏洞 CVE-2017-15715
+- [`614`](614.md) Apache HTTPd 路径穿越漏洞 CVE-2021-41773
+- [`615`](615.md) Apache HTTPd 路径穿越漏洞 CVE-2021-42013
+- [`616`](616.md) Apache Kafka Clients LDAP注入漏洞 CVE-2023-25194
+- [`617`](617.md) Apache Kafka Clients 任意文件读取与SSRF 漏洞 CVE-2025-27817
+- [`618`](618.md) Apache Kylin CubeService.java 命令注入漏洞 CVE-2020-1956
+- [`619`](619.md) Apache Kylin DiagnosisController.java 命令注入漏洞 CVE-2020-13925
+- [`620`](620.md) Apache Kylin config 未授权配置泄露 CVE-2020-13937
+- [`621`](621.md) Apache Linkis MySQL JDBC 数据源反序列化远程代码执行漏洞 CVE-2022-44645
+- [`622`](622.md) Apache Log4j Server 反序列化命令执行漏洞 CVE-2017-5645
+- [`623`](623.md) Apache Log4j2 lookup JNDI 注入漏洞 CVE-2021-44228
+- [`624`](624.md) Apache Mod_jk 访问控制权限绕过 CVE-2018-11759
+- [`625`](625.md) Apache NiFi Api 远程代码执行 RCE
+- [`626`](626.md) Apache RocketMQ Broker 远程命令执行漏洞 CVE-2023-33246
+- [`627`](627.md) Apache RocketMQ NameServer 任意文件写入漏洞 CVE-2023-37582
+- [`628`](628.md) Apache SSI 远程命令执行漏洞
+- [`629`](629.md) Apache ShenYu dashboardUser 账号密码泄漏漏洞 CVE-2021-37580
+- [`630`](630.md) Apache Shiro 1.2.4 反序列化漏洞 CVE-2016-4437
+- [`631`](631.md) Apache Shiro 1.6.0 身份认证绕过漏洞 CVE-2020-13933
+- [`632`](632.md) Apache Shiro 认证绕过漏洞 CVE-2010-3863
+- [`633`](633.md) Apache Shiro 认证绕过漏洞 CVE-2020-1957
+- [`634`](634.md) Apache SkyWalking 7.0.0 graphql SQL注入漏洞 CVE-2020-9483
+- [`635`](635.md) Apache Skywalking 8.3.0 graphql SQL注入漏洞
+- [`636`](636.md) Apache Solr JMX服务 RCE CVE-2019-12409
+- [`637`](637.md) Apache Solr Log4j 组件 远程命令执行漏洞
+- [`638`](638.md) Apache Solr RCE 未授权上传漏洞 CVE-2020-13957
+- [`639`](639.md) Apache Solr RCE 远程命令执行漏洞 CVE-2017-12629
+- [`640`](640.md) Apache Solr RemoteStreaming 文件读取与SSRF漏洞
+- [`641`](641.md) Apache Solr Replication handler SSRF CVE-2021-27905
+- [`642`](642.md) Apache Solr Velocity 注入远程命令执行漏洞 CVE-2019-17558
+- [`643`](643.md) Apache Solr XML 实体注入漏洞 CVE-2017-12629
+- [`644`](644.md) Apache Solr stream.url 任意文件读取漏洞
+- [`645`](645.md) Apache Solr 代码执行漏洞 CNVD-2023-27598
+- [`646`](646.md) Apache Solr 认证绕过漏洞 CVE-2024-45216
+- [`647`](647.md) Apache Solr 远程命令执行漏洞 CVE-2017-12629
+- [`648`](648.md) Apache Solr 远程命令执行漏洞 CVE-2019-0193
+- [`649`](649.md) Apache Struts S2-066 远程代码执行漏洞 CVE-2023-50164
+- [`650`](650.md) Apache Struts S2-067 远程代码执行漏洞 CVE-2024-53677
+- [`651`](651.md) Apache Struts S2-069 XML 外部实体注入漏洞 CVE-2025-68493
+- [`652`](652.md) Apache Struts2 S2-001 远程代码执行漏洞
+- [`653`](653.md) Apache Struts2 S2-005 远程代码执行漏洞
+- [`654`](654.md) Apache Struts2 S2-007 远程代码执行漏洞
+- [`655`](655.md) Apache Struts2 S2-008 远程代码执行漏洞
+- [`656`](656.md) Apache Struts2 S2-009 远程代码执行漏洞
+- [`657`](657.md) Apache Struts2 S2-012 远程代码执行漏洞
+- [`658`](658.md) Apache Struts2 S2-013 远程代码执行漏洞
+- [`659`](659.md) Apache Struts2 S2-015 远程代码执行漏洞
+- [`660`](660.md) Apache Struts2 S2-016 远程代码执行漏洞 CVE-2013-2251
+- [`661`](661.md) Apache Struts2 S2-032 远程代码执行漏洞 CVE-2016-3081
+- [`662`](662.md) Apache Struts2 S2-045 远程代码执行漏洞 CVE-2017-5638
+- [`663`](663.md) Apache Struts2 S2-046 远程代码执行漏洞 CVE-2017-5638
+- [`664`](664.md) Apache Struts2 S2-048 远程代码执行漏洞
+- [`665`](665.md) Apache Struts2 S2-052 远程代码执行漏洞 CVE-2017-9805
+- [`666`](666.md) Apache Struts2 S2-053 远程代码执行漏洞
+- [`667`](667.md) Apache Struts2 S2-057 远程代码执行漏洞 CVE-2018-11776
+- [`668`](668.md) Apache Struts2 S2-059 远程代码执行漏洞 CVE-2019-0230
+- [`669`](669.md) Apache Struts2 S2-061 远程代码执行漏洞 CVE-2020-17530
+- [`670`](670.md) Apache Struts2 S2-062 远程代码执行漏洞 CVE-2021-31805
+- [`671`](671.md) Apache Tomcat AJP 文件包含漏洞 CVE-2020-1938
+- [`672`](672.md) Apache Tomcat PUT 方法任意写文件漏洞 CVE-2017-12615
+- [`673`](673.md) Apache Tomcat RCE via JSP Upload Bypass CVE-2017-12617
+- [`674`](674.md) Apache Tomcat Tribes EncryptInterceptor 绕过远程代码执行漏洞 CVE-2026-34486
+- [`675`](675.md) Apache Tomcat WebSocket 拒绝服务漏洞 CVE-2020-13935
+- [`676`](676.md) Apache Tomcat 信息泄露漏洞 CVE-2021-24122
+- [`677`](677.md) Apache Tomcat 远程代码执行漏洞 CVE-2025-24813
+- [`678`](678.md) Apache Tomcat8 弱口令 + 后台 getshell 漏洞
+- [`679`](679.md) Apache Velocity 远程代码执行 CVE-2020-13936
+- [`680`](680.md) Apache ZooKeeper 未授权访问漏洞 CVE-2014-085
+- [`681`](681.md) Apereo CAS 4.1 反序列化命令执行漏洞
+- [`682`](682.md) AppWeb认证绕过漏洞 CVE-2018-8715
+- [`683`](683.md) Consul Docker images 空密码登录漏洞 CVE-2020-29564
+- [`684`](684.md) Consul Service API远程命令执行漏洞
+- [`685`](685.md) GeoServer JAI-EXT 导致远程代码注入漏洞 CVE-2022-24816 CVE-2023-35042
+- [`686`](686.md) GeoServer OGC Filter SQL注入漏洞 CVE-2023-25157
+- [`687`](687.md) GeoServer TestWfsPost 接口未授权 SSRF 漏洞 CVE-2021-40822
+- [`688`](688.md) GeoServer 属性名表达式前台代码执行漏洞 CVE-2024-36401
+- [`689`](689.md) GoAhead Server 环境变量注入 CVE-2021-42342
+- [`690`](690.md) GoAhead Server 远程命令执行漏洞 CVE-2017-17562
+- [`691`](691.md) GoCD plugin 任意文件读取漏洞 CVE-2021-43287
+- [`692`](692.md) JBoss 4.x JBossMQ JMS 反序列化漏洞 CVE-2017-7504
+- [`693`](693.md) JBoss 5.x 6.x 反序列化漏洞 CVE-2017-12149
+- [`694`](694.md) JBoss JMXInvokerServlet 反序列化漏洞 CVE-2015-7501
+- [`695`](695.md) Jenkins CLI 接口任意文件读取漏洞 CVE-2024-23897
+- [`696`](696.md) Jenkins XStream 反序列化漏洞 CVE-2016-0792
+- [`697`](697.md) Jenkins checkScript 远程命令执行漏洞 CVE-2018-1000861
+- [`698`](698.md) Jenkins script 未授权远程命令执行漏洞
+- [`699`](699.md) Jenkins 远程代码执行漏洞 CVE-2015-8103
+- [`700`](700.md) Jenkins 远程代码执行漏洞 CVE-2019-1003000
+- [`701`](701.md) Jenkins 远程命令执行漏洞 CVE-2018-1000861
+- [`702`](702.md) Jenkins-CI 远程代码执行漏洞 CVE-2017-1000353
+- [`703`](703.md) Jetty WEB-INF 敏感信息泄露漏洞 CVE-2021-28164
+- [`704`](704.md) Jetty WEB-INF 敏感信息泄露漏洞 CVE-2021-34429
+- [`705`](705.md) Jetty 通用 Servlets 组件 ConcatServlet 信息泄露漏洞 CVE-2021-28169
+- [`706`](706.md) Jmeter RMI 反序列化命令执行漏洞 CVE-2018-1297
+- [`707`](707.md) Next.js 中间件鉴权绕过漏洞 CVE-2025-29927
+- [`708`](708.md) Nginx 文件名逻辑漏洞 CVE-2013-4547
+- [`709`](709.md) Nginx 解析漏洞
+- [`710`](710.md) Nginx 配置错误漏洞
+- [`711`](711.md) Nginx越界读取缓存漏洞 CVE-2017-7529
+- [`712`](712.md) Node.js 目录穿越漏洞 CVE-2017-14849
+- [`713`](713.md) OpenSMTPD 远程命令执行漏洞 CVE-2020-7247
+- [`714`](714.md) OpenSSH 命令注入漏洞 CVE-2020-15778
+- [`715`](715.md) OpenSSH 用户名枚举漏洞 CVE-2018-15473
+- [`716`](716.md) OpenSSL 心脏出血漏洞 CVE-2014-0160
+- [`717`](717.md) OpenSSL 心脏滴血漏洞 CVE-2014-0160
+- [`718`](718.md) Openfire管理后台认证绕过漏洞 CVE-2023-32315
+- [`719`](719.md) PayaraMicro microprofile-config.properties 信息泄漏漏洞 CVE-2021-41381
+- [`720`](720.md) QEMU 虚拟机逃逸漏洞 CVE-2020-14364
+- [`721`](721.md) React Server Components Flight 协议反序列化代码执行 CVE-2025-55182
+- [`722`](722.md) Rsync 未授权访问漏洞
+- [`723`](723.md) Ruby NetFTP 模块命令注入漏洞 CVE-2017-17405
+- [`724`](724.md) Ruby On Rails 路径穿越与任意文件读取漏洞 CVE-2019-5418
+- [`725`](725.md) Ruby On Rails 路径穿越漏洞 CVE-2018-3760
+- [`726`](726.md) SRS api-server 服务器命令执行漏洞 CVE-2023-34105
+- [`727`](727.md) SaltStack Minion 命令注入漏洞 CVE-2021-31607
+- [`728`](728.md) SaltStack 任意文件读写漏洞 CVE-2020-11652
+- [`729`](729.md) SaltStack 命令注入漏洞 CVE-2020-16846
+- [`730`](730.md) SaltStack 未授权访问命令执行漏洞 CVE-2020-16846 25592
+- [`731`](731.md) SaltStack 水平权限绕过漏洞 CVE-2020-11651
+- [`732`](732.md) Saltstack 未授权RCE漏洞 CVE-2021-25281~25283
+- [`733`](733.md) Saltstack 远程命令执行漏洞 CVE-2020-11651 11652
+- [`734`](734.md) Supervisord 远程命令执行漏洞 CVE-2017-11610
+- [`735`](735.md) V2board 1.6.1 提权漏洞
+- [`736`](736.md) VMware Spring Security 身份认证绕过漏洞 CVE-2022-22978
+- [`737`](737.md) VMware View Planner 未授权RCE CVE-2021-21978
+- [`738`](738.md) VMware Workspace ONE Access SSTI漏洞 CVE-2022-22954
+- [`739`](739.md) VMware vRealize Operations Manager SSRF漏洞 CVE-2021-21975
+- [`740`](740.md) VoIPmonitor 远程命令执行漏洞 CVE-2021-30461
+- [`741`](741.md) Wazuh Manager 代码执行漏洞 CVE-2021-26814
+- [`742`](742.md) WebLogic Local File Inclusion 本地文件包含漏洞 CVE-2022-21371
+- [`743`](743.md) WebLogic T3 反序列化漏洞 CVE-2016-3510
+- [`744`](744.md) Weblogic  10.3.6 wls-wsat XMLDecoder 反序列化漏洞 CVE-2017-10271
+- [`745`](745.md) Weblogic LDAP 远程代码执行漏洞 CVE-2021-2109
+- [`746`](746.md) Weblogic Server远程代码执行漏洞 CVE-2020-14756
+- [`747`](747.md) Weblogic WLS Core Components 反序列化命令执行漏洞 CVE-2018-2628
+- [`748`](748.md) Weblogic XMLDecoder 反序列化远程代码执行漏洞 CVE-2019-2725
+- [`749`](749.md) Weblogic XMLDecoder 远程代码执行漏洞 CVE-2017-10271
+- [`750`](750.md) Weblogic uddiexplorer SSRF漏洞 CVE-2014-4210
+- [`751`](751.md) Weblogic 二次反序列化漏洞 CVE-2021-2394
+- [`752`](752.md) Weblogic 任意文件上传漏洞 CVE-2018-2894
+- [`753`](753.md) Weblogic 弱口令+前台任意文件读取
+- [`754`](754.md) Weblogic 未授权远程代码执行漏洞 CVE-2023-21839
+- [`755`](755.md) Weblogic 管理控制台未授权远程命令执行漏洞 CVE-2020-14882+CVE-2020-14883
+- [`756`](756.md) Zabbix SAML身份绕过漏洞 CVE-2022-23131
+- [`757`](757.md) Zabbix Server trapper命令注入漏洞 CVE-2017-2824
+- [`758`](758.md) Zabbix Server trapper命令注入漏洞 CVE-2020-11800
+- [`759`](759.md) Zabbix latest.php SQL注入漏洞 CVE-2016-10134
+- [`760`](760.md) muhttpd 任意文件读取漏洞 CVE-2022-31793
+- [`761`](761.md) uWSGI PHP目录穿越漏洞 CVE-2018-7490
+- [`762`](762.md) uWSGI 未授权访问漏洞

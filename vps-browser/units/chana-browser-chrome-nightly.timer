@@ -1,0 +1,7 @@
+[Unit]
+Description=每日 04:37 计划重启可视化 Chrome
+[Timer]
+OnCalendar=*-*-* 04:37:00
+Persistent=true
+[Install]
+WantedBy=timers.target

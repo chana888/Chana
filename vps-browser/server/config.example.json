@@ -1,0 +1,6 @@
+{
+  "_comment": "复制为 .runtime/config.json 并填好后再启动服务（install.sh 会自动生成）",
+  "token": "<openssl rand -hex 32 生成的随机值，MCP 与网关共用的访问令牌>",
+  "public_origin": "https://<你的VPS域名或IP>",
+  "platform_port": 8082
+}

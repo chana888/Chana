@@ -1,0 +1,22 @@
+[Unit]
+Description=MCP Chrome Extension Agent Gateway
+After=network.target 
+
+[Service]
+Type=simple
+User=chana-browser
+Group=chana-browser
+WorkingDirectory=/opt/chana-vps-browser
+Environment=HOME=/var/lib/chana-browser
+Environment=DISPLAY=:97
+Environment=XAUTHORITY=/var/lib/chana-browser/.Xauthority
+ExecStart=/usr/local/bin/node /opt/chana-vps-browser/chrome-bridge.cjs
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=8
+MemoryMax=350M
+TasksMax=256
+UMask=0077
+NoNewPrivileges=true
+[Install]
+WantedBy=multi-user.target

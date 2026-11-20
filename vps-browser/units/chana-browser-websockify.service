@@ -1,0 +1,22 @@
+[Unit]
+Description=远程桌面 WebSocket
+After=network.target chana-browser-vnc.service
+Requires=chana-browser-vnc.service
+[Service]
+Type=simple
+User=chana-browser
+Group=chana-browser
+WorkingDirectory=/opt/chana-vps-browser
+Environment=HOME=/var/lib/chana-browser
+Environment=DISPLAY=:97
+Environment=XAUTHORITY=/var/lib/chana-browser/.Xauthority
+ExecStart=/usr/bin/websockify 127.0.0.1:18864 127.0.0.1:5971
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=8
+MemoryMax=120M
+TasksMax=256
+UMask=0077
+NoNewPrivileges=true
+[Install]
+WantedBy=multi-user.target

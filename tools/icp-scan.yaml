@@ -1,0 +1,30 @@
+name: "icp-scan"
+command: 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe'
+args: ["-ExecutionPolicy", "Bypass", "-File", 'D:\app\chana\chana\recon\domain-icp-scan.ps1']
+enabled: true
+short_description: "域名ICP备案批量扫描（beian.miit.gov.cn 反查备案号/主办单位）"
+description: |
+  域名 ICP 备案批量扫描工具。对每个域名查询工信部备案信息（备案号、主办单位、公安备案），
+  并探测 HTTP 状态与 Title。用于被动信息收集（Mode2 扩攻击面 / Mode12 下级单位）：
+  备案反查可发现同一主体的其他域名，从而扩展目标资产面。
+
+  **用法示例：**
+  - `icp-scan domains="www.example.com,mail.example.com"` → 逗号分隔域名
+  - `icp-scan domain_file="D:\list.txt"` → 文件每行一个域名
+
+  **输出：** 每域名一行：域名 | 备案号 | 主办单位 | 公安备案 | HTTP状态 | Title | 备注
+  **注意：** 无参调用使用内置默认域名列表，通常应显式传 domains 或 domain_file。
+  **后续动作：** 备案结果中的"主办单位"可反查更多域名；新发现资产记录到资产库（source=icp）。
+parameters:
+  - name: "domains"
+    type: "string"
+    description: "逗号分隔的域名列表，如 www.example.com,mail.example.com"
+    required: false
+    flag: "-Domains"
+    format: "flag"
+  - name: "domain_file"
+    type: "string"
+    description: "域名列表文件路径（每行一个域名），与 domains 二选一"
+    required: false
+    flag: "-DomainFile"
+    format: "flag"

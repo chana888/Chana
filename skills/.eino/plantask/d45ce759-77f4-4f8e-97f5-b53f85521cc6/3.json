@@ -1,0 +1,1 @@
+{"id":"3","subject":"漏洞验证与利用","description":"对发现的攻击面做漏洞验证（未授权访问、注入、敏感信息泄露等），达到可复现标准后 record_vulnerability。","status":"pending","blocks":[],"blockedBy":[],"activeForm":"正在验证与利用漏洞"}

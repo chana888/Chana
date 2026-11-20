@@ -1,0 +1,39 @@
+name: "supply-chain-collect"
+command: 'D:\app\chana\chana\venv\Scripts\python.exe'
+args: ['D:\app\chana\chana\recon\supply_chain_collect.py']
+enabled: true
+short_description: "供应链信息收集（FOFA 证书/域名反查 → 供应链域名/IP → xlsx 报告）"
+description: |
+  供应链信息收集工具。基于 FOFA 官方 API 的证书/域名反查：
+  Step1: cert="<target>" 证书反查 → 发现供应链域名/IP（目标自己签发的证书）
+  Step2: domain="<主域名>" 对发现的每个主域名查子域名资产
+  Step3: ip="<关键IP>" 对高价值 IP 查全端口
+  Step4: 导出 xlsx + 去重汇总
+
+  用于被动信息收集 Mode10（供应链/供应商发散搜索）：从目标公司出发找到其
+  供应商/子公司/关联方的资产。**需要 FOFA API key**（--key 或环境变量 FOFA_API_KEY）。
+
+  **用法示例：**
+  - `supply-chain-collect target="parkson"`（key 走环境变量）
+  - `supply-chain-collect target="百盛" key="<FOFA_KEY>"`
+
+  **注意：** FOFA 证书反查只能看到"目标自己签发的证书"；供应链关系常需配合
+  WebSearch 搜索 "<公司名> 供应商/服务商" 补 B 路。产出 xlsx 报告路径在输出中。
+parameters:
+  - name: "target"
+    type: "string"
+    description: "目标关键字，如 parkson / 百盛（证书反查主体）"
+    required: true
+    flag: "--target"
+    format: "flag"
+  - name: "key"
+    type: "string"
+    description: "FOFA API Key（默认读环境变量 FOFA_API_KEY）"
+    required: false
+    flag: "--key"
+    format: "flag"
+  - name: "additional_args"
+    type: "string"
+    description: "额外参数，如 --cert-exact（证书精确匹配 subject_cn）"
+    required: false
+    format: "positional"

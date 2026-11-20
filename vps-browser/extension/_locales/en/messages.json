@@ -1,0 +1,446 @@
+{
+   "aboutTitle": {
+      "description": "About dialog title",
+      "message": "About"
+   },
+   "accuratePerformance": {
+      "description": "Accurate performance indicator",
+      "message": "Accurate"
+   },
+   "activeTabsLabel": {
+      "description": "Number of active tabs label",
+      "message": "Active Tabs"
+   },
+   "advancedSettingsLabel": {
+      "description": "Advanced settings section label",
+      "message": "Advanced Settings"
+   },
+   "autoTheme": {
+      "description": "Auto theme option",
+      "message": "Auto"
+   },
+   "balancedPerformance": {
+      "description": "Balanced performance indicator",
+      "message": "Balanced"
+   },
+   "betterThanSmallDescription": {
+      "description": "Description for medium model option",
+      "message": "Slightly larger than e5-small, but better performance"
+   },
+   "bookmarksBarLabel": {
+      "description": "Bookmarks bar folder name",
+      "message": "Bookmarks Bar"
+   },
+   "bytesUnit": {
+      "description": "Bytes unit",
+      "message": "bytes"
+   },
+   "cacheDetailsLabel": {
+      "description": "Cache details section label",
+      "message": "Cache Details"
+   },
+   "cacheEntriesLabel": {
+      "description": "Number of cache entries label",
+      "message": "Cache Entries"
+   },
+   "cacheSizeLabel": {
+      "description": "Cache size label",
+      "message": "Cache Size"
+   },
+   "cancelButton": {
+      "description": "Cancel button text",
+      "message": "Cancel"
+   },
+   "cleanExpiredCacheButton": {
+      "description": "Clean expired cache button text",
+      "message": "Clean Expired Cache"
+   },
+   "cleaningStatus": {
+      "description": "Cleaning progress message",
+      "message": "Cleaning..."
+   },
+   "clearAllCacheButton": {
+      "description": "Clear all cache button text",
+      "message": "Clear All Cache"
+   },
+   "clearAllDataButton": {
+      "description": "Clear all data button text",
+      "message": "Clear All Data"
+   },
+   "clearDataIrreversibleWarning": {
+      "description": "Irreversible operation warning",
+      "message": "This operation is irreversible! After clearing, you need to browse webpages again to rebuild the index."
+   },
+   "clearDataList1": {
+      "description": "First item in clear data list",
+      "message": "All webpage text content index"
+   },
+   "clearDataList2": {
+      "description": "Second item in clear data list",
+      "message": "Vector embedding data"
+   },
+   "clearDataList3": {
+      "description": "Third item in clear data list",
+      "message": "Search history and cache"
+   },
+   "clearDataWarningMessage": {
+      "description": "Clear data warning message",
+      "message": "This operation will clear all indexed webpage content and vector data, including:"
+   },
+   "clearingStatus": {
+      "description": "Clearing progress message",
+      "message": "Clearing..."
+   },
+   "closeButton": {
+      "description": "Close button text",
+      "message": "Close"
+   },
+   "configCopiedNotification": {
+      "description": "Configuration copied success message",
+      "message": "Configuration copied to clipboard"
+   },
+   "confirmButton": {
+      "description": "Confirm button text",
+      "message": "Confirm"
+   },
+   "confirmClearButton": {
+      "description": "Confirm clear action button",
+      "message": "Confirm Clear"
+   },
+   "confirmClearDataTitle": {
+      "description": "Clear data confirmation dialog title",
+      "message": "Confirm Clear Data"
+   },
+   "connectButton": {
+      "description": "Connect button text",
+      "message": "Connect"
+   },
+   "connectedServiceNotStartedStatus": {
+      "description": "Connected but service not started status",
+      "message": "Connected, Service Not Started"
+   },
+   "connectedStatus": {
+      "description": "Connected status message",
+      "message": "Connected"
+   },
+   "connectingStatus": {
+      "description": "Connecting status message",
+      "message": "Connecting..."
+   },
+   "connectionPortLabel": {
+      "description": "Connection port input label",
+      "message": "Connection Port"
+   },
+   "connectionStatusLabel": {
+      "description": "Connection status label",
+      "message": "Connection Status"
+   },
+   "copyConfigButton": {
+      "description": "Copy configuration button text",
+      "message": "Copy Configuration"
+   },
+   "currentPageLabel": {
+      "description": "Current page label",
+      "message": "Current Page"
+   },
+   "darkTheme": {
+      "description": "Dark theme option",
+      "message": "Dark"
+   },
+   "dataClearedNotification": {
+      "description": "Data cleared success message",
+      "message": "Data cleared successfully"
+   },
+   "debugModeLabel": {
+      "description": "Debug mode toggle label",
+      "message": "Debug Mode"
+   },
+   "detectingStatus": {
+      "description": "Detecting status message",
+      "message": "Detecting..."
+   },
+   "disconnectButton": {
+      "description": "Disconnect button text",
+      "message": "Disconnect"
+   },
+   "disconnectedStatus": {
+      "description": "Disconnected status message",
+      "message": "Disconnected"
+   },
+   "downloadingModelStatus": {
+      "description": "Model download progress with percentage",
+      "message": "Downloading Model... $PROGRESS$%",
+      "placeholders": {
+         "progress": {
+            "content": "$1",
+            "example": "50"
+         }
+      }
+   },
+   "downloadingStatus": {
+      "description": "Downloading progress message",
+      "message": "Downloading..."
+   },
+   "embeddingModelLabel": {
+      "description": "Main section header for model selection",
+      "message": "Embedding Model"
+   },
+   "expiredLabel": {
+      "description": "Expired item label",
+      "message": "Expired"
+   },
+   "exportDataButton": {
+      "description": "Export data button text",
+      "message": "Export Data"
+   },
+   "extensionDescription": {
+      "description": "Extension description",
+      "message": "Turn Chrome into an MCP server. Let AI control your browser: navigate, click, fill forms, and take screenshots."
+   },
+   "extensionName": {
+      "description": "Extension name",
+      "message": "MCP Chrome Extension - AI Browser Control"
+   },
+   "fastPerformance": {
+      "description": "Fast performance indicator",
+      "message": "Fast"
+   },
+   "gigabytesUnit": {
+      "description": "Gigabytes unit",
+      "message": "GB"
+   },
+   "helpTitle": {
+      "description": "Help dialog title",
+      "message": "Help"
+   },
+   "importDataButton": {
+      "description": "Import data button text",
+      "message": "Import Data"
+   },
+   "indexDataManagementLabel": {
+      "description": "Main section header for data management",
+      "message": "Index Data Management"
+   },
+   "indexSizeLabel": {
+      "description": "Index size label",
+      "message": "Index Size"
+   },
+   "indexedPagesLabel": {
+      "description": "Number of indexed pages label",
+      "message": "Indexed Pages"
+   },
+   "infoNotification": {
+      "description": "Generic info notification",
+      "message": "Information"
+   },
+   "initSemanticEngineButton": {
+      "description": "Initialize semantic engine button text",
+      "message": "Initialize Semantic Engine"
+   },
+   "initializingStatus": {
+      "description": "Initializing progress message",
+      "message": "Initializing..."
+   },
+   "itemsUnit": {
+      "description": "Items count unit",
+      "message": "items"
+   },
+   "kilobytesUnit": {
+      "description": "Kilobytes unit",
+      "message": "KB"
+   },
+   "languageSelectorLabel": {
+      "description": "Language selector label",
+      "message": "Language"
+   },
+   "lastUpdatedLabel": {
+      "description": "Last updated timestamp label",
+      "message": "Last Updated:"
+   },
+   "lightTheme": {
+      "description": "Light theme option",
+      "message": "Light"
+   },
+   "lightweightModelDescription": {
+      "description": "Description for lightweight model option",
+      "message": "Lightweight Multilingual Model"
+   },
+   "loadingCacheInfoStatus": {
+      "description": "Loading cache information status",
+      "message": "Loading cache information..."
+   },
+   "loadingStatus": {
+      "description": "Loading progress message",
+      "message": "Loading..."
+   },
+   "mainContentLabel": {
+      "description": "Main content accessibility label",
+      "message": "Main Content"
+   },
+   "mcpServerConfigLabel": {
+      "description": "MCP server configuration section label",
+      "message": "MCP Server Configuration"
+   },
+   "megabytesUnit": {
+      "description": "Megabytes unit",
+      "message": "MB"
+   },
+   "menuLabel": {
+      "description": "Menu accessibility label",
+      "message": "Menu"
+   },
+   "modelCacheManagementLabel": {
+      "description": "Main section header for cache management",
+      "message": "Model Cache Management"
+   },
+   "modelCorruptedErrorMessage": {
+      "description": "Model corruption error message",
+      "message": "Model file corrupted or incomplete, please retry download"
+   },
+   "modelFailedStatus": {
+      "description": "Model failed to load status",
+      "message": "Model Failed to Load"
+   },
+   "modelLoadedStatus": {
+      "description": "Model successfully loaded status",
+      "message": "Model Loaded"
+   },
+   "multilingualModelDescription": {
+      "description": "Description for multilingual model option",
+      "message": "Multilingual Semantic Model"
+   },
+   "nativeServerConfigLabel": {
+      "description": "Main section header for native server settings",
+      "message": "Native Server Configuration"
+   },
+   "navigationLabel": {
+      "description": "Navigation accessibility label",
+      "message": "Navigation"
+   },
+   "networkErrorMessage": {
+      "description": "Network connection error message",
+      "message": "Network connection error, please check network and retry"
+   },
+   "newTabLabel": {
+      "description": "New tab label",
+      "message": "New Tab"
+   },
+   "noCacheDataMessage": {
+      "description": "No cache data available message",
+      "message": "No cache data"
+   },
+   "pagesUnit": {
+      "description": "Pages count unit",
+      "message": "pages"
+   },
+   "permissionDeniedErrorMessage": {
+      "description": "Permission denied error message",
+      "message": "Permission denied"
+   },
+   "processingCacheStatus": {
+      "description": "Processing cache status",
+      "message": "Processing cache..."
+   },
+   "processingStatus": {
+      "description": "Processing progress message",
+      "message": "Processing..."
+   },
+   "refreshStatusButton": {
+      "description": "Refresh status button tooltip",
+      "message": "Refresh Status"
+   },
+   "reinitializeButton": {
+      "description": "Reinitialize button text",
+      "message": "Reinitialize"
+   },
+   "resetButton": {
+      "description": "Reset button text",
+      "message": "Reset"
+   },
+   "retryButton": {
+      "description": "Retry button text",
+      "message": "Retry"
+   },
+   "runningStatusLabel": {
+      "description": "Server running status label",
+      "message": "Running Status"
+   },
+   "saveButton": {
+      "description": "Save button text",
+      "message": "Save"
+   },
+   "semanticEngineInitFailedStatus": {
+      "description": "Semantic engine initialization failed status",
+      "message": "Semantic Engine Initialization Failed"
+   },
+   "semanticEngineInitializingStatus": {
+      "description": "Semantic engine initializing status",
+      "message": "Semantic Engine Initializing..."
+   },
+   "semanticEngineLabel": {
+      "description": "Main section header for semantic engine",
+      "message": "Semantic Engine"
+   },
+   "semanticEngineNotInitStatus": {
+      "description": "Semantic engine not initialized status",
+      "message": "Semantic Engine Not Initialized"
+   },
+   "semanticEngineReadyStatus": {
+      "description": "Semantic engine ready status",
+      "message": "Semantic Engine Ready"
+   },
+   "serviceNotConnectedStatus": {
+      "description": "Service not connected status",
+      "message": "Service Not Connected"
+   },
+   "serviceRunningStatus": {
+      "description": "Service running with port number",
+      "message": "Service Running (Port: $PORT$)",
+      "placeholders": {
+         "port": {
+            "content": "$1",
+            "example": "12306"
+         }
+      }
+   },
+   "settingsTitle": {
+      "description": "Settings dialog title",
+      "message": "Settings"
+   },
+   "statusLabel": {
+      "description": "Generic status label",
+      "message": "Status"
+   },
+   "successNotification": {
+      "description": "Generic success notification",
+      "message": "Operation completed successfully"
+   },
+   "switchingModelStatus": {
+      "description": "Model switching progress message",
+      "message": "Switching Model..."
+   },
+   "themeLabel": {
+      "description": "Theme selector label",
+      "message": "Theme"
+   },
+   "timeoutErrorMessage": {
+      "description": "Timeout error message",
+      "message": "Operation timed out"
+   },
+   "unknownErrorMessage": {
+      "description": "Unknown error fallback message",
+      "message": "Unknown error, please check if your network can access HuggingFace"
+   },
+   "vectorDocumentsLabel": {
+      "description": "Number of vector documents label",
+      "message": "Vector Documents"
+   },
+   "verboseLoggingLabel": {
+      "description": "Verbose logging toggle label",
+      "message": "Verbose Logging"
+   },
+   "warningNotification": {
+      "description": "Generic warning notification",
+      "message": "Warning: Please review before proceeding"
+   }
+}

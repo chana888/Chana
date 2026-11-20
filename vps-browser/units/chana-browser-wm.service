@@ -1,0 +1,22 @@
+[Unit]
+Description=浏览器窗口管理器
+After=network.target chana-browser-display.service
+Requires=chana-browser-display.service
+[Service]
+Type=simple
+User=chana-browser
+Group=chana-browser
+WorkingDirectory=/opt/chana-vps-browser
+Environment=HOME=/var/lib/chana-browser
+Environment=DISPLAY=:97
+Environment=XAUTHORITY=/var/lib/chana-browser/.Xauthority
+ExecStart=/usr/bin/openbox
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=8
+MemoryMax=100M
+TasksMax=256
+UMask=0077
+NoNewPrivileges=true
+[Install]
+WantedBy=multi-user.target

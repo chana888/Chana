@@ -1,0 +1,29 @@
+# 远程桌面与 WebSocket 均复用平台 Cookie 鉴权，仅内网回环可见后端。
+location = /_chana_browser_auth {
+    internal;
+    proxy_pass http://127.0.0.1:18863/auth;
+    proxy_pass_request_body off;
+    proxy_set_header Content-Length "";
+    proxy_set_header Cookie $http_cookie;
+}
+location = /browser { return 302 /browser/; }
+location = /browser/websockify {
+    if ($http_origin != "@PUBLIC_ORIGIN@") { return 403; }
+    auth_request /_chana_browser_auth;
+    proxy_pass http://127.0.0.1:18863/ws;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_set_header Cookie $http_cookie;
+    proxy_set_header Origin $http_origin;
+    proxy_read_timeout 3600s;
+    proxy_send_timeout 3600s;
+    proxy_buffering off;
+}
+location ^~ /browser/ {
+    proxy_pass http://127.0.0.1:18863/;
+    proxy_http_version 1.1;
+    proxy_set_header Cookie $http_cookie;
+    proxy_set_header Origin $http_origin;
+    proxy_buffering off;
+}

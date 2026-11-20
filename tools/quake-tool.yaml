@@ -1,0 +1,36 @@
+name: "quake-tool"
+command: 'D:\app\chana\chana\venv\Scripts\python.exe'
+args: ['D:\app\chana\chana\recon\infogather_quake.py']
+enabled: true
+short_description: "Quake 测绘数据分类/质检工具（domain可信分级 / body误报判断）"
+description: |
+  360 Quake 测绘数据后处理工具。三个子命令：
+  1. `classify <diagnoses.json> [output.json]` — 对 domain 搜索产出分类（Level A 可信 / Level B 知有资产）
+  2. `check <data.json>` — 质检 body 搜索产出（判断 70-99% 误报风险）
+  3. `to-report <data.json> [report_input.json]` — 转 infogather_report.py 输入格式
+
+  **精度铁律（已实战验证）：** 只有 `domain:"xxx.com"` 搜索结果可信（~0% 误报）；
+  body 搜索不可信（70-99% 误报）。产出分级后再决定是否入库。
+
+  **用法示例：**
+  - `quake-tool subcommand="classify" input="D:\diagnoses.json"`
+  - `quake-tool subcommand="check" input="D:\data.json"`
+parameters:
+  - name: "subcommand"
+    type: "string"
+    description: "子命令：classify / check / to-report"
+    required: true
+    position: 0
+    format: "positional"
+  - name: "input"
+    type: "string"
+    description: "输入 JSON 文件路径"
+    required: true
+    position: 1
+    format: "positional"
+  - name: "output"
+    type: "string"
+    description: "输出文件路径（可选，默认值因子命令而异）"
+    required: false
+    position: 2
+    format: "positional"

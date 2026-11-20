@@ -1,0 +1,44 @@
+# src-wiki 其他 POC 索引
+
+> 共 40 篇 | 来自 src-wiki.com 全库抓取
+
+- [`1565`](1565.md) OpenMetadata命令执行(CVE-2024-28255)
+- [`1868`](1868.md) Elber-Wayber模拟数字音频密码重置漏洞
+- [`2337`](2337.md) 天维尔消防智能指挥平台API接口页面sql注入
+- [`4156`](4156.md) ChatGPT个人专用版SSRF漏洞(CVE-2024-27564)
+- [`4157`](4157.md) CommvaultSSRF致代码执行漏洞(CVE-2025-34028)
+- [`4158`](4158.md) F-logic-DataCube3存在任意文件上传
+- [`4159`](4159.md) F-logicDataCube3任意文件上传(CVE-2024-25832)
+- [`4160`](4160.md) JooLun微信商城Plus多店版弱口令(CNVD-2024-16213)
+- [`4161`](4161.md) Kavitacover-upload任意文件读取漏洞
+- [`4162`](4162.md) MajorDoMo-thumb未授权远程代码执行漏洞
+- [`4163`](4163.md) Saber(SpringBlade)-tenant_listSQL注入漏洞
+- [`4164`](4164.md) SabererrorlistSQL注入
+- [`4165`](4165.md) Saber企业级开发平台listSQL注入
+- [`4166`](4166.md) Saber企业级开发平台存在登录绕过
+- [`4167`](4167.md) elestiomemosSSRF漏洞(CVE-2025-22952)
+- [`4168`](4168.md) 云时空商业ERPparamsSQL注入
+- [`4169`](4169.md) 京师心智心理健康测评系统-账号密码泄露
+- [`4170`](4170.md) 停车场后台管理系统LaneMonitor_GetVideoSQL注入漏洞
+- [`4171`](4171.md) 六零导航页SQL注入（CVE-2023-45951）
+- [`4172`](4172.md) 六零导航页file.php任意文件上传漏洞（CVE-2024-34982）
+- [`4173`](4173.md) 卡号极团管理系统order接口_存在SQL注入
+- [`4174`](4174.md) 卡号极团管理系统ue_serve.php存在任意文件上传
+- [`4175`](4175.md) 卡车卫星定位系统越权
+- [`4176`](4176.md) 可视化融合指挥调度平台uploadImg存在任意文件上传
+- [`4177`](4177.md) 悦库企业网盘_user_login_.htmlSQL注入漏洞
+- [`4178`](4178.md) 新中新中小学智慧校园信息管理系统存在SQL注入
+- [`4179`](4179.md) 新视窗新一代物业管理系统GetCertificateInfoByStudentIdSQL注入漏洞
+- [`4180`](4180.md) 新视窗新一代物业管理系统RegisterManager存在任意文件上传
+- [`4181`](4181.md) 无忧网络验证系统getInfoSQL注入
+- [`4182`](4182.md) 湖南建研信息admintool任意文件上传
+- [`4183`](4183.md) 湖南建研信息工程质量检测系统-文件上传致RCE
+- [`4184`](4184.md) 湖南建研信息工程质量检测系统任意文件读取漏洞
+- [`4185`](4185.md) 睿贝外贸ERPappPatchDownLoad任意文件读取
+- [`4186`](4186.md) 短视频矩阵营销系统poihuoqu任意文件读取
+- [`4187`](4187.md) 管家婆订货易在线商城VshopProcess任意文件上传
+- [`4188`](4188.md) 金华迪加现场大屏互动系统ajax_act_set_bgmusic.phpSQL注入漏洞
+- [`4189`](4189.md) 青铜器RDM研发管理平台upload存在任意文件上传
+- [`4190`](4190.md) 魔方网表ERPmailupdate.jsp任意文件上传
+- [`4191`](4191.md) 鸿宇多用户商城scan_list存在SQL注入漏洞
+- [`4192`](4192.md) 鸿宇多用户商城user.php存在远程命令执行

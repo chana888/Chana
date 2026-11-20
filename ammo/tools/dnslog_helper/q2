@@ -1,0 +1,1864 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>查询结果</title><script src=/sf-webproxy/api/vpn-config></script><script src=/sf-webproxy/resource/web_proxy.js?v=1.4.8></script><script src=/sf-webproxy/resource/postMessage.js></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="pragma" content="no-cache"/>
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <meta http-equiv="expires" content="0"/>
+    <script type="text/javascript" src="/EIP/core/boot.js?1719484331000"></script>
+    <script type="text/javascript" src="/EIP/core/fileupload/fileupload.js"></script>
+    <script type="text/javascript" src="/EIP/resources/components/JQuery.Huatech/jquery.huatech.js"></script>
+    <script type="text/javascript"
+            src="/EIP/resources/js/dc/queryResult.js?1719484342000"></script>
+    <script type="text/javascript"
+            src="/EIP/resources/js/cooperative/startCooperative.js?1721698008000"></script>
+    <link rel="stylesheet" type="text/css"
+          href="/EIP/resources/css/dc/queryList.css?1719484339000"/>
+    <link rel="stylesheet" href="/EIP/core/jqm/css/font-awesome-4.3.0/css/font-awesome.css" type="text/css"/>
+    <link rel="stylesheet" type="text/css"
+          href="/EIP/resources/css/dc/btn.css?1719484339000"/>
+    <link rel="stylesheet" href="/EIP/resources/components/JQuery.Huatech/jquery.huatech.css" type="text/css"/>
+    <style type="text/css">
+        html {
+            overflow: hidden;
+        }
+
+        #abnormal {
+            color: #ef6757;
+            line-height: 20px;
+            cursor: pointer;
+        }
+
+        #abnormal {
+            font-size: 12px;
+            background: url(/EIP//resources/images/bsu/bsu-portal-error-icon.png) left 2px no-repeat;
+            padding-left: 22px;
+            line-height: 20px;
+        }
+
+        .title_cls {
+        }
+
+        .status_cls {
+            display: inline-block;
+            color: red;
+            margin-top: 0px;
+            padding: 0px 10px;
+            border-radius: 3px;
+            background: #eee;
+        }
+
+        .data-line-avatars {
+            width: 20px;
+            height: 20px;
+            overflow: hidden;
+            display: inline-block;
+            vertical-align: middle;
+            border-radius: 50%;
+        }
+
+        .data-line-avatars img {
+            width: 20px;
+            display: block;
+        }
+
+        .cpt {
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .quick-tag-box {
+            display: none;
+            padding: 5px 10px;
+        }
+
+        #quick-tag-box p {
+            margin: 0;
+        }
+
+        .shaixuan-tj {
+            padding: 0 10px;
+            overflow: hidden;
+        }
+
+        .fast-label {
+            float: left;
+            height: 100%;
+        }
+
+        .fast-label span {
+            display: block;
+            height: 35px;
+            text-align: center;
+            line-height: 35px;
+            font-weight: bold;
+        }
+
+        .crumb-select-item {
+            float: left;
+            display: inline-block;
+            height: 23px;
+            line-height: 23px;
+            padding: 0 28px 0 5px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            position: relative;
+            background: #f3f3f3;
+        }
+
+        .crumb-select-item.active-style {
+            border: 1px solid #e4393c;
+            background: #fff;
+        }
+
+        .crumb-select-item.active-style a {
+            color: #f30213;
+        }
+
+        .crumb-select-item:hover {
+            border: 1px solid #e4393c;
+            background: #fff;
+        }
+
+        .crumb-select-item a {
+            text-decoration: none;
+            color: #333;
+            float: left;
+        }
+
+        .crumb-select-item .crumb-select-item-close {
+            display: block;
+            position: absolute;
+            right: 0px;
+            top: 0px;
+            bottom: 0px;
+            width: 23px;
+            background: transparent url('/EIP//resources/images/dc/icon-close-red.png') no-repeat center;
+        }
+
+        .crumb-select-item.active-style .crumb-select-item-close,
+        .crumb-select-item:hover .crumb-select-item-close {
+            background: #e4393c url('/EIP//resources/images/dc/icon-close-white.png') no-repeat center;
+        }
+
+        .mini-messagebox-content-text {
+            text-align: left;
+            padding-left: 5px;
+        }
+
+        .mini-grid-cell-nowrap div {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            word-break: keep-all;
+        }
+    </style>
+    <script type="text/javascript">
+
+        var grid;
+        var PageField;//字段
+        var FieldData;//字段对应的数据
+        var fieldTypeObj = {};//条件字段类型
+        var conditionFieldArr = [];//条件字段
+        var fieldEnCnJson = {}; //字段中英文对照
+        var codeJson = {};//代码集
+        var authRule = mini.decode('');
+        var globleCondLogic = "$and";
+        var queryTagList = [];
+        var basePath = '/EIP/';
+        var dc_export_limit = 50000.0;
+        var tagResult;
+        $(function () {
+            mini.parse();
+            initDataList();
+            // removeScrollbars();
+        });
+
+        function initDataList() {
+            $.ajax({
+                url: "/EIP/maindatabase/querymanage/getMQueryFields.htm",
+                dataType: "html",
+                data: {
+                    queryCode: 'rnxzxmzhar5jrrgefgftbmcqkbbmxeht'
+                },
+                type: "post",
+                success: function (text) {
+                    PageField = text;
+                    grid = new mini.DataGrid();
+                    var result = mini.decode(text);
+                    if (JSON.stringify(result) == '{}') {
+                        return;
+                    }
+                    initButton(result);
+                    initGridColum(result);
+                    grid.load();
+                    initConditionFields(result);//初始化高级查询
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    onHandleError(jqXHR.status, jqXHR);
+                }
+            });
+        }
+
+
+        /**
+         * 初始化表格列
+         */
+        function initGridColum(result) {
+            var isShowFilterRow = false;
+            var fieldArr = mini.decode(result.fieldStyle);
+            //默认序号列
+            var titleArr = [];
+            var field = new Object();
+            field.header = '序号';
+            field.width = '50px';
+            field.type = 'indexcolumn';
+            field.align = 'left';
+            field.headerAlign = 'center';
+            //field.cellStyle = "white-space: nowrap;overflow: hidden;text-overflow: ellipsis";
+            titleArr.push(field);
+
+            for (var i = 0; i < fieldArr.length; i++) {
+                //控制字段是否显示
+                if (fieldArr[i].SHOW_LIST == "1") {
+                    var field = new Object();
+                    field.header = fieldArr[i].INFO_CNNAME;
+                    field.field = fieldArr[i].INFO_NAME;
+                    field.field_typeid = fieldArr[i].INFO_TYPEID;
+                    if (fieldArr[i].ALLOW_FILTER == '1' && fieldArr[i].INFO_TYPEID != "T") {
+                        isShowFilterRow = true;
+                        codeJson = result.conditionFields.codeJson;
+                        var codeList = codeJson[fieldArr[i].INFO_NAME];
+                        if (codeList && codeList.length > 0) {
+                            var clearobj = {code_key: "", code_value: "全部"};
+                            codeList.unshift(clearobj);
+                            field.filter = {
+                                id: fieldArr[i].INFO_NAME + "Filter",
+                                type: "combobox",
+                                width: "100%",
+                                data: codeList,
+                                valueField: "code_key",
+                                textField: "code_value",
+                                onvaluechanged: "onFilterChanged",
+                                allowInput: true
+                            };
+                        } else {
+                            if (fieldArr[i].INFO_TYPEID == "C") {
+                                field.filter = {
+                                    id: fieldArr[i].INFO_NAME + "Filter",
+                                    type: "textbox",
+                                    width: "100%",
+                                    emptyText: "输入内容进行过滤",
+                                    onvaluechanged: "onFilterChanged"
+                                };
+                            } else if (fieldArr[i].INFO_TYPEID == "D") {
+                                field.filter = {
+                                    id: fieldArr[i].INFO_NAME + "Filter",
+                                    type: "datepicker",
+                                    width: "100%",
+                                    filterData: [{value: 'equal', text: '等于'}, {value: 'gt', text: '大于'}, {
+                                        value: 'lt',
+                                        text: '小于'
+                                    }, {value: 'ne', text: '不等于'}],
+                                    onvaluechanged: "onFilterChanged"
+                                };
+                            } else if (fieldArr[i].INFO_TYPEID == "N") {
+                                field.filter = {
+                                    id: fieldArr[i].INFO_NAME + "Filter",
+                                    type: "filteredit",
+                                    width: "100%",
+                                    filterData: [{value: 'equal', text: '等于'}, {value: 'gt', text: '大于'}, {
+                                        value: 'lt',
+                                        text: '小于'
+                                    }, {value: 'ne', text: '不等于'}],
+                                    onvaluechanged: "onFilterChanged",
+                                    showClose: true
+                                };
+                            }
+                        }
+                    }
+
+                    field.field_date_formatter = fieldArr[i].DATE_FORMATER;
+                    field.field_type = fieldArr[i].FIELD_TYPE;
+                    field.field_css = (fieldArr[i].FIELD_CSS || "{}");
+                    field.field_null = (fieldArr[i].FIELD_NULL || "");
+                    field.detailFlowkey = result.detailFlowkey || '';//流程详情
+
+                    try {
+                        var field_css = mini.decode(field.field_css);//列样式，列值样式，状态列样式
+                        if (field_css) {
+                            //字段标题样式
+                            var col_style = field_css.FIELDSTYLE;
+                            if (col_style) {
+                                if (col_style.width) {
+                                    field.width = col_style.width;
+                                }
+                                if (col_style.headerAlign) {
+                                    field.headerAlign = col_style.headerAlign;
+                                }
+                                if (col_style.align) {
+                                    field.align = col_style.align;
+                                }
+                                if (col_style.allowSort) {
+                                    field.allowSort = col_style.allowSort;
+                                }
+                            } else {
+                                field.width = 100;
+                                field.allowSort = true;
+                                field.align = 'center';
+                                field.headerAlign = 'center';
+                            }
+                        }
+                    } catch (e) {
+                        field.width = 100;
+                        field.allowSort = true;
+                        field.align = 'center';
+                        field.headerAlign = 'center';
+                    }
+
+                    /*
+						field.width = 100;
+						field.allowSort = true;
+						field.align = 'center';
+						field.headerAlign = 'center';
+						*/
+                    field.renderer = 'onActionRendererFieldType';
+                    titleArr.push(field);
+                }
+
+            }
+
+            //流程编辑 和删除功能控制
+            if (result.updateFlowKey || result.isshowDelMenu == '1' || result.detailFlowkey || result.isshowHis == '1' || result.pageType == 'detail' || result.pageType == 'list_detail') {
+                var field = new Object();
+                field.header = '操作';
+                field.width = 160;
+                field.align = 'center';
+                field.headerAlign = 'center';
+                field.renderer = 'onActionButtonRenderer';
+                field.updateFlowKey = result.updateFlowKey || '';//流程编辑
+                field.isshowDelMenu = result.isshowDelMenu;//流程删除
+                field.detailFlowkey = result.detailFlowkey || '';//流程详情
+                field.isshowHis = result.isshowHis;        //查看原始记录
+                field.pageType = result.pageType;        //查看记录详情
+                titleArr.push(field);
+            }
+
+            //grid 信息
+            var ordd = new Object();
+            ordd.pageSize = 30;
+            ordd.sizeList = [30, 50, 100]//'[5,10,20,50,100]';
+            ordd.showEmptyText = true;
+            ordd.emptyText = '<span class=fontQuery>没有查询到记录！</span>';
+            ordd.style = 'width: 100%;height: 100%;';
+            ordd.columns = titleArr;
+            if (isShowFilterRow) {
+                ordd.showFilterRow = true;
+            }
+            grid.render(document.getElementById('gridDiv'));
+            grid.set(ordd);
+            if (authRule) {
+                grid.setUrl("/EIP/maindatabase/querymanage/queryDataForAuthReceiver.htm?queryCode=rnxzxmzhar5jrrgefgftbmcqkbbmxeht&authid=" + authRule.id);
+            } else {
+                grid.setUrl("/EIP/maindatabase/querymanage/commonQuery.htm?queryCode=rnxzxmzhar5jrrgefgftbmcqkbbmxeht&uuid=");
+            }
+        }
+
+        //快捷过滤条件
+        function onFilterChanged() {
+            var paramList = [];
+            var result = mini.decode(PageField);
+            var fieldArr = mini.decode(result.fieldStyle);
+            for (var i = 0; i < fieldArr.length; i++) {
+                //控制字段是否显示
+                if (fieldArr[i].SHOW_LIST == "1") {
+                    var fieldName = fieldArr[i].INFO_NAME;
+                    var fieldCnName = fieldArr[i].INFO_CNNAME;
+                    var fieldType = fieldArr[i].INFO_TYPEID;
+                    if (fieldArr[i].ALLOW_FILTER == '1') {
+                        var logicRelation = "like";
+                        if (fieldType == "N") {
+                            logicRelation = mini.get(fieldName + "Filter").getFilterValue();
+                        } else if (fieldType == "D") {
+                            logicRelation = "equal";
+                        } else {
+                            var codeList = codeJson[fieldName];
+                            if (codeList && codeList.length > 0) {
+                                logicRelation = "equal";
+                            }
+                        }
+                        var paramValue = mini.get(fieldName + "Filter").getValue();
+                        if (paramValue) {
+                            var paramObject = {};
+                            paramObject.fieldName = fieldName;
+                            paramObject.fieldCnName = fieldCnName;
+                            paramObject.fieldType = fieldType;
+                            paramObject.logicRelation = logicRelation;
+                            paramObject.paramValue = paramValue;
+                            if (paramObject.fieldName && paramObject.logicRelation && paramObject.paramValue) {
+                                paramList.add(paramObject);
+                            }
+                        }
+                    }
+                }
+            }
+
+            globleCondLogic = "$and";
+            var userCondition = {};
+            if (paramList && paramList.length > 0) {
+                var parmaListStr = mini.encode(paramList);
+                userCondition = {userParamList: parmaListStr, joinRelation: globleCondLogic}
+            }
+            grid.load({usercond: mini.encode(userCondition)});
+
+        }
+
+        /**
+         * 初始化分享授权按钮
+         */
+        function initButton(result) {
+            //初始化刷新按钮
+            if (result.newFlowKey) {
+                //$(".searchDivs_tab").show();
+                $("#newFlow").prepend('<a class="mini-button" iconCls="icon-add" onclick="addQueryResult(\'' + result.newFlowKey + '\');"  plain="true">新建</a>');
+                //初始化刷新提示
+                $("#newFlow").append('<a class="mini-button" iconCls="icon-reload"  onclick="ReLoadGridData" plain="true" >刷新</a>');
+                //$("#newFlow").append('<span class="fa fa-question-circle" style="color:red;font-size:16px;" title="新增或编辑数据后，数据更新可能会有几秒钟的延迟，请点击刷新按钮刷新数据"></span>');
+                mini.parse();
+            }
+
+            if (authRule != '') {
+                $('#importFromExcel').hide();
+            } else {
+                if (result.isShowImportBtn == '0') {
+                    $('#importFromExcel').hide();
+                }
+            }
+            //切换模式按钮
+            if (result.detailFlowkey) {
+                //$(".searchDivs_tab").show();
+                $("#newFlow").append('<a class="mini-button" iconCls="icon-browser"  onclick="onPreview" plain="true" id="preview">浏览模式</a>');
+                mini.parse();
+            }
+            //初始化授权管理按钮
+            if (authRule == '') {
+                //二级管理员不可见
+                if (result.isShowShareBtn == "1") {
+                    $("#btn_group").append('<a id="share-btn" onclick="onShare()"  class="btn btn-green">数据分享</a>');
+                }
+                if (result.isShowAuthBtn == "1") {
+                    $("#btn_group").append('<a id="authmanage" onclick="onOpenAuthManage()"  class="btn btn-yellow">授权管理</a>');
+                }
+                if (result.isShowStatisticsBtn == "1") {
+                    $("#btn_group").append('<a id="authmanage" onclick="onOpenChatStatistics()"  class="btn btn-blue">数据统计</a>');
+                }
+            }
+            mini.parse();
+        }
+
+
+        /**
+         * 刷新列表按钮
+         */
+        function ReLoadGridData() {
+            grid.reload();
+            fadeAbnormal();
+        }
+
+        /**
+         * 通用查看详情
+         */
+        function showDetail() {
+            var FieldData = grid.getSelecteds();
+            mini.open({
+                url: "/EIP/maindatabase/querymanage/commonDetail.htm",
+                title: "详情页面",
+                width: 600,
+                height: 550,
+                allowResize: false,
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                    sessionStorage.setItem("commonDetail_PageField", mini.encode(PageField));
+                    sessionStorage.setItem("commonDetail_FieldData", mini.encode(FieldData));
+                    iframe.contentWindow.onSetData(PageField, FieldData);
+                },
+                ondestroy: function (action) {
+                }
+            });
+        }
+
+        /**
+         * 清空数据
+         */
+        function onCloseClick(e) {
+            var obj = e.sender;
+            obj.setText("");
+            obj.setValue("");
+            if (authRule != '') {
+                var parmaListStr = mini.encode(authRule.condition);
+                var receiverStr = mini.encode(authRule.receiver);
+                grid.load({id: 'rnxzxmzhar5jrrgefgftbmcqkbbmxeht', paramList: parmaListStr, authid: authRule.id});
+            } else {
+                grid.load({id: 'rnxzxmzhar5jrrgefgftbmcqkbbmxeht'});
+            }
+        }
+
+        /**
+         * 渲染流程编辑和删除等操作
+         */
+        function onActionButtonRenderer(e) {
+            var column = e.column;
+            var record = e.record;
+            var ufk = column.updateFlowKey;//编辑
+            var ism = column.isshowDelMenu;//删除
+            var dfk = column.detailFlowkey;//查看详情
+            var ish = column.isshowHis;//查看原始记录
+            var id = record.ID || '';  //流程使用必须传
+            var s = '';
+            if (ufk != '') {
+                s += '<img src="/EIP/resources/images/dc/edit.png" onclick="editQueryResult(\'' + ufk + '\',\'' + id + '\')" title="编辑" style="cursor: pointer;" />&nbsp;&nbsp;&nbsp;&nbsp;';
+            }
+            if (dfk != '') {
+                s += '<img src="/EIP/resources/images/dc/detailrecord.png" onclick="detailQueryResult(\'' + dfk + '\',\'' + id + '\')" title="查看详情" style="cursor: pointer;" />&nbsp;&nbsp;&nbsp;&nbsp;';
+            } else {
+                if (column.pageType == 'detail' || column.pageType == 'list_detail') {
+                    //s +='<a id="guide-button" onclick="showDetail()" style="cursor: pointer;">查看详情</a>';
+                    s += '<img src="/EIP/resources/images/dc/detailrecord.png" onclick="showDetail()" title="查看详情" style="cursor: pointer;" />&nbsp;&nbsp;&nbsp;&nbsp;';
+                }
+            }
+            if (ish == '1') {
+                s += '<img src="/EIP/resources/images/dc/hisrecord.png" onclick="onShowHisRecord(\'' + dfk + '\')"   title="查看原始记录" style="cursor: pointer;" />&nbsp;&nbsp;&nbsp;&nbsp;';
+            }
+            if (ism == '1') {
+                s += '<img src="/EIP/resources/images/dc/del.png" onclick="delData(\'' + id + '\')" title="删除" style="cursor: pointer;" />';
+            }
+            return s;
+        }
+
+        /**
+         * 流程查看原始记录
+         */
+        function onShowHisRecord(flowkeyStr) {
+            var row = grid.getSelected();
+            mini.open({
+                url: "/EIP/maindatabase/querymanage/hisrecord.htm",
+                title: "原始记录",
+                allowResize: false, //允许尺寸调节
+                allowDrag: false, //允许拖拽位置
+                showCloseButton: true, //显示关闭按钮
+                showMaxButton: false, //显示最大化按钮
+                showModal: true, //显示遮罩
+                loadOnRefresh: false,
+                width: 800,
+                height: 460,
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                    iframe.contentWindow.setData(row, PageField, flowkeyStr);
+                }
+            });
+        }
+
+        /**
+         * 流程删除数据
+         */
+        function delData(id) {
+            var result = mini.decode(PageField);
+            if (result.isshowDelMenu != "1") {
+                mini.alert("操作失败");
+                return;
+            }
+
+            if (!id) {
+                mini.alert("该条数据不能删除，数据缺少唯一标识字段！");
+                return;
+            }
+
+            mini.confirm("删除数据不可恢复，您确定要删除该条数据吗？", "提示",
+                function (action, value) {
+                    if (action == "ok") {
+                        var data = {"id": id, "queryCode": 'rnxzxmzhar5jrrgefgftbmcqkbbmxeht'};
+                        onSubmit("/EIP/maindatabase/querymanage/delData.htm", "get", data, true, function (json) {
+                            var result = mini.decode(json);
+                            if (result.code == 200) {
+                                //refreshList();
+                                ReLoadGridData();
+                            } else {
+                                mini.alert("操作失败");
+                            }
+                        });
+                    }
+                }
+            );
+        }
+
+        /**
+         * 渲染字段类型和字段样式
+         */
+        function onActionRendererFieldType(e) {
+            var result = '';
+            var column = e.column;//当前列属性，可以自定义
+            var value = e.value;//当前字段的值
+            var record = e.record;
+
+            var field_type = column.field_type;//显示类型
+            var field_typeid = column.field_typeid;//字段基本类型处理
+            var field_null = column.field_null;//空值处理
+            var dfk = column.detailFlowkey || '';//流程详情
+            var field_css = mini.decode(column.field_css);//字段样式，状态样式
+            var field_date_formatter = column.field_date_formatter || 'yyyy-MM-dd HH:mm:ss';
+
+            if (field_typeid == "D") {
+                //日期转换
+                if (value != null) {
+                    value = mini.formatDate(new Date(value), field_date_formatter);
+                } else {
+                    value = field_null;
+                }
+            }
+            if (typeof (value) == "string" && value.indexOf("@#@") != -1) {
+                value = value.split("@#@")[1];
+            }
+            // 渲染附件
+            if (typeof (value) == "string" && value.indexOf("fileupload/") != -1 && value.indexOf("nonlogin/") == -1) {
+                var annexStr = "";
+                var dataArray = new Array();
+                if (value.indexOf("\\") != -1) {
+                    dataArray = mini.decode(value.replace(/[\\]/g, ''));
+                } else {
+                    dataArray = mini.decode(value);
+                }
+                var imgReg = /^\.?(gif|png|jpg|jpeg|jpe|bmp|dib|jfif|tif|tiff){1}$/i;
+                for (var i = 0; i < dataArray.length; i++) {
+                    var annex = dataArray[i];
+                    //判断当前附件是不是图片，如果是图片，不显示文件名
+                    if (imgReg.test(annex.type)) {
+                        annexStr += "<span id=\"" + annex.physicalId + "\">" + "<img style=\"vertical-align:middle; cursor:pointer;max-width:60px;max-height:60px;\" onclick=\"downLoadFile(this, '" + annex.url + "', '" + annex.annexName + "', '" + annex.type
+                            + "')\" src=\"" + basePath + annex.imagePath + "\" data-url='" + annex.url + "&cache=true' data-type='" + annex.type + "'  alt='" + annex.annexName + annex.type + "'/>";
+                    } else {
+                        annexStr += "<span id=\"" + annex.physicalId + "\">" + "<img style=\"vertical-align:middle; cursor:pointer;max-width:60px;max-height:60px;\" onclick=\"downLoadFile(this, '" + annex.url + "', '" + annex.annexName + "', '" + annex.type
+                            + "')\" src=\"" + basePath + annex.imagePath + "\" data-url='" + annex.url + "&cache=true' data-type='" + annex.type + "'  alt='" + annex.annexName + annex.type + "'/>"
+                            + "<a style=\"border:none; text-decoration:none; margin-left:8px;\" href=\"javascript:void(0)\" onclick=\"downLoadFile(this, '"
+                            + annex.url + "', '" + annex.annexName + "', '" + annex.type + "')\">" + "<span style=\"vertical-align:middle;\" >" + annex.annexName + annex.type + "</span>" + "</a>"
+                            + "</br></span>";
+                    }
+                }
+                value = annexStr;
+                return value;
+            }
+
+            if (field_type == 'title') {
+                //空值处理
+                if (!value) {
+                    value = field_null;
+                }
+                //标题字段
+                var valuestyle = field_css.VALUESTYLE || "";
+                result += '<div class="title_cls" style="' + valuestyle + '" title="' + value + '">' + value + '</div>';
+
+            } else if (field_type == 'status') {
+                //空值处理
+                if (!value) {
+                    value = field_null;
+                }
+                //状态字段
+                var statusstyle = field_css.STATUSSTYLE || {};
+                result += '<div class="status_cls" style="' + (statusstyle[value] || "") + '">' + value + '</div>';
+            } else if (field_type == 'head') {
+                //空值处理
+                if (!value) {
+                    value = field_null;
+                }
+                var photobox = "<span class='data-line-avatars' style='width:26px; height:26px;'><img style='width:26px; height:26px;' src='/EIP/user/photo.htm?uuid=" + value + "'/>" + value + "</span> ";
+                if (value.startWith("nonlogin")) {
+                    photobox = "<span class='data-line-avatars' style='width:26px; height:26px;'><img style='width:26px; height:26px;' src='/EIP/" + value + "'/></span> ";
+                }
+                //头像
+                if (column._index == 1 && dfk != '') {//流程支持
+                    var id = record.ID || '';
+                    result += '<div style="' + valuestyle + '" >' + ' <a  class="cpt" onclick="detailQueryResult(\'' + dfk + '\',\'' + id + '\')" >' + photobox + '</a></div>';
+                } else {
+                    result += "<div class='data-line-avatars' style='width:26px; height:26px;'>" + photobox + "</div>";
+                }
+            } else if (field_type == 'hyperlink') {
+                //空值处理
+                if (!value) {
+                    value = field_null;
+                }
+                //超链接字段
+                var valuestyle = field_css.VALUESTYLE || "";
+                result += '<div style="' + valuestyle + '" >' + ' <a href="javascript:void(0);" onclick="openHyperLink(\'' + value + '\')">' + value + '</a></div>';
+            } else if (field_type == 'enclosure') {
+                //空值处理
+                if (!value) {
+                    value = field_null;
+                }
+                // 渲染附件
+                // if (typeof(value) == "string" && value.indexOf("fileupload/") != -1 && value.indexOf("nonlogin/") == -1) {
+                var annexStr = "";
+                var dataArray = new Array();
+                if (value.indexOf("\\") != -1) {
+                    dataArray = mini.decode(value.replace(/[\\]/g, ''));
+                } else {
+                    dataArray = mini.decode(value);
+                }
+                var imgReg = /^\.?(gif|png|jpg|jpeg|jpe|bmp|dib|jfif|tif|tiff){1}$/i;
+                for (var i = 0; i < dataArray.length; i++) {
+                    var annex = dataArray[i];
+                    //判断当前附件是不是图片，如果是图片，不显示文件名
+                    if (imgReg.test(annex.type)) {
+                        result += "<span id=\"" + annex.physicalId + "\">" + "<img style=\"vertical-align:middle; cursor:pointer;max-width:60px;max-height:60px;\" onclick=\"downLoadFile(this, '" + annex.url + "', '" + annex.annexName + "', '" + annex.type
+                            + "')\" src=\"" + basePath + annex.imagePath + "\" data-url='" + annex.url + "&cache=true' data-type='" + annex.type + "'  alt='" + annex.annexName + annex.type + "'/>";
+                    } else {
+                        result += "<span id=\"" + annex.physicalId + "\">" + "<img style=\"vertical-align:middle; cursor:pointer;max-width:60px;max-height:60px;\" onclick=\"downLoadFile(this, '" + annex.url + "', '" + annex.annexName + "', '" + annex.type
+                            + "')\" src=\"" + basePath + annex.imagePath + "\" data-url='" + annex.url + "&cache=true' data-type='" + annex.type + "'  alt='" + annex.annexName + annex.type + "'/>"
+                            + "<a style=\"border:none; text-decoration:none; margin-left:8px;\" href=\"javascript:void(0)\" onclick=\"downLoadFile(this, '"
+                            + annex.url + "', '" + annex.annexName + "', '" + annex.type + "')\">" + "<span style=\"vertical-align:middle;\" >" + annex.annexName + annex.type + "</span>" + "</a>"
+                            + "</br></span>";
+                    }
+                }
+                // }
+                // value = annexStr;
+                // return value;
+
+            } else {
+                //空值处理
+                //value==null && (value = field_null);
+                if (value === undefined || value === null) {
+                    value = field_null;
+                }
+                //普通字段
+                var valuestyle = field_css.VALUESTYLE || "";
+                if (column._index == 1 && dfk != '') {//流程支持
+                    var id = record.ID || '';
+                    result += '<div style="' + valuestyle + '" title="' + value + '"> <a  class="cpt" onclick="detailQueryResult(\'' + dfk + '\',\'' + id + '\')" >' + value + '</a></div>';
+                } else {
+                    result += '<div style="' + valuestyle + '" title="' + value + '">' + value + '</div>';
+                }
+
+            }
+            return result;
+
+        }
+
+
+        /**
+         * 功能：获取查询条件数据
+         * @author wumingyue
+         * @date 2016-03-06
+         */
+        function onGetQueryData() {
+            var paramList = [];
+            var param_isOk = true;
+            var count = $("#tableData .serach_list").size();
+            //当只有一行没有任何条件时，查询所有数据,否则进行条件相关验证
+            if (count == 1) {
+                $("#tableData .serach_list :input").each(function (i) {
+                    //miniui控件渲染后会生成6个input标签，其中mini-combox会生成两个一个时value，一个是text。mini-textbox会多出一个hidden
+                    if (i == $("#tableData .serach_list :input").length - 1) {
+                        return;
+                    }
+                    //条件字段跟逻辑运算符不能为空，条件值可以为空
+                    if ($.trim($(this).val()) == "" && i != 4 && i != 5) {
+                        param_isOk = false;
+                        return;
+                    }
+                });
+                if (!param_isOk) {
+                    return paramList;
+                }
+            }
+            $("#tableData .serach_list").each(function (i) {
+                var paramObject = {};
+                paramObject.fieldName = $(this).find("[name='fieldName']").eq(0).val();
+                paramObject.fieldCnName = fieldEnCnJson[paramObject.fieldName];
+                paramObject.fieldType = fieldTypeObj[paramObject.fieldName];
+                paramObject.logicRelation = $(this).find("[name='logicRelation']").eq(0).val();
+                paramObject.paramValue = $(this).find("[name='paramValue']").eq(0).val();
+                //如果参数值引用了代码集，还需要将代码对应的真正值存下来。例如性别字段：paramValue=1，paramTextValue=男
+                var codeList = codeJson[paramObject.fieldName];
+                if (codeList) {
+                    for (var i = 0; i < codeList.length; i++) {
+                        var codeObj = codeList[i];
+                        if (codeObj.code_key == paramObject.paramValue) {
+                            paramObject.paramTextValue = codeObj.code_value;
+                            break;
+                        }
+                    }
+                } else {
+                    paramObject.paramTextValue = paramObject.paramValue;
+                }
+                if (paramObject.fieldName && (paramObject.logicRelation == "empty" || paramObject.logicRelation == "notempty")) {
+                    paramList.add(paramObject);
+                } else {
+                    if (paramObject.fieldName && paramObject.logicRelation && paramObject.paramValue) {
+                        paramList.add(paramObject);
+                    }
+                }
+
+            });
+            return paramList;
+        }
+
+
+        /**
+         * 添加高级查询条件
+         */
+        var queryConditionIndex = 0
+
+        function add_search(t) {
+            queryConditionIndex++;
+            var o = $(t).parent().parent().parent();
+            if ($("#tableData .serach_list").size() > 10) {
+                mini.alert("不允许超过10个条件");
+                return;
+            } else {
+                var html = '<tr id="line_' + queryConditionIndex + '" class="serach_list">' +
+                    '<td>' +
+                    '<input name="fieldName" class="mini-combobox" data=\'' + mini.encode(conditionFieldArr) + '\' id="queryConditionFields_' + queryConditionIndex + '" textField="fieldCnName" valueField="fieldName" emptyText="请选择..." style="width: 100%;" onvaluechanged="getFieldType(e,' + queryConditionIndex + ')"/>' +
+                    '</td>' +
+                    '<td>' +
+                    '<input id="logicRelation_' + queryConditionIndex + '" name="logicRelation" class="mini-combobox" textField="text" valueField="id" emptyText="请选择..." ' +
+                    'allowInput="false" showNullItem="false" style="width: 100%;" onvaluechanged="getLogic(e,' + queryConditionIndex + ')"/>' +
+                    '</td>' +
+                    '<td>' +
+                    '<div id="serachArea_' + queryConditionIndex + '" style="width: 100%;">' +
+                    '<input id="paramValue_' + queryConditionIndex + '" name="paramValue" class="mini-textbox" style="width: 100%;" />' +
+                    '</div>' +
+                    '</td>' +
+                    '<td align="center">' +
+                    '<a onclick="delete_search(this);" href="#"><img border="0" src="/EIP/core/miniui/themes/2016-blue/images/icons/remove_gif.gif" /></a>' +
+                    '&nbsp;&nbsp;&nbsp;' +
+                    '<a onclick="add_search(this);" href="#"><img border="0" src="/EIP/core/miniui/themes/flat2015/images/icons/add.gif" /></a>' +
+                    '</td>' +
+                    '</tr>';
+                o.append(html);
+                mini.parse();
+            }
+        }
+
+        /**
+         * 删除高级查询条件
+         */
+        function delete_search(t) {
+            $("#search_str").html("");
+            if ($("#tableData .serach_list").size() > 1) {
+                $(t).parent().parent().remove();
+            } else {
+                //$(t).parent().parent().find(":input").val("");
+                //$("#tableData .serach_list").find(":input").val("");
+                var tr_id = $(t).parent().parent().attr("id");
+                var lineIndex = tr_id.substr(tr_id.length - 1, 1);
+                mini.get("queryConditionFields_" + lineIndex).setValue("");
+                mini.get("logicRelation_" + lineIndex).setValue("");
+                mini.get("paramValue_" + lineIndex).setValue("");
+            }
+            mini.parse();
+            onSearch();//提交查询
+        }
+
+        /**
+         * 清空
+         */
+        function onClearSearch() {
+            $.each($("#tableData .serach_list"), function (j, obj) {
+                if (j != 0) {
+                    $(obj).remove();
+                } else {
+                    mini.get("queryConditionFields_0").setValue("");
+                    mini.get("logicRelation_0").setValue("");
+                    mini.get("paramValue_0").setValue("");
+                }
+            });
+            mini.parse();
+            onSearch();
+        }
+
+        /**
+         * 搜索
+         */
+        function onSearch() {
+            var logic = mini.get("condLogic").getValue();
+            globleCondLogic = logic;
+            //用户在页面输入的条件
+            var paramList = onGetQueryData();
+            var userCondition = {};
+            if (paramList && paramList.length > 0) {
+                var parmaListStr = mini.encode(paramList);
+                userCondition = {userParamList: parmaListStr, joinRelation: logic}
+            }
+            grid.load({usercond: mini.encode(userCondition)});
+        }
+
+        /**
+         * 如果开启了高级查询，则初始化查询条件
+         */
+        function initConditionFields(result) {
+            var isHigeQuery = result.isgaoJiquery;
+            if (isHigeQuery == '1') {
+                $("#opensearch").show();
+                conditionFieldArr = result.conditionFields.conditionFieldArr;
+                for (var i = 0; i < conditionFieldArr.length; i++) {
+                    var fieldJson = conditionFieldArr[i];
+                    fieldEnCnJson[fieldJson.fieldName] = fieldJson.fieldCnName;
+                }
+                fieldTypeObj = result.conditionFields.conditionFieldJson;
+                codeJson = result.conditionFields.codeJson;
+                mini.get("queryConditionFields_0").setData(conditionFieldArr);
+
+                /*
+					$.ajax({
+						url : "
+
+                /EIP/maindatabase/querymanage/getConditionFields.htm",
+						dataType :"json",
+						data : {
+							queryCode : '
+
+                rnxzxmzhar5jrrgefgftbmcqkbbmxeht'
+						},
+						success : function(text) {
+							conditionFieldArr = text.conditionFieldArr;
+							for(var i =0;i<conditionFieldArr.length;i++){
+								var fieldJson = conditionFieldArr[i];
+								fieldEnCnJson[fieldJson.fieldName] = fieldJson.fieldCnName;
+							}
+							fieldTypeObj = text.conditionFieldJson;
+							codeJson = text.codeJson;
+							mini.get("queryConditionFields_0").setData(conditionFieldArr);
+						},
+						error : function(jqXHR, textStatus, errorThrown) {
+							onHandleError(jqXHR.status,jqXHR);
+						}
+					});
+					*/
+            } else {
+                $("#opensearch").hide();
+            }
+            loadQueryTagMenu();
+        }
+
+        /**
+         * 为空时，不需要输入条件值
+         */
+        function getLogic(e, index) {
+            if (e.value == 'empty' || e.value == 'notempty') {
+                mini.get("paramValue_" + index).setValue("");
+                mini.get("paramValue_" + index).setEnabled(false);
+                mini.get("paramValue_" + index).setEmptyText("条件为空或者不为空，不需要输入条件值");
+            } else {
+                mini.get("paramValue_" + index).setEnabled(true);
+                mini.get("paramValue_" + index).setEmptyText("请输入条件值");
+            }
+        }
+
+        /**
+         * 搜索条件类型切换触发方法
+         */
+
+        function getFieldType(e, index) {
+            var searchControls = [];
+            for (var i = 0; i < searchControls.length; i++) {
+                searchControls[i].destroy(); // 先销毁全部搜索控件
+            }
+            //searchControls = []; // 清空控件数组
+            $("#serachArea_" + index).html(""); // 再清空搜索条件区域
+            var field = e.value;
+            var fieldTypeEn = fieldTypeObj[field];
+            var codeList = codeJson[field];
+            var logic = [{id: 'equal', text: '等于'}, {id: 'gte', text: '大于等于'}, {id: 'lte', text: '小于等于'}, {
+                id: 'ne',
+                text: '不等于'
+            }, {id: 'gt', text: '大于'}, {id: 'lt', text: '小于'}, {id: 'like', text: '模糊匹配'}, {
+                id: 'in',
+                text: '包含'
+            }, {id: 'notin', text: '不包含'}, {id: 'empty', text: '为空'}, {id: 'notempty', text: '不为空'}];
+            if (fieldTypeEn == 'N') {
+                //数字(N) 不支持包含，不包含，而且后台Java对应的类型是int
+                logic = [{id: 'equal', text: '等于'}, {id: 'gt', text: '大于'}, {id: 'lt', text: '小于'}, {
+                    id: 'gte',
+                    text: '大于等于'
+                }, {id: 'lte', text: '小于等于'}, {id: 'ne', text: '不等于'}, {id: 'empty', text: '为空'}, {
+                    id: 'notempty',
+                    text: '不为空'
+                }];
+            } else if (fieldTypeEn == 'D') {
+                //日期(D) 不支持包含，不包含，
+                logic = [{id: 'equal', text: '等于'}, {id: 'gt', text: '大于'}, {id: 'lt', text: '小于'}, {
+                    id: 'gte',
+                    text: '大于等于'
+                }, {id: 'lte', text: '小于等于'}, {id: 'ne', text: '不等于'}, {id: 'empty', text: '为空'}, {
+                    id: 'notempty',
+                    text: '不为空'
+                }];
+            } else if (fieldTypeEn == 'C') {
+                logic = [{id: 'equal', text: '等于'}, {id: 'ne', text: '不等于'}, {id: 'like', text: '模糊匹配'}, {
+                    id: 'empty',
+                    text: '为空'
+                }, {id: 'notempty', text: '不为空'}];
+            }
+            mini.get("logicRelation_" + index).setValue('');
+            mini.get("logicRelation_" + index).setData(logic);
+            if (codeList) {
+                var comboBox = new mini.ComboBox();
+                comboBox.setEmptyText("请输入条件值");
+                comboBox.setId("paramValue_" + index);
+                comboBox.setName("paramValue");
+                comboBox.setValueField("code_key");
+                comboBox.setTextField("code_value");
+                comboBox.setStyle("width:100%");
+                comboBox.setData(codeList);
+                comboBox.setAllowInput(true);
+                $("#serachArea_" + index).append(comboBox.getEl());
+                searchControls.push(comboBox);
+            } else {
+                if (fieldTypeEn == 'N' || fieldTypeEn == 'C') {
+                    var textBox = new mini.TextBox();
+                    textBox.setEmptyText("请输入条件值");
+                    textBox.setId("paramValue_" + index);
+                    textBox.setName("paramValue");
+                    textBox.setStyle("width:100%");
+                    $("#serachArea_" + index).append(textBox.getEl());
+                    searchControls.push(textBox);
+                } else if (fieldTypeEn == 'D') {
+                    var datePicker = new mini.DatePicker();
+                    datePicker.setId("paramValue_" + index);
+                    datePicker.setName("paramValue");
+                    datePicker.setAllowInput(false);
+                    datePicker.setStyle("width:100%");
+                    $("#serachArea_" + index).append(datePicker.getEl());
+                    searchControls.push(datePicker);
+                }
+            }
+        }
+
+
+        function onExport() {
+            var gridData = grid.getData();
+            if (gridData.length == 0) {
+                mini.alert("无数据可供导出");
+                return;
+            }
+			
+            var totalCount = grid.getTotalCount();
+			if(totalCount > dc_export_limit){
+				mini.alert("当前导出数据量过大，请联系业务管理员手工处理。");
+				return;
+			}
+			
+            var authId = "";
+            if (authRule != '') {
+                authId = authRule.id
+            }
+            var paramList = onGetQueryData();
+            var userCondition = {};
+            if (paramList && paramList.length > 0) {
+                var parmaListStr = mini.encode(paramList);
+                userCondition = {userParamList: parmaListStr, joinRelation: globleCondLogic}
+            }
+            if (Object.keys(userCondition).length == 0){
+                userCondition = tagResult;
+            }
+            var params = {queryCode: "rnxzxmzhar5jrrgefgftbmcqkbbmxeht", authId: authId, usercond: mini.encode(userCondition)};
+            var messageid = '';
+            messageid = mini.loading("导出中，如果数据量过大，可能会花费些时间，请耐心等候...", "提示");
+            var form = document.createElement("form");
+            form.style.display = "none";
+            form.action = "/EIP/maindatabase/querymanage/exportResult.htm";
+            form.method = "post";
+            document.body.appendChild(form);
+            for (var key in params) {
+                var input = document.createElement("input");
+                input.type = "hidden";
+                input.name = key;
+                input.value = params[key];
+                form.appendChild(input);
+            }
+            form.submit();
+            form.remove();
+            //文件下载好隐藏遮罩(前提是后台文件下载方法中有设置session、删除session)
+            shadeStateListener(messageid);
+        }
+
+        /**
+         * 定时监听文件下载状态
+         * @param messageid 遮罩id
+         * @param shadeKey 自定义约定好的sessionKey
+         */
+        function shadeStateListener(messageid) {
+            var isHideShade = false;
+            setTimeout(function () {
+                $.ajax({
+                    url: '/EIP/flowcfg/synergy_template/getShadeState.htm?timestamp=' + new Date().getTime(),  //请求的URL
+                    type: 'post',  //请求方式，get或post
+                    async: false, //false同步、true异步
+                    data: {},//请求所传参数，json格式
+                    dataType: 'json',//返回的数据格式
+                    success: function (data) { //请求成功的回调函数
+                        if (data && data.state == '500') {
+                            isHideShade = true;
+                        }
+                    },
+                    error: function () {
+                        isHideShade = true;
+                    }
+                });
+                if (isHideShade) {
+                    // 隐藏遮罩
+                    mini.hideMessageBox(messageid);
+                } else {
+                    // 重新调用自己，直到遮罩隐藏为止
+                    shadeStateListener(messageid);
+                }
+            }, 1000);
+        }
+
+        /**
+         * 功能：excel导入
+         */
+        function onImport(e) {
+            mini.showMessageBox({
+                title: "提示",
+                width: 250,
+                iconCls: "mini-messagebox-question",
+                buttons: ["导入", "下载"],
+                message: "直接导入还是下载模版?",
+                callback: function (action) {
+                    if (action == "导入") {
+                        var data = {
+                            basePath: '/EIP/',
+                            title: '导入通用查询',
+                            width: 573,
+                            height: 362,
+                            fileType: 'xls,xlsx',
+                            savePath: 'user/upload/files/',
+                            fileNum: 1,
+                            size: 80
+                        };
+                        uploadFile(data, function (file) {
+                            if (file != undefined && file[0].id != undefined) {
+                                var size = file[0].fileSize;
+                                // grid.loading("处理中，请稍后......");
+                                var html = '<div style="padding: 10px;"><div>数据导入可能需要几分钟时间，请不要关闭本页面</div><div id="progress_bar" style="margin: 10px 0;"></div></div>';
+                                var options = {
+                                    title: '提示',
+                                    html: html,
+                                    width: '320px',
+                                    height: '120px',
+                                    showCloseButton: false
+                                }
+                                var messageId = mini.showMessageBox(options);
+                                $('#progress_bar').ProgressBar();
+                                var interval = $('#progress_bar').ProgressBar({
+                                    start: 0,
+                                    end: 95,
+                                    speed: 20000 / size
+                                });
+                                $.ajax({
+                                    url: "/EIP/maindatabase/querymanage/importExcel.htm",
+                                    type: "post",
+                                    dataType: "html",
+                                    data: {fileId: file[0].id, queryCode: 'rnxzxmzhar5jrrgefgftbmcqkbbmxeht'},
+                                    success: function (json) {
+                                        json = mini.decode(json);
+                                        clearInterval(interval);
+                                        mini.hideMessageBox(messageId);
+
+                                        if (json.code == 200) {
+                                            mini.showMessageBox({
+                                                title: "提示",
+                                                width: 250,
+                                                iconCls: "mini-messagebox-warning",
+                                                buttons: ["确定"],
+                                                message: json.msg,
+                                                callback: function (action) {
+                                                    grid.reload();
+                                                }
+                                            });
+                                        } else if (json.code === 449) {
+                                            var html1 = "<div class=\"mini-fit\" id='ddd' style=\"position:absolute;width:786px;height:300px;overflow:scroll;text-align:left;\">" + json.data + "</div>";
+                                            mini.showMessageBox({
+                                                title: "提示",
+                                                width: 300,
+                                                iconCls: "mini-messagebox-warning",
+                                                buttons: ["查看"],
+                                                message: json.msg,
+                                                callback: function (action) {
+                                                    if (action === '查看') {
+                                                        mini.showMessageBox({
+                                                            height: 800,
+                                                            width: 800,
+                                                            title: "数据合法性校验提示",
+                                                            html: html1,
+                                                            iconCls: "mini-messagebox-warning",
+                                                            callback: function (action) {
+                                                                grid.reload();
+                                                            }
+                                                        });
+                                                    } else {
+                                                        grid.reload();
+                                                    }
+                                                }
+                                            })
+                                        } else if (json.code === 500) {
+
+                                            console.log(json);
+
+                                            var html1 = "<div class=\"mini-fit\" id='ddd' style=\"position:absolute;width:786px;height:300px;overflow:scroll;text-align:left;\">" +
+                                                '<div style="margin: 0 20px;word-wrap:break-word;word-break:break-all;width:746px">' +
+                                                json.data +
+                                                '</div>' +
+                                                "</div>";
+                                            mini.showMessageBox({
+                                                title: "提示",
+                                                width: 300,
+                                                iconCls: "mini-messagebox-warning",
+                                                buttons: ["查看"],
+                                                message: json.msg,
+                                                callback: function (action) {
+                                                    if (action === '查看') {
+                                                        mini.showMessageBox({
+                                                            height: 800,
+                                                            width: 800,
+                                                            title: "导入出错",
+                                                            html: html1,
+                                                            iconCls: "mini-messagebox-warning",
+                                                            callback: function (action) {
+                                                                grid.reload();
+                                                            }
+                                                        });
+                                                    } else {
+                                                        grid.reload();
+                                                    }
+                                                }
+                                            })
+                                        }
+                                    },
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        mini.hideMessageBox(messageId);
+                                        clearInterval(interval);
+                                        onHandleError(jqXHR.status, jqXHR);
+                                    }
+                                });
+
+                            }
+                        });
+
+                    }
+                    if (action == "下载") {
+                        proxyLoc(window.location).href = encodeURI("/EIP/maindatabase/querymanage/exportExcelModule.htm?queryCode=rnxzxmzhar5jrrgefgftbmcqkbbmxeht");
+                    }
+                }
+            });
+        }
+
+        /**
+         * 功能：切换为预览模式
+         */
+        function onPreview() {
+            //判断当前是否已被授权
+            if (authRule != '') {
+                proxyLoc(window.location).href = encodeURI("/EIP/maindatabase/querymanage/preview_main.htm?queryCode=rnxzxmzhar5jrrgefgftbmcqkbbmxeht&auhtId=" + authRule.id);
+            } else {
+                proxyLoc(window.location).href = encodeURI("/EIP/maindatabase/querymanage/preview_main.htm?queryCode=rnxzxmzhar5jrrgefgftbmcqkbbmxeht");
+            }
+        }
+
+        /**
+         * 功能:数据分享
+         */
+        function onShare() {
+            onOpen("/EIP/maindatabase/queryShare/share-list-manager.htm?queryCode=rnxzxmzhar5jrrgefgftbmcqkbbmxeht&currentLevel=1&pid=0&pids=0", "数据分享列表", function () {
+            });
+        }
+
+        /**
+         * 功能：打开权限管理页面
+         */
+        function onOpenAuthManage() {
+            openNewTabBack("/EIP/maindatabase/authmanage/authManageList.htm?queryCode=rnxzxmzhar5jrrgefgftbmcqkbbmxeht", "授权管理", "授权管理",
+                function (tabs, tab) {
+                },
+                function (tabs, tab) {
+                }
+            );
+        }
+
+        /**
+         * 功能：打开数据统计页面
+         */
+        function onOpenChatStatistics() {
+            var queryName = encodeURI("");
+            onOpen("/EIP/dataVisualization/queryChartShow.htm?queryCode=rnxzxmzhar5jrrgefgftbmcqkbbmxeht&queryName=" + queryName, "数据统计", function () {
+            });
+        }
+
+        /**
+         * 功能：刷新提示
+         */
+        var abnormalTimer = "";
+        $("#abnormal").show();
+        abnormalTimer = setInterval(function () {
+            fadeAbnormal()
+        }, 5000);
+
+        function fadeAbnormal() {
+            $("#abnormal").fadeOut(500).fadeIn(500);
+        }
+
+        function onOpenSearch(e) {
+            var btn = e.sender;
+            var display = $('#gaojichaxun').css('display');
+            if (display == "none") {
+                btn.setIconCls("icon-revocation");
+                btn.setText("关闭查询");
+                $('#gaojichaxun').css('display', "block");
+            } else {
+                btn.setIconCls("icon-search");
+                btn.setText("高级查询");
+                $('#gaojichaxun').css('display', "none");
+            }
+            mini.parse();
+        }
+
+
+        //关闭高级查询
+        function closeHighQuery() {
+            loadQueryTagMenu();
+            restoreCondArea();
+            $('#gaojichaxun').css('display', "none");
+            onSearch();
+            mini.parse();
+        }
+
+        //查询标签
+        function loadQueryTagMenu() {
+            $.ajax({
+                url: "/EIP/maindatabase/querytag/queryTagList.htm",
+                data: {
+                    queryCode: 'rnxzxmzhar5jrrgefgftbmcqkbbmxeht'
+                },
+                type: "post",
+                success: function (text) {
+                    var html = "";
+                    var tagList = text;
+                    if (tagList.length > 0) {
+                        $("#quick-tag-box").show();
+                        var logic = {
+                            'equal': '等于',
+                            'gte': '大于等于',
+                            'lte': '小于等于',
+                            'ne': '不等于',
+                            'gt': '大于',
+                            'lt': '小于',
+                            'like': '模糊匹配',
+                            'in': '包含',
+                            'notin': '不包含',
+                            'empty': '为空',
+                            'notempty': '不为空'
+                        };
+                        for (var i = 0; i < tagList.length; i++) {
+                            var tag = tagList[i]
+                            tagname = tag.tagname;
+                            var condlist = tag.condlist;
+                            var title = "";
+                            for (var j = 0; j < condlist.length; j++) {
+                                var cond = condlist[j];
+                                var fieldCnName = cond['fieldCnName'];
+                                var logicRelation = cond['logicRelation'];
+                                var paramValue = cond['paramValue'];
+                                title += "【" + fieldCnName + logic[logicRelation] + paramValue + "】";
+                            }
+
+                            html += "<span class='crumb-select-item' title='" + title + "'><a href='javascript:void(0);' onclick='queryByTag(\"" + encodeURIComponent(JSON.stringify(tag)) + "\")'>" + tagname + "</a>" +
+                                "<a href='javascript:void(0);' onclick='deleteTag(\"" + tag.tagid + "\")' class='crumb-select-item-close'></a></span>"
+                        }
+                        $(".crumb-select-item").remove();
+                        $(".shaixuan-tj").append(html);
+                    } else {
+                        $("#quick-tag-box").hide();
+                        mini.parse();
+                    }
+                    mini.layout();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    onHandleError(jqXHR.status, jqXHR);
+                }
+            });
+        }
+
+        //删除快捷标签
+        function deleteTag(tagid) {
+            mini.confirm("确定要删除该快捷标签吗？", "提示信息", function (messageId) {
+                if (messageId == "ok") {
+                    $.ajax({
+                        url: "/EIP/maindatabase/querytag/deleteTag.htm",
+                        type: "post",
+                        data: {tagid: tagid},
+                        success: function (res) {
+                            loadQueryTagMenu();
+                            //重新加载数据
+                            grid.load();
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            onHandleError(jqXHR.status, jqXHR);
+                        }
+                    });
+                }
+            });
+        }
+
+        //选择快捷标签的时候，加载标签条件，查询列表
+        function queryByTag(tag) {
+            if ($(event.target).closest(".crumb-select-item").hasClass("active-style")) {
+                $(event.target).closest(".crumb-select-item").removeClass("active-style");
+                //restoreCondArea();
+                onClearSearch();
+                tagResult = {};
+            } else {
+                $(event.target).closest(".crumb-select-item").addClass("active-style").siblings().removeClass('active-style');
+                var tagObj = JSON.parse(decodeURIComponent(tag));
+                var condList = tagObj.condlist;
+                var condlogic = tagObj.condlogic;
+                //$('#gaojichaxun').css('display', "block");
+                //constructCondition(condList);
+
+                globleCondLogic = condlogic;
+                var userCondition = {};
+                if (condList && condList.length > 0) {
+                    var parmaListStr = mini.encode(condList);
+                    userCondition = {userParamList: parmaListStr, joinRelation: condlogic}
+                    tagResult=userCondition;
+                }
+                grid.load({usercond: mini.encode(userCondition)});
+            }
+
+        }
+
+
+        /**
+         保存为快捷体条件
+         */
+        function saveAsQueryTag() {
+            var logic = mini.get("condLogic").getValue();
+            globleCondLogic = logic;
+            var paramList = onGetQueryData();
+            var tagData = {};
+            if (paramList && paramList.length > 0) {
+                var parmaListStr = mini.encode(paramList);
+                tagData = {condlist: parmaListStr, condlogic: logic, querycode: 'rnxzxmzhar5jrrgefgftbmcqkbbmxeht'}
+                mini.prompt("请输入快捷标签名称：", "请输入",
+                    function (action, value) {
+                        if (action == "ok") {
+                            tagData.tagname = value;
+                            var data = mini.encode(tagData);
+                            grid.loading();
+                            $.ajax({
+                                url: "/EIP/maindatabase/querytag/saveTag.htm",
+                                type: "post",
+                                data: {data: data},
+                                success: function (res) {
+                                    grid.unmask();
+                                    var result = mini.decode(res);
+                                    mini.alert(result.msg);
+                                    //重新查询所有标签
+                                    loadQueryTagMenu();
+                                    restoreCondArea();
+                                    mini.parse();
+                                },
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    onHandleError(jqXHR.status, jqXHR);
+                                }
+                            });
+                        }
+                    }
+                );
+            } else {
+                mini.alert("请输入条件");
+            }
+        }
+
+
+        function restoreCondArea() {
+
+            $("#tableData").empty();
+            var html = '<tr id="line_0" class="serach_list">' +
+                '<td>' +
+                '<input name="fieldName" class="mini-combobox" data=\'' + mini.encode(conditionFieldArr) + '\' id="queryConditionFields_0" textField="fieldCnName" valueField="fieldName" emptyText="请选择..." style="width: 100%;" onvaluechanged="getFieldType(e,0)"/>' +
+                '</td>' +
+                '<td>' +
+                '<input id="logicRelation_0" name="logicRelation" class="mini-combobox" textField="text" valueField="id" emptyText="请选择..." ' +
+                'allowInput="false" showNullItem="false" style="width: 100%;" onvaluechanged="getLogic(e,0)"/>' +
+                '</td>' +
+                '<td>' +
+                '<div id="serachArea_0" style="width: 100%;">' +
+                '<input id="paramValue_0" name="paramValue" class="mini-textbox" style="width: 100%;" />' +
+                '</div>' +
+                '</td>' +
+                '<td align="center">' +
+                '<a onclick="delete_search(this);" href="#"><img border="0" src="/EIP/core/miniui/themes/2016-blue/images/icons/remove_gif.gif" /></a>' +
+                '&nbsp;&nbsp;&nbsp;' +
+                '<a onclick="add_search(this);" href="#"><img border="0" src="/EIP/core/miniui/themes/flat2015/images/icons/add.gif" /></a>' +
+                '</td>' +
+                '</tr>';
+            $("#tableData").append(html);
+            mini.parse();
+        }
+
+
+        /**
+         * 展示快捷标签里的条件
+         */
+        function constructCondition(conditionJsonArr) {
+            restoreCondArea();
+            if (conditionJsonArr) {
+                if (conditionJsonArr.length >= 1) {
+                    var conditionJson = conditionJsonArr[0];
+                    mini.get("queryConditionFields_0").setValue(conditionJson.fieldName);
+                    //mini.get("queryConditionFields_0").setText(conditionJson.fieldCnName);
+
+                    var fieldTypeEn = fieldTypeObj[conditionJson.fieldName];
+                    var logic = [{id: 'equal', text: '等于'}, {id: 'gte', text: '大于等于'}, {
+                        id: 'lte',
+                        text: '小于等于'
+                    }, {id: 'ne', text: '不等于'}, {id: 'gt', text: '大于'}, {id: 'lt', text: '小于'}, {
+                        id: 'like',
+                        text: '模糊匹配'
+                    }, {id: 'in', text: '包含'}, {id: 'notin', text: '不包含'}, {id: 'empty', text: '为空'}, {
+                        id: 'notempty',
+                        text: '不为空'
+                    }];
+                    if (fieldTypeEn == 'N') {
+                        //数字(N) 不支持包含，不包含，而且后台Java对应的类型是int
+                        logic = [{id: 'equal', text: '等于'}, {id: 'gt', text: '大于'}, {id: 'lt', text: '小于'}, {
+                            id: 'gte',
+                            text: '大于等于'
+                        }, {id: 'lte', text: '小于等于'}, {id: 'ne', text: '不等于'}, {
+                            id: 'empty',
+                            text: '为空'
+                        }, {id: 'notempty', text: '不为空'}];
+                    } else if (fieldTypeEn == 'D') {
+                        //日期(D) 不支持包含，不包含，
+                        logic = [{id: 'equal', text: '等于'}, {id: 'gt', text: '大于'}, {id: 'lt', text: '小于'}, {
+                            id: 'gte',
+                            text: '大于等于'
+                        }, {id: 'lte', text: '小于等于'}, {id: 'ne', text: '不等于'}, {
+                            id: 'empty',
+                            text: '为空'
+                        }, {id: 'notempty', text: '不为空'}];
+                    } else if (fieldTypeEn == 'C') {
+                        logic = [{id: 'equal', text: '等于'}, {id: 'ne', text: '不等于'}, {
+                            id: 'like',
+                            text: '模糊匹配'
+                        }, {id: 'empty', text: '为空'}, {id: 'notempty', text: '不为空'}];
+                    }
+                    mini.get("logicRelation_0").setData(logic);
+                    mini.get("logicRelation_0").setValue(conditionJson.logicRelation);
+                    var e_ = {value: conditionJson.logicRelation};
+                    getLogic(e_, 0);
+                    var codeList = codeJson[conditionJson.fieldName];
+                    if (codeList && codeList.length > 0) {
+                        var comboBox = new mini.ComboBox();
+                        comboBox.setEmptyText("请输入条件值");
+                        comboBox.setId("paramValue_0");
+                        comboBox.setName("paramValue");
+                        comboBox.setValueField("code_key");
+                        comboBox.setTextField("code_value");
+                        comboBox.setStyle("width:100%");
+                        comboBox.setData(codeList);
+                        comboBox.setAllowInput(true);
+                        $("#paramValue_0").remove();
+                        $("#serachArea_0").append(comboBox.getEl());
+                        mini.get("paramValue_0").setValue(conditionJson.paramValue);
+                    } else {
+                        if (fieldTypeEn == 'D') {
+                            var datePicker = new mini.DatePicker();
+                            datePicker.setId("paramValue_0");
+                            datePicker.setName("paramValue");
+                            datePicker.setAllowInput(false);
+                            datePicker.setStyle("width:100%");
+                            $("#paramValue_0").remove();
+                            $("#serachArea_0").append(datePicker.getEl());
+                            mini.get("paramValue_0").setValue(conditionJson.paramValue);
+                        } else {
+                            mini.get("paramValue_0").setValue(conditionJson.paramValue);
+                        }
+                    }
+
+                    for (var i = 1; i < conditionJsonArr.length; i++) {
+                        appendCondition(conditionJsonArr[i], i);
+                    }
+                }
+            }
+
+        }
+
+        /**
+         * 功能：拼接条件
+         * @author ssc
+         * @date 2018-02-05
+         */
+        function appendCondition(conditionJson, line) {
+
+            //清理掉
+            var logic = [{id: 'equal', text: '等于'}, {id: 'gte', text: '大于等于'}, {id: 'lte', text: '小于等于'}, {
+                id: 'ne',
+                text: '不等于'
+            }, {id: 'gt', text: '大于'}, {id: 'lt', text: '小于'}, {id: 'like', text: '模糊匹配'}, {
+                id: 'in',
+                text: '包含'
+            }, {id: 'notin', text: '不包含'}, {id: 'empty', text: '为空'}, {id: 'notempty', text: '不为空'}];
+            if (conditionJson.fieldType == 'N') {
+                //数字(N) 不支持包含，不包含，而且后台Java对应的类型是int
+                logic = [{id: 'equal', text: '等于'}, {id: 'gt', text: '大于'}, {id: 'lt', text: '小于'}, {
+                    id: 'gte',
+                    text: '大于等于'
+                }, {id: 'lte', text: '小于等于'}, {id: 'ne', text: '不等于'}, {id: 'empty', text: '为空'}, {
+                    id: 'notempty',
+                    text: '不为空'
+                }];
+            } else if (conditionJson.fieldType == 'D') {
+                //日期(D) 不支持包含，不包含，
+                logic = [{id: 'equal', text: '等于'}, {id: 'gt', text: '大于'}, {id: 'lt', text: '小于'}, {
+                    id: 'gte',
+                    text: '大于等于'
+                }, {id: 'lte', text: '小于等于'}, {id: 'ne', text: '不等于'}, {id: 'empty', text: '为空'}, {
+                    id: 'notempty',
+                    text: '不为空'
+                }];
+            } else if (conditionJson.fieldType == 'C') {
+                logic = [{id: 'equal', text: '等于'}, {id: 'ne', text: '不等于'}, {id: 'like', text: '模糊匹配'}, {
+                    id: 'empty',
+                    text: '为空'
+                }, {id: 'notempty', text: '不为空'}];
+            }
+
+            var valueArea = '<input name="paramValue" id="paramValue_' + line + '" value="' + conditionJson.paramValue + '" class="mini-textbox" style="width: 100%;" />';
+            var codeList = codeJson[conditionJson.fieldName];
+            var fieldTypeEn = fieldTypeObj[conditionJson.fieldName];
+            if (codeList && codeList.length > 0) {
+                valueArea = '<input name="paramValue" id="paramValue_' + line + '" value="' + conditionJson.paramValue + '"  valueField="code_key"  textField ="code_value"  data=\'' + mini.encode(codeList) + '\' class="mini-combobox" style="width: 100%;" />';
+            } else {
+                if (conditionJson.fieldType == 'D') {
+                    valueArea = '<input name="paramValue" id="paramValue_' + line + '" value="' + conditionJson.paramValue + '"  class="mini-datepicker" style="width: 100%;" />';
+                }
+            }
+
+            var queryConditionId = "queryConditionId_" + line;
+            var o = $("#tableData");
+            if ($("#tableData .serach_list").size() > 10) {
+                mini.alert("不允许超过10个条件");
+            } else {
+                var html = '<tr class="serach_list" id="line_' + line + '">' +
+                    '<td>' +
+                    '<input name="fieldName" class="mini-combobox"  data=\'' + mini.encode(conditionFieldArr) + '\'  id="' + queryConditionId + '" value="' + conditionJson.fieldName + '"  textField=fieldCnName valueField="fieldName" emptyText="请选择..." style="width: 100%;" onvaluechanged="getFieldType(e,' + line + ')"/>' +
+                    '</td>' +
+                    '<td>' +
+                    '<input id="logicRelation_' + line + '" name="logicRelation" data=\'' + mini.encode(logic) + '\' class="mini-combobox"  value="' + conditionJson.logicRelation + '" valueField="id" textField="text"  emptyText="请选择..." ' +
+                    'allowInput="false" showNullItem="false" style="width: 100%;" onvaluechanged="getLogic(e,' + line + ')"/>' +
+                    '</td>' +
+                    '<td>' +
+                    '<div id="serachArea_' + line + '" style="width: 100%;">' +
+                    valueArea +
+                    '</div>' +
+                    '</td>' +
+                    '<td align="center">' +
+                    '<a onclick="delete_search(this);" href="#"><img border="0" src="/EIP/core/miniui/themes/2016-blue/images/icons/remove_gif.gif" /></a>' +
+                    '&nbsp;&nbsp;&nbsp;' +
+                    '<a onclick="add_search(this);" href="#"><img border="0" src="/EIP/core/miniui/themes/flat2015/images/icons/add.gif" /></a>' +
+                    '</td>' +
+                    '</tr>';
+                o.append(html);
+                mini.parse();
+
+                var e_ = {value: conditionJson.logicRelation};
+                getLogic(e_, line);
+            }
+        }
+
+        /**
+         * 功能：下载附件
+         * gaojj
+         * 2018年9月27日
+         */
+        function downLoadFile(ele, url, oldName, type) {
+            var imgReg = /^\.?(gif|png|jpg|jpeg|jpe|bmp|dib|jfif|tif|tiff){1}$/i;
+
+            // 图片预览
+            if (imgReg.test(type) && window.top.previewImage) {
+                var imgs = [], index = 0;
+                var $imgs = $(ele).closest('.mini-grid-cell').find('img[data-url]').filter(function () {
+                    return imgReg.test($(this).attr('data-type'));
+                });
+                index = $imgs.index($(event.target).closest('img[data-url]'));
+
+                $imgs.each(function () {
+                    imgs.push({
+                        url: $(this).attr('data-url'),
+                        name: $(this).attr('alt')
+                    })
+                });
+
+                window.top.previewImage(imgs, index);
+                return;
+            }
+
+            oldName = encodeURI(oldName);
+            proxyLoc(parent.window.location).href = basePath + url + "&mode=download";
+        }
+
+        /**
+         * 修改表格字段顺序
+         */
+        function manageFieldOrder() {
+            mini.open({
+                url: "/EIP/maindatabase/querymanage/fieldsSelector_right.htm",
+                title: "列表设置",
+                width: 320,
+                height: 470,
+                allowResize: false,
+                onload: function () {
+                    var iframe = this.getIFrameEl();
+                    iframe.contentWindow.onSetData(mini.decode(mini.decode(PageField)['fieldStyle']));
+                },
+                ondestroy: function (action) {
+                    if (action == 'ok') {
+                        var iframe = this.getIFrameEl();
+                        var fields = iframe.contentWindow.onGetData();
+                        var id = mini.decode(PageField)['id'];
+                        var fieldStyle = mini.decode(mini.decode(PageField)['fieldStyle']);
+                        if (fieldStyle.length == fields.length) {
+                            $.ajax({
+                                url: '/EIP/maindatabase/querymanage/updateFieldStyle.htm',
+                                type: 'POST',
+                                data: {id: id, fieldStyle: JSON.stringify(fields)}
+                            });
+                            location.reload();
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+
+</head>
+<body>
+<div style="height: 100%;">
+    <div class="mini-toolbar" borderStyle="border-bottom:0;"
+    ">
+    <table style="width: 100%" class="searchDivs_tab">
+        <tr>
+            <td style="width:64%;">
+                <div id="newFlow">
+                    <a class="mini-button" iconCls="icon-excel" onclick="onExport()" plain="true">导出</a>
+                    <a id="importFromExcel" class="mini-button" iconCls="icon-excel" onclick="onImport()" plain="true">导入</a>
+                    <a class="mini-button" iconCls="icon-search" style="display:none;" onclick="onOpenSearch"
+                       plain="true" id="opensearch">高级查询</a>
+                    <a class="mini-button" iconCls="icon-setting" onclick="manageFieldOrder" plain="true"
+                       id="set-field-btn">列表设置</a>
+                </div>
+
+            </td>
+            <td style="text-align: right;">
+                <div id="btn_group">
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div class="quick-tag-box" id="quick-tag-box">
+    <div class="clearfix">
+        <p class="fast-label"><span>快捷标签</span></p>
+        <p class="shaixuan-tj floatLeft clearfix"></p>
+        <!-- <p id="sxbtn" class="shaixuan-btn clearfix"><span><em>收起筛选</em><i class="icon-angle-up"></i></span></p> -->
+    </div>
+</div>
+
+<!-- 高级查询 -->
+<div id="gaojichaxun" class="bsu-hall-detail-jibenxinxi" style="display: none;">
+    <div class="bsu-hall-detail-queryconditon">
+        <fieldset style="border: 1px solid #ddd; ">
+            <legend>请选择查询条件：</legend>
+            <table style="width: 100%;">
+                <colgroup>
+                    <col width="20%"/>
+                    <col width="20%"/>
+                    <col width="50%"/>
+                    <col width="10%"/>
+                </colgroup>
+                <tr>
+                    <td align="center">
+                        条件字段
+                    </td>
+                    <td align="center">
+                        条件
+                    </td>
+                    <td align="center">
+                        条件值
+                    </td>
+                    <td align="center">
+                        操作
+                    </td>
+                </tr>
+                <tbody id="tableData">
+                <tr class="serach_list" id="line_0">
+                    <td>
+                        <input name="fieldName" class="mini-combobox "
+                               textField=fieldCnName valueField="fieldName"
+                               emptyText="请选择..." id="queryConditionFields_0"
+                               onvaluechanged="getFieldType(e,0)"
+                               style="width: 100%;"/>
+                    </td>
+                    <td>
+                        <input id="logicRelation_0" name="logicRelation" class="mini-combobox"
+                               textField="text" valueField="id" emptyText="请选择..." onvaluechanged="getLogic(e,0)"
+                               allowInput="false" showNullItem="false" style="width: 100%;"/>
+                    </td>
+                    <td>
+                        <div id="serachArea_0" style="width: 100%;">
+                            <input id="paramValue_0" name="paramValue" class="mini-textbox" style="width: 100%;"/>
+                        </div>
+                    </td>
+                    <td align="center">
+                        <a onclick="delete_search(this);" href="#"><img border="0"
+                                                                        src="/EIP/core/miniui/themes/2016-blue/images/icons/remove_gif.gif"/></a>&nbsp;&nbsp;&nbsp;<a
+                            onclick="add_search(this);" href="#"><img border="0"
+                                                                      src="/EIP/core/miniui/themes/flat2015/images/icons/add.gif"/></a>
+                    </td>
+                </tr>
+                </tbody>
+                <tr>
+                    <td colspan="8">
+                        <div id="search_str" style="height: 10px; color: red;"></div>
+                    </td>
+                </tr>
+            </table>
+            <div style="overflow: hidden">
+                <input id="condLogic" class="mini-radiobuttonlist" style="width:260px;float: left"
+                       valueField="id" textField="text" name="condLogic" value="$and"
+                       data="[{id:'$and',text:'满足以上所有条件'},{id:'$or',text:'满足以上任意条件'}]"/>
+
+                <a class="mini-button" style="float: left; margin-top: 1px;" iconCls="icon-search" onclick="onSearch()"
+                   plain="true">查询</a>
+                <a class="mini-button" style="float: left; margin-top: 1px;" iconCls="icon-save"
+                   onclick="saveAsQueryTag()" plain="true">保存到快捷查询</a>
+                
+                <!-- <a class="button" style="background:#EF4F4F;" onclick="onClearSearch()" >清空以上所有条件</a> -->
+            </div>
+        </fieldset>
+    </div>
+
+</div>
+
+<!-- 高级查询 -->
+<div class="mini-fit">
+    <div id="gridDiv" style="width: 100%;height:100%;"></div>
+</div>
+</div>
+</div>
+</body>
+</html>

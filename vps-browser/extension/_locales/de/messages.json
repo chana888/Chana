@@ -1,0 +1,446 @@
+{
+   "aboutTitle": {
+      "description": "Über Dialogtitel",
+      "message": "Über"
+   },
+   "accuratePerformance": {
+      "description": "Genaue Leistungsanzeige",
+      "message": "Genau"
+   },
+   "activeTabsLabel": {
+      "description": "Anzahl aktiver Tabs Label",
+      "message": "Aktive Tabs"
+   },
+   "advancedSettingsLabel": {
+      "description": "Erweiterte Einstellungen Abschnittslabel",
+      "message": "Erweiterte Einstellungen"
+   },
+   "autoTheme": {
+      "description": "Automatisches Design Option",
+      "message": "Automatisch"
+   },
+   "balancedPerformance": {
+      "description": "Ausgewogene Leistungsanzeige",
+      "message": "Ausgewogen"
+   },
+   "betterThanSmallDescription": {
+      "description": "Beschreibung für mittlere Modelloption",
+      "message": "Etwas größer als e5-small, aber bessere Leistung"
+   },
+   "bookmarksBarLabel": {
+      "description": "Lesezeichenleiste Ordnername",
+      "message": "Lesezeichenleiste"
+   },
+   "bytesUnit": {
+      "description": "Bytes Einheit",
+      "message": "Bytes"
+   },
+   "cacheDetailsLabel": {
+      "description": "Cache-Details Abschnittslabel",
+      "message": "Cache-Details"
+   },
+   "cacheEntriesLabel": {
+      "description": "Anzahl Cache-Einträge Label",
+      "message": "Cache-Einträge"
+   },
+   "cacheSizeLabel": {
+      "description": "Cache-Größe Label",
+      "message": "Cache-Größe"
+   },
+   "cancelButton": {
+      "description": "Abbrechen-Schaltflächentext",
+      "message": "Abbrechen"
+   },
+   "cleanExpiredCacheButton": {
+      "description": "Abgelaufenen Cache bereinigen Schaltflächentext",
+      "message": "Abgelaufenen Cache bereinigen"
+   },
+   "cleaningStatus": {
+      "description": "Bereinigungsfortschrittsmeldung",
+      "message": "Wird bereinigt..."
+   },
+   "clearAllCacheButton": {
+      "description": "Gesamten Cache löschen Schaltflächentext",
+      "message": "Gesamten Cache löschen"
+   },
+   "clearAllDataButton": {
+      "description": "Alle Daten löschen Schaltflächentext",
+      "message": "Alle Daten löschen"
+   },
+   "clearDataIrreversibleWarning": {
+      "description": "Unwiderrufliche Aktion Warnung",
+      "message": "Diese Aktion ist unwiderruflich! Nach dem Löschen müssen Sie Webseiten erneut durchsuchen, um den Index neu aufzubauen."
+   },
+   "clearDataList1": {
+      "description": "Erster Punkt in Datenlöschungsliste",
+      "message": "Alle Webseitentextinhaltsindizes"
+   },
+   "clearDataList2": {
+      "description": "Zweiter Punkt in Datenlöschungsliste",
+      "message": "Vektor-Embedding-Daten"
+   },
+   "clearDataList3": {
+      "description": "Dritter Punkt in Datenlöschungsliste",
+      "message": "Suchverlauf und Cache"
+   },
+   "clearDataWarningMessage": {
+      "description": "Datenlöschung Warnmeldung",
+      "message": "Diese Aktion löscht alle indizierten Webseiteninhalte und Vektordaten, einschließlich:"
+   },
+   "clearingStatus": {
+      "description": "Leerungsfortschrittsmeldung",
+      "message": "Wird geleert..."
+   },
+   "closeButton": {
+      "description": "Schließen-Schaltflächentext",
+      "message": "Schließen"
+   },
+   "configCopiedNotification": {
+      "description": "Konfiguration kopiert Erfolgsmeldung",
+      "message": "Konfiguration in Zwischenablage kopiert"
+   },
+   "confirmButton": {
+      "description": "Bestätigen-Schaltflächentext",
+      "message": "Bestätigen"
+   },
+   "confirmClearButton": {
+      "description": "Löschung bestätigen Aktionsschaltfläche",
+      "message": "Löschung bestätigen"
+   },
+   "confirmClearDataTitle": {
+      "description": "Datenlöschung bestätigen Dialogtitel",
+      "message": "Datenlöschung bestätigen"
+   },
+   "connectButton": {
+      "description": "Verbinden-Schaltflächentext",
+      "message": "Verbinden"
+   },
+   "connectedServiceNotStartedStatus": {
+      "description": "Verbunden aber Service nicht gestartet Status",
+      "message": "Verbunden, Service nicht gestartet"
+   },
+   "connectedStatus": {
+      "description": "Verbunden-Statusmeldung",
+      "message": "Verbunden"
+   },
+   "connectingStatus": {
+      "description": "Verbindungsstatusmeldung",
+      "message": "Verbindung wird hergestellt..."
+   },
+   "connectionPortLabel": {
+      "description": "Verbindungsport-Eingabelabel",
+      "message": "Verbindungsport"
+   },
+   "connectionStatusLabel": {
+      "description": "Verbindungsstatuslabel",
+      "message": "Verbindungsstatus"
+   },
+   "copyConfigButton": {
+      "description": "Konfiguration kopieren Schaltflächentext",
+      "message": "Konfiguration kopieren"
+   },
+   "currentPageLabel": {
+      "description": "Aktuelle Seite Label",
+      "message": "Aktuelle Seite"
+   },
+   "darkTheme": {
+      "description": "Dunkles Design Option",
+      "message": "Dunkel"
+   },
+   "dataClearedNotification": {
+      "description": "Daten gelöscht Erfolgsmeldung",
+      "message": "Daten erfolgreich gelöscht"
+   },
+   "debugModeLabel": {
+      "description": "Debug-Modus Umschalter Label",
+      "message": "Debug-Modus"
+   },
+   "detectingStatus": {
+      "description": "Erkennungsstatusmeldung",
+      "message": "Erkennung läuft..."
+   },
+   "disconnectButton": {
+      "description": "Trennen-Schaltflächentext",
+      "message": "Trennen"
+   },
+   "disconnectedStatus": {
+      "description": "Getrennt-Statusmeldung",
+      "message": "Getrennt"
+   },
+   "downloadingModelStatus": {
+      "description": "Modell-Download-Fortschritt mit Prozentsatz",
+      "message": "Modell wird heruntergeladen... $PROGRESS$%",
+      "placeholders": {
+         "progress": {
+            "content": "$1",
+            "example": "50"
+         }
+      }
+   },
+   "downloadingStatus": {
+      "description": "Download-Fortschrittsmeldung",
+      "message": "Wird heruntergeladen..."
+   },
+   "embeddingModelLabel": {
+      "description": "Hauptabschnittstitel für Modellauswahl",
+      "message": "Embedding-Modell"
+   },
+   "expiredLabel": {
+      "description": "Abgelaufenes Element Label",
+      "message": "Abgelaufen"
+   },
+   "exportDataButton": {
+      "description": "Daten exportieren Schaltflächentext",
+      "message": "Daten exportieren"
+   },
+   "extensionDescription": {
+      "description": "Erweiterungsbeschreibung",
+      "message": "Verwandeln Sie Chrome in einen MCP-Server. Lassen Sie KI-Assistenten wie Claude/Codex Ihren Browser steuern - navigieren, klicken, Formulare ausfüllen, Screenshots."
+   },
+   "extensionName": {
+      "description": "Erweiterungsname",
+      "message": "MCP Chrome Extension - AI Browser-Steuerung"
+   },
+   "fastPerformance": {
+      "description": "Schnelle Leistungsanzeige",
+      "message": "Schnell"
+   },
+   "gigabytesUnit": {
+      "description": "Gigabytes Einheit",
+      "message": "GB"
+   },
+   "helpTitle": {
+      "description": "Hilfe Dialogtitel",
+      "message": "Hilfe"
+   },
+   "importDataButton": {
+      "description": "Daten importieren Schaltflächentext",
+      "message": "Daten importieren"
+   },
+   "indexDataManagementLabel": {
+      "description": "Hauptabschnittstitel für Datenverwaltung",
+      "message": "Index-Datenverwaltung"
+   },
+   "indexSizeLabel": {
+      "description": "Indexgröße Label",
+      "message": "Indexgröße"
+   },
+   "indexedPagesLabel": {
+      "description": "Anzahl indizierter Seiten Label",
+      "message": "Indizierte Seiten"
+   },
+   "infoNotification": {
+      "description": "Allgemeine Informationsmeldung",
+      "message": "Information"
+   },
+   "initSemanticEngineButton": {
+      "description": "Semantische Engine initialisieren Schaltflächentext",
+      "message": "Semantische Engine initialisieren"
+   },
+   "initializingStatus": {
+      "description": "Initialisierung-Fortschrittsmeldung",
+      "message": "Initialisierung..."
+   },
+   "itemsUnit": {
+      "description": "Elemente Zähleinheit",
+      "message": "Elemente"
+   },
+   "kilobytesUnit": {
+      "description": "Kilobytes Einheit",
+      "message": "KB"
+   },
+   "languageSelectorLabel": {
+      "description": "Sprachauswahl Label",
+      "message": "Sprache"
+   },
+   "lastUpdatedLabel": {
+      "description": "Zeitstempel der letzten Aktualisierung",
+      "message": "Zuletzt aktualisiert:"
+   },
+   "lightTheme": {
+      "description": "Helles Design Option",
+      "message": "Hell"
+   },
+   "lightweightModelDescription": {
+      "description": "Beschreibung für leichtgewichtige Modelloption",
+      "message": "Leichtgewichtiges mehrsprachiges Modell"
+   },
+   "loadingCacheInfoStatus": {
+      "description": "Cache-Informationen laden Status",
+      "message": "Cache-Informationen werden geladen..."
+   },
+   "loadingStatus": {
+      "description": "Ladefortschrittsmeldung",
+      "message": "Wird geladen..."
+   },
+   "mainContentLabel": {
+      "description": "Hauptinhalt Barrierefreiheitslabel",
+      "message": "Hauptinhalt"
+   },
+   "mcpServerConfigLabel": {
+      "description": "MCP Server-Konfigurationsabschnittslabel",
+      "message": "MCP Server-Konfiguration"
+   },
+   "megabytesUnit": {
+      "description": "Megabytes Einheit",
+      "message": "MB"
+   },
+   "menuLabel": {
+      "description": "Menü Barrierefreiheitslabel",
+      "message": "Menü"
+   },
+   "modelCacheManagementLabel": {
+      "description": "Hauptabschnittstitel für Cache-Verwaltung",
+      "message": "Modell-Cache-Verwaltung"
+   },
+   "modelCorruptedErrorMessage": {
+      "description": "Modell-Beschädigungsfehlermeldung",
+      "message": "Modelldatei beschädigt oder unvollständig, bitte Download wiederholen"
+   },
+   "modelFailedStatus": {
+      "description": "Modell-Ladefehler Status",
+      "message": "Modell konnte nicht geladen werden"
+   },
+   "modelLoadedStatus": {
+      "description": "Modell erfolgreich geladen Status",
+      "message": "Modell geladen"
+   },
+   "multilingualModelDescription": {
+      "description": "Beschreibung für mehrsprachige Modelloption",
+      "message": "Mehrsprachiges semantisches Modell"
+   },
+   "nativeServerConfigLabel": {
+      "description": "Hauptabschnittstitel für Native Server-Einstellungen",
+      "message": "Native Server-Konfiguration"
+   },
+   "navigationLabel": {
+      "description": "Navigation Barrierefreiheitslabel",
+      "message": "Navigation"
+   },
+   "networkErrorMessage": {
+      "description": "Netzwerkverbindungsfehlermeldung",
+      "message": "Netzwerkverbindungsfehler, bitte Netzwerk prüfen und erneut versuchen"
+   },
+   "newTabLabel": {
+      "description": "Neuer Tab Label",
+      "message": "Neuer Tab"
+   },
+   "noCacheDataMessage": {
+      "description": "Keine Cache-Daten verfügbar Meldung",
+      "message": "Keine Cache-Daten vorhanden"
+   },
+   "pagesUnit": {
+      "description": "Seiten Zähleinheit",
+      "message": "Seiten"
+   },
+   "permissionDeniedErrorMessage": {
+      "description": "Zugriff verweigert Fehlermeldung",
+      "message": "Zugriff verweigert"
+   },
+   "processingCacheStatus": {
+      "description": "Cache verarbeiten Status",
+      "message": "Cache wird verarbeitet..."
+   },
+   "processingStatus": {
+      "description": "Verarbeitung-Fortschrittsmeldung",
+      "message": "Verarbeitung..."
+   },
+   "refreshStatusButton": {
+      "description": "Status aktualisieren Schaltflächen-Tooltip",
+      "message": "Status aktualisieren"
+   },
+   "reinitializeButton": {
+      "description": "Neu initialisieren Schaltflächentext",
+      "message": "Neu initialisieren"
+   },
+   "resetButton": {
+      "description": "Zurücksetzen-Schaltflächentext",
+      "message": "Zurücksetzen"
+   },
+   "retryButton": {
+      "description": "Wiederholen-Schaltflächentext",
+      "message": "Wiederholen"
+   },
+   "runningStatusLabel": {
+      "description": "Server-Betriebsstatuslabel",
+      "message": "Betriebsstatus"
+   },
+   "saveButton": {
+      "description": "Speichern-Schaltflächentext",
+      "message": "Speichern"
+   },
+   "semanticEngineInitFailedStatus": {
+      "description": "Semantische Engine Initialisierung fehlgeschlagen Status",
+      "message": "Initialisierung der semantischen Engine fehlgeschlagen"
+   },
+   "semanticEngineInitializingStatus": {
+      "description": "Semantische Engine Initialisierungsstatus",
+      "message": "Semantische Engine wird initialisiert..."
+   },
+   "semanticEngineLabel": {
+      "description": "Hauptabschnittstitel für semantische Engine",
+      "message": "Semantische Engine"
+   },
+   "semanticEngineNotInitStatus": {
+      "description": "Semantische Engine nicht initialisiert Status",
+      "message": "Semantische Engine nicht initialisiert"
+   },
+   "semanticEngineReadyStatus": {
+      "description": "Semantische Engine bereit Status",
+      "message": "Semantische Engine bereit"
+   },
+   "serviceNotConnectedStatus": {
+      "description": "Service nicht verbunden Status",
+      "message": "Service nicht verbunden"
+   },
+   "serviceRunningStatus": {
+      "description": "Service läuft mit Portnummer",
+      "message": "Service läuft (Port: $PORT$)",
+      "placeholders": {
+         "port": {
+            "content": "$1",
+            "example": "12306"
+         }
+      }
+   },
+   "settingsTitle": {
+      "description": "Einstellungen Dialogtitel",
+      "message": "Einstellungen"
+   },
+   "statusLabel": {
+      "description": "Allgemeines Statuslabel",
+      "message": "Status"
+   },
+   "successNotification": {
+      "description": "Allgemeine Erfolgsmeldung",
+      "message": "Vorgang erfolgreich abgeschlossen"
+   },
+   "switchingModelStatus": {
+      "description": "Modellwechsel-Fortschrittsmeldung",
+      "message": "Modell wird gewechselt..."
+   },
+   "themeLabel": {
+      "description": "Design-Auswahl Label",
+      "message": "Design"
+   },
+   "timeoutErrorMessage": {
+      "description": "Zeitüberschreitungsfehlermeldung",
+      "message": "Zeitüberschreitung"
+   },
+   "unknownErrorMessage": {
+      "description": "Unbekannte Fehler-Rückfallmeldung",
+      "message": "Unbekannter Fehler, bitte prüfen Sie, ob Ihr Netzwerk auf HuggingFace zugreifen kann"
+   },
+   "vectorDocumentsLabel": {
+      "description": "Anzahl Vektordokumente Label",
+      "message": "Vektordokumente"
+   },
+   "verboseLoggingLabel": {
+      "description": "Ausführliche Protokollierung Umschalter Label",
+      "message": "Ausführliche Protokollierung"
+   },
+   "warningNotification": {
+      "description": "Allgemeine Warnmeldung",
+      "message": "Warnung: Bitte prüfen Sie vor dem Fortfahren"
+   }
+}

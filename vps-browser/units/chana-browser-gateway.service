@@ -1,0 +1,22 @@
+[Unit]
+Description=远程浏览器平台鉴权入口
+After=network.target chana-browser-mcp.service
+Requires=chana-browser-mcp.service
+[Service]
+Type=simple
+User=chana-browser
+Group=chana-browser
+WorkingDirectory=/opt/chana-vps-browser
+Environment=HOME=/var/lib/chana-browser
+Environment=DISPLAY=:97
+Environment=XAUTHORITY=/var/lib/chana-browser/.Xauthority
+ExecStart=/usr/local/bin/node /opt/chana-vps-browser/gateway.cjs
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=8
+MemoryMax=150M
+TasksMax=256
+UMask=0077
+NoNewPrivileges=true
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,10 @@
+[Unit]
+Description=远程浏览器剪贴板助手（root 代执行 xclip）
+After=chana-browser-display.service
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/node /opt/chana-vps-browser/cliphelper.cjs
+Restart=always
+RestartSec=2
+[Install]
+WantedBy=multi-user.target

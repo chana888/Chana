@@ -1,0 +1,44 @@
+name: "dns-enum"
+command: 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe'
+args: ["-ExecutionPolicy", "Bypass", "-File", 'D:\app\chana\chana\recon\infogather_dns.ps1']
+enabled: true
+short_description: "批量 DNS 解析（A/MX/NS/CNAME，输出 CSV）— 被动信息收集"
+description: |
+  批量 DNS 解析工具。从文件或参数读取域名列表，批量解析 A/MX/NS/CNAME 记录并输出 CSV。
+  用于被动信息收集 Mode6（DNS 解析 & CDN 识别）：
+  - 解析出的 A 记录 IP 即资产，应入库（source=dns）
+  - 多域名解析到同一 IP = 同服务器横向线索
+  - MX/NS 记录可发现邮件系统/NS 服务商
+
+  **用法示例：**
+  - `dns-enum domains="www.example.com,mail.example.com"` → 逗号分隔
+  - `dns-enum input_file="D:\domains.txt"` → 文件每行一个
+  - `dns-enum domains="example.com" record_type="MX"` → 只查 MX
+  - 不传 output_file 时默认输出到桌面 infogather_dns_<时间戳>.csv
+parameters:
+  - name: "domains"
+    type: "string"
+    description: "逗号分隔的域名列表"
+    required: false
+    flag: "-Domains"
+    format: "flag"
+  - name: "input_file"
+    type: "string"
+    description: "域名列表文件（每行一个），与 domains 二选一"
+    required: false
+    flag: "-InputFile"
+    format: "flag"
+  - name: "output_file"
+    type: "string"
+    description: "输出 CSV 路径（默认桌面 infogather_dns_<时间戳>.csv）"
+    required: false
+    flag: "-OutputFile"
+    format: "flag"
+  - name: "record_type"
+    type: "string"
+    description: "解析记录类型：A / MX / NS / CNAME / ALL（默认 ALL）"
+    required: false
+    flag: "-RecordType"
+    format: "flag"
+    default: "ALL"
+    options: ["A", "MX", "NS", "CNAME", "ALL"]

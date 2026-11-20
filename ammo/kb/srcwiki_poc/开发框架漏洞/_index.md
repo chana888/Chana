@@ -1,0 +1,102 @@
+# src-wiki 开发框架漏洞 POC 索引
+
+> 共 98 篇 | 来自 src-wiki.com 全库抓取
+
+- [`1688`](1688.md) SpringBootjolokiaRealmJNDI远程代码执行漏洞
+- [`4193`](4193.md) FastAdmin-框架远程代码执行漏洞
+- [`4194`](4194.md) FastAdmin后台开发框架lang任意文件读取漏洞
+- [`4195`](4195.md) FastAdmin插件管理功能getshell
+- [`4196`](4196.md) FastAdmin菜单规则getshell
+- [`4197`](4197.md) Fastadmin前台Getshell方法
+- [`4198`](4198.md) JunAms内容管理系统文件上传漏洞CNVD-2020-24741
+- [`4199`](4199.md) Laravel-.env-配置文件泄露-CVE-2017-16894
+- [`4200`](4200.md) Laravel-Cookie伪造漏洞
+- [`4201`](4201.md) Laravel-小于-8.4.2-Debug模式-_ignition-远程代码执行漏洞-CVE-2021-3129
+- [`4202`](4202.md) Laravel8.70.1跨站脚本攻（XSS击）
+- [`4203`](4203.md) Next.JsSSRF漏洞(CVE-2024-34351)
+- [`4204`](4204.md) Node.js命令注入漏洞（CVE-2021-21315）
+- [`4205`](4205.md) Node.js通过DNS请求实现拒绝服务CVE-2020-8277
+- [`4206`](4206.md) PHPUniteval-stdin.php远程命令执行漏洞CVE-2017-9841
+- [`4207`](4207.md) RailsAccept任意文件读取漏洞CVE-2019-5418
+- [`4208`](4208.md) Railssprockets任意文件读取漏洞CVE-2018-3760
+- [`4209`](4209.md) Spring-Cloud-Function-SPEL-远程命令执行漏洞
+- [`4210`](4210.md) spring-core-rce
+- [`4211`](4211.md) Struts2-s2-061-Poc-(CVE-2020-17530)
+- [`4212`](4212.md) Thymeleaf-3.0.12-RCE-Bypass
+- [`4213`](4213.md) jQueryXSS漏洞CVE-2020-1102211023
+- [`4214`](4214.md) MotionEye视频监控组件list信息泄漏洞CVE-2022-25568
+- [`4766`](4766.md) Next.js - 多漏洞批量 - CVE-2026-44575/44574/44573 等 11 个 CVE
+- [`827`](827.md) Apache CXF Aegis DataBinding 服务端请求伪造漏洞 CVE-2024-28752
+- [`828`](828.md) Apache Commons Configuration 远程命令执行漏洞 CVE-2022-33980
+- [`829`](829.md) Apache Commons Text 远程代码执行漏洞 CVE-2022-42889
+- [`830`](830.md) Apache Dubbo Hessian 反序列化漏洞 CVE-2020-1948
+- [`831`](831.md) Apache Dubbo Java反序列化漏洞 CVE-2019-17564
+- [`832`](832.md) Apache Flink 小于1.9.1远程代码执行 CVE-2020-17518
+- [`833`](833.md) Apache Flink 目录遍历漏洞 CVE-2020-17519
+- [`834`](834.md) Apache OFBiz RMI Bypass RCE CVE-2021-29200
+- [`835`](835.md) Apache OFBiz RMI反序列化漏洞 CVE-2021-26295
+- [`836`](836.md) Apache OFBiz SSRF 和远程代码执行漏洞 CVE-2024-45507
+- [`837`](837.md) Apache OFBiz 反序列化 CVE-2021-30128
+- [`838`](838.md) Apache OFBiz 目录遍历致代码执行漏洞 CVE-2024-36104
+- [`839`](839.md) Apache OFBiz 身份验证绕过导致远程代码执行 CVE-2024-38856
+- [`840`](840.md) Apache OFBiz 身份验证绕过导致远程代码执行 CVE-2024-45195
+- [`841`](841.md) Apache OfBiz 反序列化命令执行漏洞 CVE-2020-9496
+- [`842`](842.md) Apache OfBiz 反序列化命令执行漏洞 CVE-2023-49070
+- [`843`](843.md) Apache OfBiz 服务器端模板注入 SSTI
+- [`844`](844.md) Apache OfBiz 远程代码执行 RCE
+- [`845`](845.md) Apache OfBiz 鉴权绕过导致命令执行 CVE-2023-51467
+- [`846`](846.md) Apache Spark create 未授权访问漏洞
+- [`847`](847.md) Apache Spark doAs 远程命令执行漏洞 CVE-2022-33891
+- [`848`](848.md) Apache Spark unTarUsingTar 命令注入漏洞 SPARK-38631
+- [`849`](849.md) Django  2.0.8 任意URL跳转漏洞 CVE-2018-14574
+- [`850`](850.md) Django GIS SQL注入漏洞 CVE-2020-9402
+- [`851`](851.md) Django JSONField  HStoreField SQL注入漏洞 CVE-2019-14234
+- [`852`](852.md) Django QuerySet.order_by() SQL注入漏洞 CVE-2021-35042
+- [`853`](853.md) Django Trunc(kind) and Extract(lookup_name) SQL注入漏洞 CVE-2022-34265
+- [`854`](854.md) Django debug page XSS漏洞 CVE-2017-12794
+- [`855`](855.md) FastAdmin 远程代码执行漏洞
+- [`856`](856.md) Fastjson 1.2.24 反序列化导致任意命令执行漏洞
+- [`857`](857.md) Fastjson 1.2.47 远程命令执行漏洞
+- [`858`](858.md) Fastjson 远程代码执行漏洞 CVE-2022-25845
+- [`859`](859.md) Flask Jinja2 服务端模板注入漏洞
+- [`860`](860.md) Jackson-databind SSRF&RCE CVE-2020-36179~36182
+- [`861`](861.md) Jackson-databind 反序列化漏洞 CVE-2017-7525+CVE-2017-17485
+- [`862`](862.md) Jackson-databind远程代码执行 CVE-2019-12384
+- [`863`](863.md) Laravel .env 配置文件泄露 CVE-2017-16894
+- [`864`](864.md) Laravel Filemanager插件 download 任意文件读取漏洞 CVE-2022-40734
+- [`865`](865.md) Laravel Ignition 2.5.1 代码执行漏洞 CVE-2021-3129
+- [`866`](866.md) Laravel 小于 8.4.2 Debug模式 _ignition 远程代码执行漏洞 CVE-2021-3129
+- [`867`](867.md) Livewire 组件属性 hydrate 远程代码执行漏洞 CVE-2025-54068
+- [`868`](868.md) MotionEye 视频监控组件 list 信息泄漏洞 CVE-2022-25568
+- [`869`](869.md) PHPUnit eval-stdin.php 远程命令执行漏洞 CVE-2017-9841
+- [`870`](870.md) Rails Accept 任意文件读取漏洞 CVE-2019-5418
+- [`871`](871.md) Rails sprockets 任意文件读取漏洞 CVE-2018-3760
+- [`872`](872.md) Spring Boot 目录遍历 CVE-2021-21234
+- [`873`](873.md) Spring Cloud Config 目录遍历漏洞 CVE-2019-3799
+- [`874`](874.md) Spring Cloud Function SPEL 远程命令执行漏洞
+- [`875`](875.md) Spring Cloud Function SpEL表达式命令注入 CVE-2022-22963
+- [`876`](876.md) Spring Cloud Gateway Actuator API SpEL表达式注入命令执行 CVE-2022-22947
+- [`877`](877.md) Spring Data Binding与JDK 9+导致的远程代码执行漏洞 CVE-2022-22965
+- [`878`](878.md) Spring Data Commons 远程命令执行漏洞 CVE-2018-1273
+- [`879`](879.md) Spring Data Rest 远程命令执行漏洞 CVE-2017-8046
+- [`880`](880.md) Spring Framework 安全绕过漏洞 CVE-2023-20860
+- [`881`](881.md) Spring Framework 特定条件下目录遍历漏洞 CVE-2024-38819
+- [`882`](882.md) Spring Messaging 远程命令执行漏洞 CVE-2018-1270
+- [`883`](883.md) Spring Security OAuth2 远程命令执行漏洞 CVE-2016-4977
+- [`884`](884.md) Spring WebFlow 远程代码执行漏洞 CVE-2017-4971
+- [`885`](885.md) Spring 框架因 Jetty URI 解析不一致导致的路径穿越漏洞 CVE-2025-41242
+- [`886`](886.md) ThinkPHP 2.x 任意代码执行漏洞
+- [`887`](887.md) ThinkPHP 命令执行漏洞 CNVD-2022-86535
+- [`888`](888.md) ThinkPHP 多语言本地文件包含漏洞
+- [`889`](889.md) ThinkPHP5 5.0.22 5.1.29 远程代码执行漏洞
+- [`890`](890.md) ThinkPHP5 5.0.23 远程代码执行漏洞
+- [`891`](891.md) ThinkPHP5 SQL注入漏洞 && 敏感信息泄露
+- [`892`](892.md) Vite 开发服务器 WebSocket 任意文件读取漏洞 CVE-2026-39363
+- [`893`](893.md) Vite 开发服务器任意文件读取漏洞 CNVD-2022-44615
+- [`894`](894.md) Vite 开发服务器任意文件读取漏洞绕过 CVE-2025-30208
+- [`895`](895.md) Vite 开发服务器通过 Hash 字符绕过任意文件读取漏洞 CVE-2025-32395
+- [`896`](896.md) XStream SSRF 反序列化漏洞 CVE-2020-26258
+- [`897`](897.md) XStream 任意文件删除 反序列化漏洞 CVE-2020-26259
+- [`898`](898.md) XStream 反序列化命令执行漏洞 CVE-2021-21351
+- [`899`](899.md) XStream 反序列化命令执行漏洞 CVE-2021-29505
+- [`900`](900.md) jQuery XSS漏洞 CVE-2020-11022 11023
