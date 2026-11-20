@@ -139,3 +139,41 @@ ssh -N -L 127.0.0.1:8095:127.0.0.1:8080 user@vshell-host
 ```
 
 脚本执行后按提示重启平台即可。若 `config.yaml` 已存在对应段，脚本会跳过并提示手动修改。
+
+---
+
+## 四、仓库内一键部署（推荐）
+
+### 4.1 dsh：完全可由仓库部署
+
+- 依赖固定在 `integrations/dsh/package.json`（`@deepseek-ai/dsh`，MIT 许可；`node_modules` 不入库）
+- 一条命令完成「安装依赖 → 启动 dsh → 解析 token → 写入 config.yaml」：
+
+```bash
+./scripts/deploy-dsh.sh                       # Linux / macOS
+```
+
+```powershell
+.\scripts\deploy-dsh.ps1                      # Windows
+```
+
+- 只安装不启动：`--install-only` / `-InstallOnly`
+- 依赖里含较新的 `@earendil-works/pi-schema`，国内镜像可能尚未同步；脚本默认使用官方源，可用
+  `--registry` / `-Registry` 覆盖（若镜像缺包会报 `ETARGET`）
+
+### 4.2 vShell：服务端无法入仓，脚本负责对接
+
+vShell 官方编译版是**单体约 500MB 的独立授权二进制**，超过 GitHub 单文件 100MB 限制，且源码不公开，
+因此仓库只能提供部署脚本，二进制请从官方获取后指定路径：
+
+```bash
+./scripts/deploy-vshell.sh --binary /opt/vshell/vshell-server-standalone-linux
+```
+
+```powershell
+.\scripts\deploy-vshell.ps1 -Binary D:\vshell\vshell-server-standalone.exe
+```
+
+脚本会生成随机管理 Token、启动服务端（`-a 127.0.0.1 -p 8095 -ap 8084 -t <token>`）、等待端口就绪并把
+`vshell:` 段写入 `config.yaml`。
+

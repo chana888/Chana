@@ -110,3 +110,41 @@ Keep `url: http://127.0.0.1:8095` in `config.yaml`.
 
 Restart the platform afterwards. If the corresponding block already exists, the script exits
 without changes.
+
+---
+
+## 4. One-command deployment from this repository
+
+### 4.1 dsh (fully deployable from the repo)
+
+The runtime is pinned in `integrations/dsh/package.json` (`@deepseek-ai/dsh`, MIT; `node_modules` is not
+committed). A single command installs, starts dsh, extracts the token and patches `config.yaml`:
+
+```bash
+./scripts/deploy-dsh.sh
+```
+
+```powershell
+.\scripts\deploy-dsh.ps1
+```
+
+Use `--install-only` / `-InstallOnly` to install without starting. The default npm registry is
+`https://registry.npmjs.org` because some transitive packages are newer than CN mirrors; override with
+`--registry` / `-Registry` (a stale mirror fails with `ETARGET`).
+
+### 4.2 vShell (server binary cannot be bundled)
+
+The official vShell server is a ~500MB licensed single binary (GitHub rejects files over 100MB and the
+source is not public), so the repository ships only the deployment script. Point it at your official build:
+
+```bash
+./scripts/deploy-vshell.sh --binary /opt/vshell/vshell-server-standalone-linux
+```
+
+```powershell
+.\scripts\deploy-vshell.ps1 -Binary D:\vshell\vshell-server-standalone.exe
+```
+
+It generates a random admin token, starts the server (`-a 127.0.0.1 -p 8095 -ap 8084 -t <token>`), waits for
+the panel port and writes the `vshell:` block into `config.yaml`.
+
