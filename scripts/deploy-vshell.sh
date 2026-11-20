@@ -86,6 +86,7 @@ else
 fi
 
 echo "[3/3] 完成"
-echo "        面板: http://127.0.0.1:$PORT/  管理Token: $TOKEN"
+echo "        面板: http://127.0.0.1:$PORT/?token=$TOKEN  管理Token: $TOKEN"
+echo "        面板默认账号: admin / admin123（首次登录后请立即修改）"
 echo "        Agent 回连端口: $AGENT_PORT（如需目标上线，记得在防火墙放行）"
 echo "        远程/隔离部署可改用: ssh -N -L 127.0.0.1:$PORT:127.0.0.1:<面板端口> user@host"

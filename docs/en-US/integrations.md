@@ -150,6 +150,18 @@ licensed product; bundled binaries are intended for license holders only.
 It generates a random admin token, starts the server (`-a 127.0.0.1 -p 8095 -ap 8084 -t <token>`), waits for
 the panel port and writes the `vshell:` block into `config.yaml`.
 
+### Default credentials
+
+- Bundled Windows panel: **`admin / admin123`** (change it right after the first login)
+- Token login (recommended): `http://127.0.0.1:8095/?token=<token printed by deploy-vshell>`
+- Entering through the platform injects the token automatically
+
+### ChanaAgent first-login password
+
+- Username `admin`; the random password is printed **once** at first start under `ADMIN SETUP REQUIRED`
+- Background/service start: `grep -A3 "ADMIN SETUP REQUIRED" chana-run.log`
+- Forgot it: `./chana --reset-admin-password` (interactive reset)
+
 ---
 
 ## 5. GSL5 (GodzillaSuper) WebShell-management MCP

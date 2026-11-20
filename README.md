@@ -64,6 +64,35 @@ PowerShell 等价命令 `./init.ps1`。
 
 两个组件均需单独获取并启动，`scripts/` 下有 `setup-dsh.*` / `setup-vshell.*` 一键写入配置。
 
+### 🔑 默认账号与首次登录
+
+**ChanaAgent 平台**
+
+- 用户名固定为 `admin`
+- 首次启动时随机生成密码，**只在启动输出里显示一次**：
+
+```text
+ADMIN SETUP REQUIRED
+  Username  admin
+  Password  <随机密码>
+```
+
+- 后台 / 服务方式启动：在日志里查
+
+```bash
+grep -A3 "ADMIN SETUP REQUIRED" chana-run.log
+# systemd 部署：journalctl -u chana | grep -A3 "ADMIN SETUP REQUIRED"
+```
+
+- 忘记密码：在可执行文件所在目录执行 `./chana --reset-admin-password`（交互式重置，需能操作终端）
+- 首次登录后请到「系统设置 → 安全设置」修改密码
+
+**vShell C2 面板**
+
+- 随仓库的 Windows 版面板默认账号：`admin / admin123`（**首次登录后请立即修改**）
+- `scripts/deploy-vshell.*` 启动时会随机生成管理 Token 并写入 `config.yaml`；平台侧 vShell 页面会注入该 Token，无需二次登录
+- 直连面板：`http://127.0.0.1:8095/?token=<deploy-vshell 输出的 Token>`（Linux 版同样用 Token 登录）
+
 ## 📁 目录结构
 
 | 目录 | 说明 |

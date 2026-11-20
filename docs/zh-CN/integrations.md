@@ -178,6 +178,18 @@ ssh -N -L 127.0.0.1:8095:127.0.0.1:8080 user@vshell-host
 脚本会生成随机管理 Token、启动服务端（`-a 127.0.0.1 -p 8095 -ap 8084 -t <token>`）、等待端口就绪并把
 `vshell:` 段写入 `config.yaml`。
 
+### 默认账号与登录方式
+
+- **Windows 版面板默认账号：`admin / admin123`**（首次登录后请立即修改）
+- 直连面板推荐用 Token 免登录：`http://127.0.0.1:8095/?token=<deploy-vshell 输出的 Token>`
+- 从平台进入时平台会自动注入 Token，无需二次登录
+
+### ChanaAgent 平台首次登录密码
+
+- 用户名 `admin`，密码在**首次启动输出**的 `ADMIN SETUP REQUIRED` 段中（只显示一次）
+- 后台运行时：`grep -A3 "ADMIN SETUP REQUIRED" chana-run.log`
+- 忘记密码：`./chana --reset-admin-password`（交互式重置）
+
 ---
 
 ## 五、GSL5（GodzillaSuper）WebShell 管理 MCP

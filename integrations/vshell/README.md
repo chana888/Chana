@@ -18,6 +18,11 @@ integrations/vshell/server/
 - **授权提醒**：vShell 为第三方授权产品，仓库内二进制仅供已获授权者使用；如需再分发请自行确认授权
 - 其他版本/官方更新请从官方渠道获取，替换对应目录文件即可
 
+## 默认账号
+
+- Windows 版面板默认账号：**`admin / admin123`**（首次登录后请立即修改）
+- 推荐用 Token 免登录：`http://127.0.0.1:8095/?token=<deploy-vshell 输出的 Token>`
+
 ## 一键部署
 
 Windows：
