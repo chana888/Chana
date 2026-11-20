@@ -1,52 +1,33 @@
-# vShell C2（服务端不随仓库分发）
+# vShell C2 服务端（Linux 版随仓库提供）
 
-vShell C2 是**独立产品**：官方编译版服务端免费发放，但源码不公开、带独立授权，因此仓库默认
-不提交其二进制（Linux 单体约 27MB，另需约 37MB 的 `www/` 前端资源）。
-
-## 放置服务端（二选一）
-
-1. 放到仓库内本地目录（**已被 .gitignore 忽略，不会提交**）：
+vShell C2 是独立产品。本目录附带**Linux 版服务端与 `www/` 前端资源**（来自自有部署，已脱敏：
+不含授权文件、配置、日志、备份与任何服务器标识），用于让仓库开箱即可部署 vShell 页面。
 
 ```text
 integrations/vshell/server/
-├── vshell-server-standalone-linux     # 或 vshell-server-standalone.exe
-└── www/                               # 面板前端资源（与服务端同目录）
+├── vshell-server-standalone-linux   # 服务端（sha256 见 SHA256SUMS）
+├── SHA256SUMS
+└── www/                             # 面板前端资源（与服务端同目录）
 ```
 
-2. 用参数直接指定官方服务端路径（推荐，保持仓库干净）。
-
-> 平台按 Linux/Windows 运行环境选择对应服务端：本仓库示例的 Linux 版来自自有服务器，
-> Windows 部署请使用官方 Windows 编译版。
+- **Windows 部署**需要官方 Windows 编译版：把它放到本目录或用 `-Binary` 指定
+- **授权提醒**：vShell 为第三方授权产品，仓库内二进制仅供已获授权者使用；如需再分发请自行确认授权
+- 其他版本/官方更新请从官方渠道获取，替换本目录文件即可
 
 ## 一键部署
 
 ```bash
-./scripts/deploy-vshell.sh                    # 自动使用 integrations/vshell/server/ 下的服务端
-./scripts/deploy-vshell.sh --binary /opt/vshell/vshell-server-standalone-linux
+./scripts/deploy-vshell.sh                    # 自动使用本目录服务端
 ```
 
 ```powershell
-.\scripts\deploy-vshell.ps1
-.\scripts\deploy-vshell.ps1 -Binary D:\vshell\vshell-server-standalone.exe
+.\scripts\deploy-vshell.ps1                   # 自动使用本目录的 exe（需自备）
 ```
 
-脚本会：
+脚本会生成随机管理 Token、启动 `-a 127.0.0.1 -p 8095 -ap 8084 -t <token>`、等待面板端口，并把
+`vshell:` 段写入 `config.yaml`。之后重启平台即可。
 
-1. 生成随机管理 Token；
-2. 启动服务端（`-a 127.0.0.1 -p 8095 -ap 8084 -t <token>`）；
-3. 等待面板端口就绪；
-4. 调用 `scripts/setup-vshell.*` 把 `vshell:` 段写入 `config.yaml`。
+远程/隔离部署：服务端只监听回环时，用
+`ssh -N -L 127.0.0.1:8095:127.0.0.1:8080 user@host` 建隧道。
 
-之后重启平台，侧栏 vShell 即可免二次登录使用。
-
-## 远程 / 隔离部署
-
-服务端只监听回环时，用
-`ssh -N -L 127.0.0.1:8095:127.0.0.1:8080 user@host` 建隧道，`config.yaml` 的 `url` 保持
-`http://127.0.0.1:8095`。
-
-## 授权提醒
-
-vShell 服务端为第三方授权产品。**未经授权不得再分发**：请勿把官方二进制提交到公开仓库，
-如需随仓库分发，请先确认你拥有再分发授权（可考虑 GitHub Releases 私密附件或自建下载源）。
 完整排障见 [`docs/zh-CN/integrations.md`](../../docs/zh-CN/integrations.md)。

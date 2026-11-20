@@ -161,10 +161,11 @@ ssh -N -L 127.0.0.1:8095:127.0.0.1:8080 user@vshell-host
 - 依赖里含较新的 `@earendil-works/pi-schema`，国内镜像可能尚未同步；脚本默认使用官方源，可用
   `--registry` / `-Registry` 覆盖（若镜像缺包会报 `ETARGET`）
 
-### 4.2 vShell：服务端无法入仓，脚本负责对接
+### 4.2 vShell：Linux 版随仓库提供，Windows 版需自备
 
-vShell 官方编译版是**单体约 500MB 的独立授权二进制**，超过 GitHub 单文件 100MB 限制，且源码不公开，
-因此仓库只能提供部署脚本，二进制请从官方获取后指定路径：
+仓库 `integrations/vshell/server/` 附带**已脱敏的 Linux 版服务端 + www**，`deploy-vshell` 会自动使用；
+Windows 部署请使用官方 Windows 编译版并通过 `-Binary` 指定。vShell 为第三方授权产品，
+仓库内二进制仅供已获授权者使用。
 
 ```bash
 ./scripts/deploy-vshell.sh --binary /opt/vshell/vshell-server-standalone-linux
