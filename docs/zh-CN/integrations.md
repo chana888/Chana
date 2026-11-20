@@ -178,3 +178,49 @@ Windows 部署请使用官方 Windows 编译版并通过 `-Binary` 指定。vShe
 脚本会生成随机管理 Token、启动服务端（`-a 127.0.0.1 -p 8095 -ap 8084 -t <token>`）、等待端口就绪并把
 `vshell:` 段写入 `config.yaml`。
 
+---
+
+## 五、GSL5（GodzillaSuper）WebShell 管理 MCP
+
+GSL5 以 MCP 服务形式提供 WebShell 管理（命令执行、文件管理、数据库、内存马、payload 生成等）。
+
+### 5.1 前置
+
+- **Java 17+**（`java -version` 可用）
+- 平台已启动
+
+### 5.2 一键部署（运行包随仓库提供）
+
+运行时已放在 `integrations/gsl5/bin/gsl5.jar`（自包含，约 78MB），脚本完成
+「启动 → 解析 Token → 写入 config.yaml」：
+
+```bash
+./scripts/deploy-gsl5.sh
+```
+
+```powershell
+.\scripts\deploy-gsl5.ps1
+```
+
+### 5.3 手动配置参考
+
+```yaml
+external_mcp:
+  servers:
+    gsl5:
+      type: http
+      url: http://127.0.0.1:9123/message
+      headers:
+        Authorization: Bearer <gsl5 banner 中的 Token>
+      external_mcp_enable: true
+```
+
+重启平台后：「MCP 管理」出现 gsl5（约 62 个工具），「GSL5 控制台」可直接使用。
+
+### 5.4 排障
+
+| 现象 | 排查 |
+|------|------|
+| 启动报 Java 错误 | 安装 JDK/JRE 17+ 并确认 `java` 在 PATH |
+| MCP 管理无 gsl5 | `config.yaml` 是否有 `external_mcp.servers.gsl5`；9123 是否监听 |
+| 工具调用失败 | Token 与 banner 不一致（重启后可能变化，重跑脚本同步） |

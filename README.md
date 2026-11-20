@@ -1,4 +1,4 @@
-# ChanaAgent · 刹那
+﻿# ChanaAgent · 刹那
 
 > AI 原生红队作业平台 —— 多智能体渗透编排 · 工作流硬治理 · 攻击面管理 · POC 工厂 · 知识体系
 
@@ -60,6 +60,7 @@ PowerShell 等价命令 `./init.ps1`。
 |------|------|---------|
 | DeepSeek Harness (dsh) | 对话/Agent 运行时，Harness 页依赖它 | [docs/zh-CN/integrations.md](docs/zh-CN/integrations.md) |
 | vShell C2 | 内网隧道 / C2 面板，侧栏 vShell 页依赖它 | [docs/zh-CN/integrations.md](docs/zh-CN/integrations.md) |
+| GSL5 (GodzillaSuper) | WebShell 管理 MCP，GSL5 控制台依赖它（需 Java 17+） | [docs/zh-CN/integrations.md](docs/zh-CN/integrations.md) |
 
 两个组件均需单独获取并启动，`scripts/` 下有 `setup-dsh.*` / `setup-vshell.*` 一键写入配置。
 

@@ -149,3 +149,35 @@ third-party licensed product; the bundled binary is intended for license holders
 It generates a random admin token, starts the server (`-a 127.0.0.1 -p 8095 -ap 8084 -t <token>`), waits for
 the panel port and writes the `vshell:` block into `config.yaml`.
 
+---
+
+## 5. GSL5 (GodzillaSuper) WebShell-management MCP
+
+GSL5 runs as an MCP server providing WebShell operations (command execution, file management, database,
+in-memory shells, payload generation).
+
+- Requires **Java 17+**
+- The runtime ships in `integrations/gsl5/bin/gsl5.jar` (~78MB, self-contained)
+
+```bash
+./scripts/deploy-gsl5.sh        # start → parse token → patch config.yaml
+```
+
+```powershell
+.\scripts\deploy-gsl5.ps1
+```
+
+Manual config:
+
+```yaml
+external_mcp:
+  servers:
+    gsl5:
+      type: http
+      url: http://127.0.0.1:9123/message
+      headers:
+        Authorization: Bearer <token from the gsl5 banner>
+      external_mcp_enable: true
+```
+
+Restart the platform; the gsl5 entry (~62 tools) appears under MCP management and the GSL5 console works.

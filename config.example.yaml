@@ -319,6 +319,12 @@ mcp:
 #     url: http://127.0.0.1:18862/mcp
 #     headers:
 #       X-Chana-Vps-Token: "<token>"
+#   gsl5:                       # GodzillaSuper WebShell 管理 MCP（需 Java 17+，运行包随仓库提供）
+#     type: http
+#     url: http://127.0.0.1:9123/message
+#     headers:
+#       Authorization: Bearer <gsl5 启动 banner 中的 Token>
+#     external_mcp_enable: true
 external_mcp:
   servers: {}
 # 可选集成：DeepSeek Harness（对话引擎）反代。dsh 不随仓库分发，安装与接入见 docs/zh-CN/integrations.md
