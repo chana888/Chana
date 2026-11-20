@@ -132,11 +132,12 @@ Use `--install-only` / `-InstallOnly` to install without starting. The default n
 `https://registry.npmjs.org` because some transitive packages are newer than CN mirrors; override with
 `--registry` / `-Registry` (a stale mirror fails with `ETARGET`).
 
-### 4.2 vShell (Linux build bundled, Windows build BYO)
+### 4.2 vShell (Linux and Windows builds bundled)
 
-`integrations/vshell/server/` ships a sanitized Linux server binary plus `www/`, picked up automatically by
-`deploy-vshell`. Windows deployments must supply the official Windows build via `-Binary`. vShell is a
-third-party licensed product; the bundled binary is intended for license holders only.
+`integrations/vshell/server/` ships a sanitized Linux server plus `www/`;
+`integrations/vshell/server/windows/` ships the Windows server plus `www/` (branding unified as vShell,
+project logo applied). `deploy-vshell` selects the right one per platform. vShell is a third-party
+licensed product; bundled binaries are intended for license holders only.
 
 ```bash
 ./scripts/deploy-vshell.sh --binary /opt/vshell/vshell-server-standalone-linux

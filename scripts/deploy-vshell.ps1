@@ -13,8 +13,8 @@ if (-not $Config) { $Config = Join-Path $Root 'config.yaml' }
 
 if (-not $Binary) {
     foreach ($cand in @(
-            (Join-Path $Root 'integrations\vshell\server\vshell-server-standalone.exe'),
-            (Join-Path $Root 'integrations\vshell\server\desshell-server-standalone.exe'))) {
+            (Join-Path $Root 'integrations\vshell\server\windows\vshell-server-standalone.exe'),
+            (Join-Path $Root 'integrations\vshell\server\vshell-server-standalone.exe'))) {
         if (Test-Path $cand) { $Binary = $cand; break }
     }
 }

