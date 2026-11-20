@@ -1,5 +1,5 @@
 ﻿param(
-    [Parameter(Mandatory = $true)][string]$Binary,
+    [string]$Binary = '',
     [int]$Port = 8095,
     [int]$AgentPort = 8084,
     [string]$Token = '',
@@ -11,8 +11,16 @@ $ErrorActionPreference = 'Stop'
 $Root = Split-Path -Parent $PSScriptRoot
 if (-not $Config) { $Config = Join-Path $Root 'config.yaml' }
 
-if (-not (Test-Path $Binary)) {
-    throw "找不到 vShell 服务端: $Binary。vShell 为独立产品（官方编译版，不随仓库分发），请从官方获取后指定 -Binary"
+if (-not $Binary) {
+    foreach ($cand in @(
+            (Join-Path $Root 'integrations\vshell\server\vshell-server-standalone.exe'),
+            (Join-Path $Root 'integrations\vshell\server\desshell-server-standalone.exe'))) {
+        if (Test-Path $cand) { $Binary = $cand; break }
+    }
+}
+
+if (-not $Binary -or -not (Test-Path $Binary)) {
+    throw "找不到 vShell 服务端。vShell 为独立产品（官方编译版，源码不公开，带独立授权），仓库默认不含其二进制。请把服务端放到 integrations\vshell\server\（该目录已 gitignore），或用 -Binary 指定路径。注意：通常需要同目录的 www\ 前端资源。"
 }
 if (-not $Token) {
     $bytes = New-Object byte[] 24

@@ -56,3 +56,6 @@ certs/
 .runtime/
 # 本地运行日志
 *-run*.log
+
+# vShell 服务端（第三方授权二进制，禁止入库）
+integrations/vshell/server/

@@ -31,12 +31,21 @@ while [ $# -gt 0 ]; do
 done
 
 if [ -z "$BINARY" ]; then
+  # 未显式指定时，尝试使用仓库内本地放置的服务端（该目录不入库）
+  for cand in \
+    "$ROOT/integrations/vshell/server/vshell-server-standalone-linux" \
+    "$ROOT/integrations/vshell/server/vshell-server-standalone"; do
+    [ -f "$cand" ] && { BINARY="$cand"; break; }
+  done
+fi
+
+if [ -z "$BINARY" ]; then
   cat >&2 <<'EOF'
 [错误] 未指定 vShell 服务端。
-  vShell C2 是独立产品，官方编译版免费发放、源码不随本仓库发布（单体二进制约 500MB，
-  超过 GitHub 单文件 100MB 限制，且带独立授权），因此无法打包进仓库。
-  获取官方服务端后执行：
+  vShell C2 是独立产品（官方编译版，源码不公开，带独立授权），仓库默认不包含其二进制。
+  请把官方服务端放到 integrations/vshell/server/ 下（该目录已 gitignore），或用 --binary 指定：
       ./scripts/deploy-vshell.sh --binary /opt/vshell/vshell-server-standalone-linux
+  注意：服务端通常需要同目录的 www/ 前端资源。
 EOF
   exit 2
 fi
