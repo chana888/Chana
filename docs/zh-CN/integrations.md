@@ -236,3 +236,51 @@ external_mcp:
 | 启动报 Java 错误 | 安装 JDK/JRE 17+ 并确认 `java` 在 PATH |
 | MCP 管理无 gsl5 | `config.yaml` 是否有 `external_mcp.servers.gsl5`；9123 是否监听 |
 | 工具调用失败 | Token 与 banner 不一致（重启后可能变化，重跑脚本同步） |
+
+---
+
+## 六、浏览器 MCP（local-browser / vps-browser）
+
+作用：让 Agent 直接控制浏览器（打开页面、点击、截图、读取 DOM、抓网络请求、注入脚本）。
+
+> 平台只通过 **`local-browser`（控制本机 Chrome）** 或 **`vps-browser`（VPS 常驻 Chrome）** 这两个外部 MCP 控制浏览器（二选一），不内置 Playwright / Chrome DevTools 等其他方案。
+
+### 组成
+
+| 部件 | 位置 | 说明 |
+|------|------|------|
+| Chrome 扩展 | `vps-browser/extension/` | 必须在目标 Chrome 里「加载已解压的扩展」 |
+| MCP 桥 | `vps-browser/server/chrome-bridge.cjs` | 默认 `127.0.0.1:18862/mcp`，连扩展的 12306 端口 |
+| 平台预置 | 启动时自动注册 | 「MCP 管理」里的 `local-browser` / `vps-browser`（默认停用，令牌自动发现） |
+
+### 本地模式（控制本机日常 Chrome）
+
+```bash
+./scripts/deploy-browser.sh          # Linux/macOS：装依赖 → 生成令牌 → 启动桥
+```
+
+```powershell
+.\scripts\deploy-browser.ps1         # Windows
+```
+
+1. Chrome 打开 `chrome://extensions` → 开发者模式 → 「加载已解压的扩展」→ 选 `vps-browser/extension`
+2. 扩展里点 Connect（桥 `127.0.0.1:12306`）
+3. 平台「MCP 管理」→ 启用 `local-browser`（令牌从 `vps-browser/server/.runtime/config.json` 自动读取）
+4. 验证：`curl -H "X-Chana-Vps-Token: <token>" http://127.0.0.1:18862/status` 返回 `browserConnected: true`
+
+### VPS 模式（远程桌面 + Agent 共享登录态）
+
+```bash
+sudo ./vps-browser/install.sh        # systemd 服务 + 网关 + viewer + 夜间清理定时器
+```
+
+详见 [`vps-browser/README.md`](../../vps-browser/README.md)。
+
+### 排障
+
+| 现象 | 排查 |
+|------|------|
+| 平台 MCP 管理里显示已停用 | 桥未启动或令牌不匹配；先 `deploy-browser` 再启用 |
+| `browserConnected: false` | Chrome 未装扩展 / 扩展未点 Connect / 12306 无监听 |
+| 端口 18862 被占用 | 换 `--port`，并同步平台配置里的 URL |
+| 工具调用失败 | 确认目标窗口不是 omnibox 弹窗；操作后需重新 `get_windows_and_tabs` |

@@ -61,8 +61,11 @@ PowerShell 等价命令 `./init.ps1`。
 | DeepSeek Harness (dsh) | 对话/Agent 运行时，Harness 页依赖它 | [docs/zh-CN/integrations.md](docs/zh-CN/integrations.md) |
 | vShell C2 | 内网隧道 / C2 面板，侧栏 vShell 页依赖它 | [docs/zh-CN/integrations.md](docs/zh-CN/integrations.md) |
 | GSL5 (GodzillaSuper) | WebShell 管理 MCP，GSL5 控制台依赖它（需 Java 17+） | [docs/zh-CN/integrations.md](docs/zh-CN/integrations.md) |
+| 浏览器 MCP | 控制本机/远程 Chrome（点击/截图/DOM/网络） | [docs/zh-CN/integrations.md](docs/zh-CN/integrations.md) |
 
 两个组件均需单独获取并启动，`scripts/` 下有 `setup-dsh.*` / `setup-vshell.*` 一键写入配置。
+
+> 浏览器控制统一走 **`local-browser`（本机 Chrome）** 或 **`vps-browser`（VPS 常驻 Chrome）** 这两个外部 MCP（二选一），平台不内置 Playwright / Chrome DevTools 等其他浏览器方案。
 
 ### 🔑 默认账号与首次登录
 

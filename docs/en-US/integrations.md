@@ -194,3 +194,28 @@ external_mcp:
 ```
 
 Restart the platform; the gsl5 entry (~62 tools) appears under MCP management and the GSL5 console works.
+
+---
+
+## 6. Browser MCP (local-browser / vps-browser)
+
+Lets agents drive a real browser (navigate, click, screenshot, read DOM, capture network, inject scripts).
+
+> The platform drives browsers only through the **`local-browser`** (local Chrome) or **`vps-browser`** (VPS Chrome) external MCP servers (pick one); no Playwright / Chrome DevTools fallback is built in.
+
+Components: Chrome extension `vps-browser/extension/`, MCP bridge `vps-browser/server/chrome-bridge.cjs`
+(`127.0.0.1:18862/mcp`), and platform presets `local-browser` / `vps-browser` (auto-registered, disabled by default).
+
+```bash
+./scripts/deploy-browser.sh      # install deps, create token, start bridge
+```
+
+```powershell
+.\scripts\deploy-browser.ps1
+```
+
+Then load `vps-browser/extension` in `chrome://extensions`, click Connect, and enable `local-browser`
+under platform MCP management. Verify with:
+`curl -H "X-Chana-Vps-Token: <token from vps-browser/server/.runtime/config.json>" http://127.0.0.1:18862/status`.
+
+For a VPS deployment with remote desktop and shared login state, run `vps-browser/install.sh`.
