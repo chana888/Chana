@@ -29,7 +29,7 @@
     target.innerHTML = '<div style="padding:32px;text-align:center">' +
       '<h3 style="margin:0 0 12px;font-size:18px;font-weight:600">NPS Shellcode Generator</h3>' +
       '<p style="color:#888;margin:0 0 20px">AES-GCM encrypted shellcode with embedded C2 configuration</p>' +
-      '<button onclick="var t=(localStorage?localStorage.getItem(\'TOKEN__\'):\'\')||\'\';window.open(\'/nps_shellcode.html?token=\'+t,\'_blank\')" ' +
+      '<button onclick="var t=(localStorage?localStorage.getItem(\'TOKEN__\'):\'\')||\'\';window.open(\'nps_shellcode.html?token=\'+t,\'_blank\')" ' +
       'style="padding:10px 24px;background:#238636;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:14px;font-family:inherit">' +
       'Open Generator</button></div>';
   }
