@@ -321,10 +321,19 @@ mcp:
 #       X-Chana-Vps-Token: "<token>"
 external_mcp:
   servers: {}
-# 内置 dsh 反代（本地/无 nginx 部署）：对话页 iframe 同源 /dsh/ 反代到 dsh web（VPS 可用 nginx 替代，留空即关闭）
+# 可选集成：DeepSeek Harness（对话引擎）反代。dsh 不随仓库分发，安装与接入见 docs/zh-CN/integrations.md
+# 对话页 iframe 同源 /dsh/ 反代到 dsh web（VPS 可用 nginx 替代，留空即关闭）
 # dsh:
 #   base_url: http://127.0.0.1:3080
-#   token: <dsh 启动 banner 打印的 URL token，dsh 重启后需同步更新>
+#   token: <dsh 启动 banner 打印的 URL token；dsh 每次重启都会变化，需同步更新>
+#
+# 可选集成：vShell C2 面板桥接。vShell 服务端为独立产品（官方编译版，不随仓库分发），
+# 启动示例：./vshell-server-standalone-linux -a 127.0.0.1 -p 8095 -ap 8084 -t <管理Token>
+# 接入步骤见 docs/zh-CN/integrations.md；只监听回环时可用 ssh -N -L 127.0.0.1:8095:127.0.0.1:<面板端口> user@host 建隧道
+# vshell:
+#   enabled: true
+#   url: http://127.0.0.1:8095
+#   token: <与 -t 完全一致的管理 Token>
 # 内置 C2：本机仅做对话/知识库时可设为 false，不启动监听器、不注册 C2 MCP 工具；省略本段时默认启用
 c2:
   enabled: true

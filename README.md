@@ -45,13 +45,23 @@ cp config.example.yaml config.yaml
 ### 启动
 
 ```bash
-./chana --http
+./chana --https
 ```
 
-浏览器打开 `http://127.0.0.1:8080`，首次启动会初始化管理员账户（详见部署文档）。
+浏览器打开 `https://127.0.0.1:8080/`（自签证书首次需手动信任），首次启动会初始化管理员账户（详见部署文档）。
+> 注意：登录流程要求 HTTPS，使用 `--http` 启动时登录页会提示“请通过 HTTPS 入口登录”。
 
 Windows 下也可以用一键脚本：`python init.py`（自检 → 建运行目录 → 提示配 Key → 启动 → 验证），
 PowerShell 等价命令 `./init.ps1`。
+
+### 可选集成（不随仓库分发）
+
+| 组件 | 作用 | 接入文档 |
+|------|------|---------|
+| DeepSeek Harness (dsh) | 对话/Agent 运行时，Harness 页依赖它 | [docs/zh-CN/integrations.md](docs/zh-CN/integrations.md) |
+| vShell C2 | 内网隧道 / C2 面板，侧栏 vShell 页依赖它 | [docs/zh-CN/integrations.md](docs/zh-CN/integrations.md) |
+
+两个组件均需单独获取并启动，`scripts/` 下有 `setup-dsh.*` / `setup-vshell.*` 一键写入配置。
 
 ## 📁 目录结构
 
