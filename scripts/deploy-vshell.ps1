@@ -59,4 +59,4 @@ Write-Host '[3/3] 完成'
 Write-Host "        面板: http://127.0.0.1:$Port/?token=$Token  管理Token: $Token"
 Write-Host '        面板默认账号: admin / admin123（首次登录后请立即修改）'
 Write-Host "        Agent 回连端口: $AgentPort（如需目标上线，记得在防火墙放行）"
-Write-Host "        远程/隔离部署可改用: ssh -N -L 127.0.0.1:$Port:127.0.0.1:<面板端口> user@host"
+Write-Host "        远程/隔离部署可改用: ssh -N -L 127.0.0.1:${Port}:127.0.0.1:<面板端口> user@host"

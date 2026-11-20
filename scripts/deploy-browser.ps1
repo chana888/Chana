@@ -19,9 +19,9 @@ New-Item -ItemType Directory -Force $Runtime | Out-Null
 $Cfg = Join-Path $Runtime 'config.json'
 if (-not (Test-Path $Cfg)) {
     $bytes = New-Object byte[] 32
-    [System.Security.Cryptography.RandomNumberGenerator]::Fill($bytes)
+    $rng = [System.Security.Cryptography.RNGCryptoServiceProvider]::new(); $rng.GetBytes($bytes); $rng.Dispose()
     $token = ($bytes | ForEach-Object { $_.ToString('x2') }) -join ''
-    @{ token = $token; public_origin = ''; platform_port = 8082 } | ConvertTo-Json | Set-Content $Cfg -Encoding utf8
+    $json = @{ token = $token; public_origin = ''; platform_port = 8082 } | ConvertTo-Json; [System.IO.File]::WriteAllText($Cfg, $json, (New-Object System.Text.UTF8Encoding($false)))
     Write-Host '      已生成令牌'
 }
 $token = (Get-Content $Cfg -Raw | ConvertFrom-Json).token
