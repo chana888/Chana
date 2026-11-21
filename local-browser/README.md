@@ -16,43 +16,38 @@
 
 ## 三步接入
 
-### 1. 本机 Chrome 安装配套扩展
+### 1. 本机 Chrome 加载扩展（只需一次，必须手动）
 
 1. 打开 `chrome://extensions/`，右上角开启**开发者模式**
 2. 「加载已解压的扩展程序」→ 选择仓库的 `vps-browser/extension/` 目录
-3. 点浏览器工具栏的扩展图标，确认服务状态为**已连接**（扩展监听本机 12306 端口）
+3. 记下扩展卡片上的 ID（脚本会按 manifest key 自动配置，无需手工填）
 
-### 2. 启动 MCP 桥
+> Chrome 不允许程序静默安装“未打包扩展”，所以这一步无法自动完成；其余全部由脚本处理。
 
-```bash
-# Windows: 双击 start.bat
-# macOS / Linux:
-bash local-browser/start.sh
+### 2. 运行一键准备脚本
+
+```powershell
+.\scripts\setup-local-browser.ps1      # Windows
 ```
 
-脚本自动：生成随机访问令牌（写入 `vps-browser/server/.runtime/config.json`）→ 安装 Node 依赖 →
-启动桥（`127.0.0.1:18862`），并打印接入信息。**令牌只对应本机，无需外发。**
+```bash
+./scripts/setup-local-browser.sh         # Linux / macOS
+```
+
+脚本自动完成：
+
+- 安装 `mcp-chrome-bridger`（扩展 connectNative 拉起的 12306 native host，纯 JS 依赖，Windows 无需 VS 编译环境）
+- 注册 native host，并把 `allowed_origins` 修正为本仓库扩展 ID
+- 启动 18862 MCP 桥（生成令牌写入 `vps-browser/server/.runtime/config.json`）
+- 调 `/status` 自检 `browserConnected`
+
+也可以用 `local-browser/start.bat` / `start.sh`，它们等价于调用上述脚本。
 
 ### 3. 平台启用（MCP 管理页，推荐）
 
-平台的 **MCP 管理** 页在启动时已自动预置 `local-browser` 条目（默认停用；访问令牌会自动读取
-`vps-browser/server/.runtime/config.json`，也可用环境变量 `CHANA_BROWSER_TOKEN` 指定）——
-桥跑起来后，在 MCP 管理页找到 `local-browser` 点启用即可，无需手工编辑配置文件。
-
-手工方式（等价）：平台 `config.yaml` 的 `external_mcp.servers` 添加：
-
-```yaml
-external_mcp:
-  servers:
-    local-browser:
-      type: http
-      url: http://127.0.0.1:18862/mcp
-      headers:
-        X-Chana-Vps-Token: "<start 脚本打印的令牌>"
-```
-
-之后对话/任务中即可使用 `local-browser__chrome_*` 全套浏览器工具。
-agent 操作手册见 [`../vps-browser/server/workflow-agent.md`](../vps-browser/server/workflow-agent.md)。
+桥就绪后，在平台「MCP 管理」找到 `local-browser` 点启用即可（令牌自动读取
+`vps-browser/server/.runtime/config.json`，也可用环境变量 `CHANA_BROWSER_TOKEN` 指定）。
+之后对话/任务中即可使用 `local-browser__chrome_*` 全套工具。
 
 ## 常见问题
 

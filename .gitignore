@@ -63,3 +63,6 @@ integrations/vshell/server/
 # GSL5 运行期数据（在 integrations/gsl5 下生成）
 integrations/gsl5/data.db
 integrations/gsl5/profile/
+
+# local browser native host install dir
+.chrome-mcp-host/
