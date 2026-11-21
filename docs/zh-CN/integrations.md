@@ -48,13 +48,15 @@ dsh:
 
 ### 1.4 让 Agent 遵守平台作业规范（可选但推荐）
 
-把仓库根目录的 `AGENTS-TEMPLATE.md` 复制到 dsh 主目录作为 `AGENTS.md`：
+`deploy-dsh.sh`（或 `.ps1`）会自动执行 `scripts/setup-dsh-platform.sh`，完成 154 同款的四件事：
 
-```bash
-cp AGENTS-TEMPLATE.md ~/.dsh/AGENTS.md
-```
+1. 启用平台 MCP（`127.0.0.1:8081` + 静态令牌）
+2. 把 `AGENTS-TEMPLATE.md` 安装为 `~/.dsh/AGENTS.md`（平台作业流程：S/D0-D3、台账门禁、漏洞落库）
+3. 软链技能库：`~/.dsh/skills`、`~/skills` → 仓库 `skills/`
+4. 向 dsh 的 `~/.dsh/profiles/web/cordis.patch.yml` 注入 `mcp-chana` 客户端
 
-Windows 对应 `C:\Users\<you>\.dsh\AGENTS.md`。模板里写了项目绑定、事实写入、漏洞上报等指引。
+手动执行：`./scripts/setup-dsh-platform.sh`（Windows 用 `.\scripts\setup-dsh-platform.ps1`）。
+执行后按顺序重启：**平台**（让 8081 生效）→ **dsh**（加载 AGENTS 与 MCP）。
 
 ### 1.5 注意事项
 

@@ -39,7 +39,13 @@ and dsh workspaces are mirrored into platform projects every 30s.
 
 - The dsh token **changes on every restart**; update `config.yaml` and restart the platform.
 - The platform proxies but never starts or supervises dsh.
-- Optionally copy `AGENTS-TEMPLATE.md` to `~/.dsh/AGENTS.md` so agents follow platform conventions.
+- `deploy-dsh.sh` / `.ps1` runs `scripts/setup-dsh-platform.sh`, which:
+  1. enables the platform MCP server (`127.0.0.1:8081` + static token),
+  2. installs `AGENTS-TEMPLATE.md` as `~/.dsh/AGENTS.md`,
+  3. links the skills library into `~/.dsh/skills` and `~/skills`,
+  4. injects an `mcp-chana` client into `~/.dsh/profiles/web/cordis.patch.yml`.
+
+  Restart **platform** then **dsh** afterwards (or run the script manually).
 
 ### Troubleshooting
 

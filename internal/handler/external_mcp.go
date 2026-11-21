@@ -163,6 +163,32 @@ func (h *ExternalMCPHandler) AddOrUpdateExternalMCP(c *gin.Context) {
 		return
 	}
 
+	// 合并已有配置：UI 只切换启用状态时会丢失 type/url/headers，
+	// 这里用现有（预置或已保存）条目补齐缺失字段，避免"不支持的传输模式"。
+	if existing, ok := h.manager.GetConfigs()[name]; ok {
+		if req.Config.Type == "" {
+			req.Config.Type = existing.Type
+		}
+		if req.Config.URL == "" {
+			req.Config.URL = existing.URL
+		}
+		if req.Config.Command == "" {
+			req.Config.Command = existing.Command
+		}
+		if len(req.Config.Headers) == 0 {
+			req.Config.Headers = existing.Headers
+		}
+		if len(req.Config.Env) == 0 {
+			req.Config.Env = existing.Env
+		}
+		if len(req.Config.Args) == 0 {
+			req.Config.Args = existing.Args
+		}
+	}
+	if req.Config.Type == "" && req.Config.URL != "" {
+		req.Config.Type = "http"
+	}
+
 	// 验证配置
 	if err := h.validateConfig(req.Config); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
