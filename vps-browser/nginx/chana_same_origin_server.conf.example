@@ -1,0 +1,37 @@
+# 同源入口：Chana 平台 + /browser/ 远程桌面共用同一个 HTTPS 端口。
+# 用法：把占位符替换为实际值后放到 /etc/nginx/conf.d/chana.conf，再 nginx -t && nginx -s reload
+#      也可直接运行 vps-browser/nginx/install-same-origin.sh 自动生成。
+#
+# 占位符：
+#   @NGINX_PORT@        对外 HTTPS 端口（如 443 或 8090）
+#   @SERVER_NAME@       域名或 IP
+#   @CERT_PATH@         TLS 证书路径
+#   @KEY_PATH@          TLS 私钥路径
+#   @PLATFORM_UPSTREAM@ 平台内部地址（如 https://127.0.0.1:8082）
+server {
+    listen @NGINX_PORT@ ssl;
+    server_name @SERVER_NAME@;
+
+    ssl_certificate     @CERT_PATH@;
+    ssl_certificate_key @KEY_PATH@;
+
+    client_max_body_size 512m;
+
+    # 平台（内部 HTTPS；自签证书需关闭校验）
+    location / {
+        proxy_pass @PLATFORM_UPSTREAM@;
+        proxy_ssl_verify off;
+        proxy_http_version 1.1;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_read_timeout 3600s;
+        proxy_buffering off;
+    }
+
+    # /browser/、/browser/websockify、/assets/（noVNC）与平台 Cookie 鉴权
+    include /etc/nginx/browser_location.inc;
+}

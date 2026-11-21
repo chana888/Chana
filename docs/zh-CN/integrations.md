@@ -289,6 +289,9 @@ sudo ./vps-browser/install.sh        # systemd 服务 + 网关 + viewer + 夜间
 
 详见 [`vps-browser/README.md`](../../vps-browser/README.md)。
 
+> 想让 `/browser/` 与平台**同域同端口**：见 README「同源入口」一节，模板在
+> `vps-browser/nginx/chana_same_origin_server.conf.example`，可用 `nginx/install-same-origin.sh` 自动生成。
+
 ### 排障
 
 | 现象 | 排查 |

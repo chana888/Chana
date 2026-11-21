@@ -77,6 +77,54 @@ external_mcp:
         X-Chana-Vps-Token: "<install.sh 生成的 token>"
 ```
 
+## 同源入口（平台 + /browser/ 共用一个端口）
+
+默认 `install.sh --with-nginx` 只生成 `/etc/nginx/browser_location.inc`，由你现有的 HTTPS server 块 include。
+如果你希望像 154 一样 `https://<host>/browser/` 与平台**同域同端口**，按下面三步：
+
+### 1. 平台改为内部监听
+
+`config.yaml`：
+
+```yaml
+server:
+  host: 127.0.0.1
+  port: 8082
+```
+
+重启平台（保持 `--https`）。
+
+### 2. 安装/重装浏览器栈（指向内部端口）
+
+```bash
+cd vps-browser
+sudo PLATFORM_TLS=1 bash install.sh --origin https://<域名或IP>[:端口] --platform-port 8082 --with-nginx
+```
+
+`PLATFORM_TLS=1` 会让网关用 HTTPS 校验平台登录态（平台自身是自签 HTTPS）。
+
+### 3. 生成同源 server 块
+
+```bash
+sudo bash nginx/install-same-origin.sh   --server-name <域名或IP> --port 443   --platform-upstream https://127.0.0.1:8082   --cert /etc/nginx/ssl/chana.crt --key /etc/nginx/ssl/chana.key
+```
+
+或手工：`cp nginx/chana_same_origin_server.conf.example /etc/nginx/conf.d/chana.conf`，替换
+`@NGINX_PORT@ @SERVER_NAME@ @CERT_PATH@ @KEY_PATH@ @PLATFORM_UPSTREAM@` 后 reload。
+
+### 验证
+
+```bash
+curl -k https://<host>/login        # 200
+curl -k https://<host>/browser/     # 未登录 302 → /login?next=%2Fbrowser%2F
+# 登录平台后再访问 /browser/ → 200（viewer）
+```
+
+注意：
+- 平台内部是自签 HTTPS，server 块里已带 `proxy_ssl_verify off`
+- `/assets/`（noVNC）与 `/browser/` 都在 inc 里，`proxy_pass` 末尾不能加 `/`
+- 证书需含对外域名/IP 的 SAN；首次访问需在浏览器信任自签证书
+
 ## 人工 / agent 协作
 
 1. 会话中让 agent 用浏览器打开目标 → 打开远程桌面，agent 自动暂停

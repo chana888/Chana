@@ -235,3 +235,6 @@ self-checks. Finally enable `local-browser` under platform MCP management. Verif
 `curl -H "X-Chana-Vps-Token: <token from vps-browser/server/.runtime/config.json>" http://127.0.0.1:18862/status`.
 
 For a VPS deployment with remote desktop and shared login state, run `vps-browser/install.sh`.
+
+> To serve `/browser/` on the **same origin/port** as the platform, see the "same-origin" section in
+> `vps-browser/README.md`; template: `vps-browser/nginx/chana_same_origin_server.conf.example`.
