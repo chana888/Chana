@@ -203,6 +203,15 @@ Lets agents drive a real browser (navigate, click, screenshot, read DOM, capture
 
 > The platform drives browsers only through the **`local-browser`** (local Chrome) or **`vps-browser`** (VPS Chrome) external MCP servers (pick one); no Playwright / Chrome DevTools fallback is built in.
 
+**Which one to pick**
+
+| Scenario | MCP to enable |
+|----------|---------------|
+| Personal machine / local deployment, drive your own Chrome | `local-browser` (default) |
+| VPS / server, remote desktop with shared login state | `vps-browser` |
+
+Both share the same Chrome extension and bridge; enable only one at a time.
+
 Components: Chrome extension `vps-browser/extension/`, MCP bridge `vps-browser/server/chrome-bridge.cjs`
 (`127.0.0.1:18862/mcp`), and platform presets `local-browser` / `vps-browser` (auto-registered, disabled by default).
 
