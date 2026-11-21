@@ -245,6 +245,15 @@ external_mcp:
 
 > 平台只通过 **`local-browser`（控制本机 Chrome）** 或 **`vps-browser`（VPS 常驻 Chrome）** 这两个外部 MCP 控制浏览器（二选一），不内置 Playwright / Chrome DevTools 等其他方案。
 
+**怎么选**
+
+| 场景 | 用哪个 MCP |
+|------|-----------|
+| 个人电脑 / 本机部署，控制自己日常 Chrome | `local-browser`（推荐默认） |
+| VPS / 服务器，远程桌面 + 多人共享登录态 | `vps-browser` |
+
+两者共用同一套 Chrome 扩展与桥，同一时间只启用其中一个即可。
+
 ### 组成
 
 | 部件 | 位置 | 说明 |
