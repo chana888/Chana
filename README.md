@@ -66,6 +66,8 @@ PowerShell 等价命令 `./init.ps1`。
 两个组件均需单独获取并启动，`scripts/` 下有 `setup-dsh.*` / `setup-vshell.*` 一键写入配置。
 
 > 浏览器控制统一走 **`local-browser`（本机 Chrome）** 或 **`vps-browser`（VPS 常驻 Chrome）** 这两个外部 MCP（二选一），平台不内置 Playwright / Chrome DevTools 等其他浏览器方案。
+>
+> **怎么选**：个人电脑 / 本机部署 → 用 `local-browser`（推荐默认）；服务器、VPS、需要远程桌面或多人共享登录态 → 用 `vps-browser`。同一时间只需启用其中一个。
 
 ### 🔑 默认账号与首次登录
 
