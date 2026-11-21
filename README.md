@@ -54,6 +54,26 @@ cp config.example.yaml config.yaml
 Windows 下也可以用一键脚本：`python init.py`（自检 → 建运行目录 → 提示配 Key → 启动 → 验证），
 PowerShell 等价命令 `./init.ps1`。
 
+### 一键完整部署（推荐）
+
+不想逐个组件手动部署时，用总装脚本一次装齐（平台 + dsh 平台联动 + GSL5 + vShell + 浏览器 MCP）：
+
+```bash
+./scripts/deploy-all.sh            # Linux / macOS
+```
+
+```powershell
+.\scripts\deploy-all.ps1           # Windows
+```
+
+脚本会自动：准备平台二进制（有 Go 本地构建，没有则从 GitHub Releases 下载预编译）→ 生成配置 →
+部署 dsh 并打通平台 MCP/AGENTS/skills → 部署 GSL5（缺 Java 时 Linux 自动装 / Windows 下载便携 JRE）→
+部署 vShell → 准备本地浏览器 MCP → 启动平台 → 自检并打印账号。
+
+常用参数：`--no-dsh` `--no-gsl5` `--no-vshell` `--no-browser` `--no-start`（Windows 用 `-SkipDsh` 等）。
+
+唯一需要人工做一次的步骤：在 Chrome `chrome://extensions` 加载 `vps-browser/extension`（浏览器不允许静默安装未打包扩展）。
+
 ### 可选集成（不随仓库分发）
 
 | 组件 | 作用 | 接入文档 |

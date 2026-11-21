@@ -10,6 +10,15 @@
 
 ---
 
+## 零、一键总装（推荐）
+
+```bash
+./scripts/deploy-all.sh        # Windows: .\scripts\deploy-all.ps1
+```
+
+依次完成：平台二进制（本地构建 / Releases 预编译）→ 配置 → dsh 与平台联动 → GSL5 → vShell →
+浏览器 MCP → 启动与自检。下面的分节是各组件的手工步骤，排障时按需查阅。
+
 ## 一、DeepSeek Harness (dsh)
 
 ### 1.1 前置

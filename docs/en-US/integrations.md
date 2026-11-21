@@ -11,6 +11,16 @@
 
 ---
 
+## 0. One-shot deployment (recommended)
+
+```bash
+./scripts/deploy-all.sh        # Windows: .\scripts\deploy-all.ps1
+```
+
+It prepares the platform binary (local build, or prebuilt from Releases), config, dsh + platform wiring,
+GSL5, vShell, browser MCP, then starts and self-checks. The per-component sections below remain for
+manual steps and troubleshooting.
+
 ## 1. DeepSeek Harness (dsh)
 
 ### Install and start
