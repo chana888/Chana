@@ -40,11 +40,11 @@ log() { echo -e "\033[32m[deploy]\033[0m $*"; }
 log "1/9 安装系统依赖"
 PKGS_BASE="xauth xclip xdotool"
 if command -v dnf >/dev/null 2>&1; then
-  dnf install -y xorg-x11-server-Xvfb openbox x11vnc websockify $PKGS_BASE google-noto-sans-cjk-ttc-fonts || \
-    dnf install -y xorg-x11-server-Xvfb openbox x11vnc websockify $PKGS_BASE
+  dnf install -y xorg-x11-server-Xvfb openbox x11vnc websockify novnc $PKGS_BASE google-noto-sans-cjk-ttc-fonts || \
+    dnf install -y xorg-x11-server-Xvfb openbox x11vnc websockify novnc $PKGS_BASE
 elif command -v apt-get >/dev/null 2>&1; then
   apt-get update -qq
-  apt-get install -y xvfb openbox x11vnc websockify $PKGS_BASE fonts-noto-cjk
+  apt-get install -y xvfb openbox x11vnc websockify novnc $PKGS_BASE fonts-noto-cjk
 else
   echo "未识别的包管理器，请手动安装: Xvfb openbox x11vnc websockify xauth xclip xdotool 中文字体"; exit 1
 fi
