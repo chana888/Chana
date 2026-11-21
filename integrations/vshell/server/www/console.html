@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DesShell 命令控制台</title>
+<title>vShell 命令控制台</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%;background:#0d1117;color:#c9d1d9;font-family:'Cascadia Code','Fira Code','JetBrains Mono','Consolas','Courier New',monospace;font-size:14px;overflow:hidden}
@@ -64,7 +64,7 @@ html,body{height:100%;background:#0d1117;color:#c9d1d9;font-family:'Cascadia Cod
   <div class="console-header">
     <div class="title">
       <span class="dot online" id="statusDot"></span>
-      <span>DesShell 命令控制台</span>
+      <span>vShell 命令控制台</span>
       <span class="badge" id="clientBadge">客户端 #--</span>
     </div>
     <div class="info">
@@ -120,9 +120,7 @@ const hostBadge = document.getElementById('hostBadge');
 // ====== API ======
 function getApiUrl(path) {
   if (API_BASE) return API_BASE.replace(/\/+$/, '') + path;
-  var m = location.pathname.match(/^(.*\/)[^/]*$/);
-  var dir = m ? m[1] : '/';
-  return dir.replace(/\/+$/, '') + '/api' + path;
+  return path;
 }
 
 async function apiCall(url, data) {
@@ -272,7 +270,7 @@ cmdInput.addEventListener('keydown', function(e) {
 async function init() {
   clientBadge.textContent = '客户端 #' + CLIENT_ID;
   addLine('═══════════════════════════════════════════', 'info-text');
-  addLine('DesShell 命令控制台 | 客户端 #' + CLIENT_ID, 'info-text');
+  addLine('vShell 命令控制台 | 客户端 #' + CLIENT_ID, 'info-text');
   addLine('输入 help 查看可用命令 | Ctrl+L 清屏', 'info-text');
   addLine('═══════════════════════════════════════════', 'info-text');
   addLine('', 'empty-line');

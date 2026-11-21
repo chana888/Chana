@@ -20,7 +20,7 @@ integrations/vshell/server/
 
 ## 默认账号
 
-- Windows 版面板默认账号：**`admin / admin123`**（首次登录后请立即修改）
+- 面板默认账号（Linux / Windows 版一致）：**`admin / admin123`**（首次登录后请立即修改）
 - 推荐用 Token 免登录：`http://127.0.0.1:8095/?token=<deploy-vshell 输出的 Token>`
 
 ## 一键部署

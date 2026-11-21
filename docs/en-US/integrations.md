@@ -152,7 +152,7 @@ the panel port and writes the `vshell:` block into `config.yaml`.
 
 ### Default credentials
 
-- Bundled Windows panel: **`admin / admin123`** (change it right after the first login)
+- Bundled panel (Linux and Windows builds): **`admin / admin123`** (change it right after the first login)
 - Token login (recommended): `http://127.0.0.1:8095/?token=<token printed by deploy-vshell>`
 - Entering through the platform injects the token automatically
 

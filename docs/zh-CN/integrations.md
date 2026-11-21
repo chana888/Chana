@@ -163,7 +163,7 @@ ssh -N -L 127.0.0.1:8095:127.0.0.1:8080 user@vshell-host
 
 ### 4.2 vShell：Linux / Windows 双版本随仓库提供
 
-仓库 `integrations/vshell/server/` 附带**已脱敏的 Linux 版服务端 + www**，
+仓库 `integrations/vshell/server/` 附带**已脱敏、支持账号登录的 Linux 版服务端 + www**，
 `integrations/vshell/server/windows/` 附带 **Windows 版服务端 + www**（品牌统一为 vShell、图标为项目品牌图）。
 `deploy-vshell` 会按平台自动选择。vShell 为第三方授权产品，仓库内二进制仅供已获授权者使用。
 
@@ -180,7 +180,7 @@ ssh -N -L 127.0.0.1:8095:127.0.0.1:8080 user@vshell-host
 
 ### 默认账号与登录方式
 
-- **Windows 版面板默认账号：`admin / admin123`**（首次登录后请立即修改）
+- **面板默认账号：`admin / admin123`（Linux / Windows 两个版本一致）**，首次登录后请立即修改
 - 直连面板推荐用 Token 免登录：`http://127.0.0.1:8095/?token=<deploy-vshell 输出的 Token>`
 - 从平台进入时平台会自动注入 Token，无需二次登录
 
