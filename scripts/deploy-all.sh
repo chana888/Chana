@@ -77,8 +77,16 @@ if [ "$NODE_OK" -eq 1 ]; then ok "node $(node -v)"
 else
   warn "安装便携 Node v24.10.0 → $DEPS/node"
   V=v24.10.0
-  download "https://npmmirror.com/mirrors/node/$V/node-$V-linux-x64.tar.xz" "$DEPS/node.tar.xz"
-  mkdir -p "$DEPS/node" && tar -xJf "$DEPS/node.tar.xz" -C "$DEPS/node" --strip-components=1
+  OS=$(uname -s); ARCH=$(uname -m)
+  case "$OS:$ARCH" in
+    Linux:x86_64) F="node-$V-linux-x64.tar.xz"; TARF="-xJf" ;;
+    Linux:aarch64|Linux:arm64) F="node-$V-linux-arm64.tar.xz"; TARF="-xJf" ;;
+    Darwin:x86_64) F="node-$V-darwin-x64.tar.gz"; TARF="-xzf" ;;
+    Darwin:arm64) F="node-$V-darwin-arm64.tar.gz"; TARF="-xzf" ;;
+    *) die "暂不支持的平台 $OS/$ARCH，请手动安装 Node >=24.9" ;;
+  esac
+  download "https://npmmirror.com/mirrors/node/$V/$F" "$DEPS/$F"
+  mkdir -p "$DEPS/node" && tar $TARF "$DEPS/$F" -C "$DEPS/node" --strip-components=1
   export PATH="$DEPS/node/bin:$PATH"
   ok "node $(node -v)"
 fi
@@ -103,8 +111,10 @@ else warn "跳过 GSL5"; fi
 
 step "6/7 vShell 与浏览器 MCP"
 if [ "$WITH_VSHELL" -eq 1 ]; then
-  if [ "$(uname -s)" = "Linux" ] || [ "$(uname -s)" = "Darwin" ]; then
+  if [ "$(uname -s)" = "Linux" ]; then
     bash "$ROOT/scripts/deploy-vshell.sh" || warn "vShell 部署失败（可稍后重试）"
+  else
+    warn "仓库内置 vShell 为 Linux 版；macOS 请使用官方对应版本并 --no-vshell"
   fi
 fi
 if [ "$WITH_BROWSER" -eq 1 ]; then
