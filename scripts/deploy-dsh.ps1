@@ -3,7 +3,8 @@
     [int]$Port = 3080,
     [string]$Registry = 'https://registry.npmjs.org',
     [switch]$InstallOnly,
-    [switch]$NoConfig
+    [switch]$NoConfig,
+    [switch]$NoPlatform
 )
 $ErrorActionPreference = 'Stop'
 $Root = Split-Path -Parent $PSScriptRoot
@@ -65,5 +66,9 @@ if ($token -and -not $NoConfig) {
     Write-Host '[3/3] 跳过配置写入'
 }
 
+if (-not $NoPlatform -and (Test-Path $Config)) {
+    Write-Host '[联动] 配置平台 MCP / AGENTS.md / skills / mcp-chana ...'
+    & (Join-Path $PSScriptRoot 'setup-dsh-platform.ps1') -Config $Config
+}
 if ($token) { Write-Host "[完成] dsh 已就绪: http://127.0.0.1:$Port/?token=$token" }
 Write-Host '       重启平台后 Harness 页面即可连接；dsh 每次重启 token 都会变化，需重新执行本脚本同步'
