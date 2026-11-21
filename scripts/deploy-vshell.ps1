@@ -24,7 +24,7 @@ if (-not $Binary -or -not (Test-Path $Binary)) {
 }
 if (-not $Token) {
     $bytes = New-Object byte[] 24
-    [System.Security.Cryptography.RandomNumberGenerator]::Fill($bytes)
+    $rng = [System.Security.Cryptography.RNGCryptoServiceProvider]::new(); $rng.GetBytes($bytes); $rng.Dispose()
     $Token = ($bytes | ForEach-Object { $_.ToString('x2') }) -join ''
 }
 
