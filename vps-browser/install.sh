@@ -18,6 +18,8 @@ RUN_HOME=/var/lib/chana-browser
 PLATFORM_PORT=8082
 PUBLIC_ORIGIN=""
 WITH_NGINX=0
+CHROME_VERSION=${CHROME_VERSION:-127.0.6533.119} # 137+ 会忽略 --load-extension 且 native messaging 受限，固定 127
+PLATFORM_TLS=${PLATFORM_TLS:-0}
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -67,8 +69,8 @@ log "3/9 安装 Node 依赖 (npm install)"
 # ---------- 4. Chrome for Testing ----------
 log "4/9 获取 Chrome for Testing"
 if [[ ! -x "$INSTALL_DIR/chrome-linux64/chrome" ]]; then
-  ( cd "$INSTALL_DIR" && npx -y @puppeteer/browsers install chrome@stable --base-url https://cdn.npmmirror.com/binaries/chrome-for-testing --path "$INSTALL_DIR/.chrome-dl" ) \
-  || ( cd "$INSTALL_DIR" && npx -y @puppeteer/browsers install chrome@stable --path "$INSTALL_DIR/.chrome-dl" )
+  ( cd "$INSTALL_DIR" && npx -y @puppeteer/browsers install chrome@${CHROME_VERSION} --base-url https://cdn.npmmirror.com/binaries/chrome-for-testing --path "$INSTALL_DIR/.chrome-dl" ) \
+  || ( cd "$INSTALL_DIR" && npx -y @puppeteer/browsers install chrome@${CHROME_VERSION} --path "$INSTALL_DIR/.chrome-dl" )
   CHROME_DIR=$(find "$INSTALL_DIR/.chrome-dl" -maxdepth 2 -type d -name 'chrome-linux64' | head -1)
   [[ -n "$CHROME_DIR" ]] || { echo "Chrome 下载失败，请手动解压 chrome-linux64 到 $INSTALL_DIR/"; exit 1; }
   ln -sfn "$CHROME_DIR" "$INSTALL_DIR/chrome-linux64"
@@ -81,7 +83,8 @@ cat > "$INSTALL_DIR/.runtime/config.json" <<EOF
 {
   "token": "$TOKEN",
   "public_origin": "$PUBLIC_ORIGIN",
-  "platform_port": $PLATFORM_PORT
+  "platform_port": $PLATFORM_PORT,
+  "platform_tls": $([ "$PLATFORM_TLS" = "1" ] && echo true || echo false)
 }
 EOF
 chmod 600 "$INSTALL_DIR/.runtime/config.json"
@@ -108,6 +111,8 @@ systemctl enable --now chana-browser-display.service chana-browser-wm.service \
   chana-browser-vnc.service chana-browser-websockify.service \
   chana-browser-mcp.service chana-browser-gateway.service chana-browser-cliphelper.service
 systemctl enable --now chana-browser-chrome-nightly.timer
+bash "$SRC_DIR/setup-native-host.sh" --extension-dir "$EXT_PARENT/extension" --user "$RUN_USER" --home "$RUN_HOME" || \
+  echo "native host 注册失败：稍后可手动执行 vps-browser/setup-native-host.sh"
 systemctl restart chana-browser-chrome.service
 
 # ---------- 7. Nginx（可选） ----------

@@ -53,6 +53,15 @@ sudo bash install.sh --origin https://<你的VPS域名或IP> --platform-port 808
 
 依赖：Node.js ≥ 18、Nginx（平台已带）、平台主服务运行中（鉴权用）。
 
+### 兼容性说明（开箱即用要点）
+
+- **Chrome 版本固定 `127.0.6533.119`**：Chrome 137+ 会忽略 `--load-extension`，且 native messaging 行为变化，
+  导致扩展无法连上桥（表现为 `/browser/` 能看画面但 `browserConnected:false`）。可用 `CHROME_VERSION=...` 覆盖。
+- **自动注册 native host**：install.sh 会调用 `setup-native-host.sh`，安装 `mcp-chrome-bridge`、按扩展 manifest 的 key
+  计算扩展 ID、写入 `allowed_origins` 并复制到各 Chrome 变体目录（google-chrome / chrome-for-testing / chromium / 系统级）。
+- **平台使用 HTTPS 时**：启动脚本加 `PLATFORM_TLS=1`（写入 `.runtime/config.json` 的 `platform_tls`），
+  网关校验平台登录态时会走 HTTPS，否则 `auth_request` 会 302/401。
+
 部署后：
 - **人工入口**：`https://<你的VPS>/browser/`（平台管理员登录后操作，agent 自动暂停等待交接）
 - **agent 接入**：平台 `config.yaml` 的 `external_mcp.servers` 添加（install.sh 结尾会打印带真实 Token 的片段）：

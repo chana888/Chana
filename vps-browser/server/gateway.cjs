@@ -1,5 +1,6 @@
 /* 复用平台 Cookie 鉴权，不把平台令牌或 MCP 凭据发送给远程桌面网页。 */
 const http=require('node:http');
+const https=require('node:https');
 const fs=require('node:fs');
 const path=require('node:path');
 const {spawn}=require('node:child_process');
@@ -8,9 +9,10 @@ const cfg=JSON.parse(fs.readFileSync(path.join(__dirname,'.runtime/config.json')
 const origin=cfg.public_origin||'http://127.0.0.1:8080';
 const cache=new Map();
 const inflight=new Map();
-function request(port,route,headers={},body,timeout=3000) {
+function request(port,route,headers={},body,timeout=3000,tls=false) {
   return new Promise((resolve,reject)=>{
-    const r=http.request({host:'127.0.0.1',port,path:route,method:body?'POST':'GET',headers:{...headers,...(body?{'Content-Type':'application/json','Content-Length':Buffer.byteLength(body)}:{})}},res=>{
+    const reqmod=(tls?https:http);
+    const r=reqmod.request({host:'127.0.0.1',port,path:route,method:body?'POST':'GET',rejectUnauthorized:false,headers:{...headers,...(body?{'Content-Type':'application/json','Content-Length':Buffer.byteLength(body)}:{})}},res=>{
       let data='';res.on('data',p=>{data+=p;if(data.length>1048576)r.destroy();});res.on('end',()=>{let json={};try{json=JSON.parse(data);}catch{}resolve({code:res.statusCode,json});});
     });r.setTimeout(timeout,()=>r.destroy(new Error('本地服务超时')));r.on('error',reject);if(body)r.write(body);r.end();
   });
@@ -19,7 +21,7 @@ async function validate(token) {
   // 网络抖动重试一次；确定性失败（非200/无admin角色）不重试。
   for(let attempt=0;attempt<2;attempt++){
     try{
-      const result=await request(cfg.platform_port||8082,'/api/auth/validate',{Authorization:'Bearer '+token});
+      const result=await request(cfg.platform_port||8082,'/api/auth/validate',{Authorization:'Bearer '+token},undefined,3000,!!cfg.platform_tls);
       if(result.code===200 && result.json.roles?.includes('admin'))
         return Math.min(Date.now()+10000,Date.parse(result.json.expires_at)||Infinity)||Date.now()+10000;
       return null;
