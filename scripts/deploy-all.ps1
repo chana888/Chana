@@ -117,6 +117,13 @@ if (Test-Path $log) {
     $m = Select-String -Path $log -Pattern 'ADMIN SETUP' -Context 0,3 | Select-Object -Last 1
     if ($m) { $pm = $m.Context.PostContext | Select-String 'Password'; if ($pm) { $pass = ($pm.Line -split '\s+')[-1] } }
 }
+$nodeCmd = Get-Command node -ErrorAction SilentlyContinue
+if ($nodeCmd) {
+    & $nodeCmd.Source (Join-Path $PSScriptRoot 'verify-stack.mjs') '--config' $Config
+} else {
+    Write-Host '未找到 node，跳过堆栈自检（安装 Node 后可运行 node scripts/verify-stack.mjs）' -ForegroundColor Yellow
+}
+
 Write-Host ''
 Write-Host '部署完成' -ForegroundColor Green
 Write-Host "  平台:   $base/   账号 admin$($(if($pass){" / $pass"}))"

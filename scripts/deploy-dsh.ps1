@@ -62,7 +62,12 @@ if (-not $listening) {
     }
     if (-not $token) { throw "30 秒内未解析到 token，请查看 $Log" }
 } else {
-    Write-Host "[提示] 端口 $Port 已被占用，假定 dsh 已在运行；token 变更请手动同步配置"
+    Write-Host "[提示] 端口 $Port 已被占用，复用现有 dsh 实例"
+    if (Test-Path $Log) {
+        $m = Select-String -Path $Log -Pattern 'token=([A-Za-z0-9_-]+)' -ErrorAction SilentlyContinue | Select-Object -Last 1
+        if ($m) { $token = $m.Matches[0].Groups[1].Value }
+    }
+    if (-not $token) { Write-Host '      未能从日志读取现有 token；如平台 Harness 连不上，请重启 dsh 后重跑本脚本' }
 }
 
 if ($token -and -not $NoConfig) {

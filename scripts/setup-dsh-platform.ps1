@@ -57,11 +57,53 @@ foreach ($link in @((Join-Path $DshHome 'skills'), (Join-Path $HOME 'skills'))) 
 Write-Host '[4/4] 注入 mcp-chana 到 dsh 配置'
 $prof = Join-Path $DshHome 'profiles\web'
 New-Item -ItemType Directory -Force $prof | Out-Null
+
+# MCP 客户端依赖自检：部分 npm 镜像的 @modelcontextprotocol/client 缺 dist/index.mjs，
+# 插件会 import 失败，dsh 只在 stderr 里报一行警告，MCP 工具全部不出现。这里自动修复。
+$dshDir = Join-Path $Root 'integrations\dsh'
+$pluginEntry = Join-Path $dshDir 'node_modules\@deepseek-ai\dsh-mcp-client\lib\index.js'
+$mcpClientMjs = Join-Path $dshDir 'node_modules\@modelcontextprotocol\client\dist\index.mjs'
+if ((Test-Path $pluginEntry) -and -not (Test-Path $mcpClientMjs)) {
+    Write-Host '      [修复] @modelcontextprotocol/client 缺 dist/index.mjs，从官方源重装...'
+    $oldEap = $ErrorActionPreference; $ErrorActionPreference = 'Continue'
+    try { Push-Location $dshDir; & npm install '@modelcontextprotocol/client@2.2.0' --registry=https://registry.npmjs.org --no-save --ignore-scripts 2>&1 | Out-Null } catch { } finally { Pop-Location; $ErrorActionPreference = $oldEap }
+}
+if (Test-Path $pluginEntry) {
+    $probe = Join-Path $dshDir '.mcp-probe.mjs'
+    Set-Content -Path $probe -Value "import('@deepseek-ai/dsh-mcp-client').then(()=>console.log('ok')).catch(e=>console.log('fail:'+e.message))" -Encoding utf8
+    $oldEap = $ErrorActionPreference; $ErrorActionPreference = 'Continue'
+    try { Push-Location $dshDir; $probeOut = (& node $probe 2>&1 | Out-String) } catch { $probeOut = "$_" } finally { Pop-Location; $ErrorActionPreference = $oldEap }
+    Remove-Item $probe -Force -ErrorAction SilentlyContinue
+    if ($probeOut -notmatch 'ok') { Write-Host "      [警告] dsh-mcp-client 无法加载，MCP 不会连接：$($probeOut.Trim())" }
+}
 $patch = Join-Path $prof 'cordis.patch.yml'
 if (-not (Test-Path $patch)) { New-Item -ItemType File $patch | Out-Null }
 $existing = (Get-Content $patch -Raw -ErrorAction SilentlyContinue)
 if ($null -eq $existing) { $existing = '' }
 if ($existing.Trim() -eq '[]' -or $existing.Trim() -eq '') { Set-Content -Path $patch -Value '' -Encoding utf8 }
+
+# 兼容修复：新增条目必须是 `- insert:` 块；裸 `- id: mcp-*` 会被 dsh 当成"修改已有条目"而忽略。
+$pLines = @(Get-Content $patch -ErrorAction SilentlyContinue)
+if ($pLines -match '^- id: mcp-') {
+    $kept = @(); $mcpRows = @(); $collect = $false
+    foreach ($ln in $pLines) {
+        if ($ln -match '^- id: mcp-') { $collect = $true; $mcpRows += ('    ' + $ln); continue }
+        if ($collect) {
+            if ($ln -match '^- ') { $collect = $false }
+            elseif ($ln.Trim() -eq '') { continue }
+            else { $mcpRows += ('    ' + $ln); continue }
+        }
+        $kept += $ln
+    }
+    if ($mcpRows.Count -gt 0) {
+        $kept += '- insert:'
+        $kept += $mcpRows
+        $utf8n = New-Object System.Text.UTF8Encoding($false)
+        [System.IO.File]::WriteAllLines($patch, $kept, $utf8n)
+        $existing = Get-Content $patch -Raw -Encoding utf8
+        Write-Host '      [修复] 已把裸 mcp 条目改写为 insert 块'
+    }
+}
 if (-not (Select-String -Path $patch -Pattern 'mcp-chana' -Quiet)) {
     $block = @"
 

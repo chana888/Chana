@@ -17,7 +17,17 @@
 ```
 
 依次完成：平台二进制（本地构建 / Releases 预编译）→ 配置 → dsh 与平台联动 → GSL5 → vShell →
-浏览器 MCP → 启动与自检。下面的分节是各组件的手工步骤，排障时按需查阅。
+浏览器 MCP → 启动 → **堆栈自检**。下面的分节是各组件的手工步骤，排障时按需查阅。
+
+自检命令（deploy-all 结束时会自动执行）：
+
+```bash
+node scripts/verify-stack.mjs
+```
+
+它会逐项验证平台、dsh、dsh MCP 插件、`mcp-chana` / `mcp-gsl5` / `mcp-local-browser` 三个 MCP
+的实际工具数、以及 vShell 是否在线。除 Chrome 扩展外全部为 ✓ 即表示「三者已连好」，
+只剩在本机 Chrome 加载扩展并点 Connect 这一件人工操作。
 
 ## 一、DeepSeek Harness (dsh)
 
@@ -65,6 +75,11 @@ dsh:
 4. 向 dsh 的 `~/.dsh/profiles/web/cordis.patch.yml` 注入 `mcp-chana` 客户端
    - 同时把平台 `external_mcp.servers` 中**已启用**的条目（如 `local-browser` 浏览器桥、`gsl5`）一并注入为独立 MCP（`mcp-<名称>`），agent 可直接调用 `chrome_*` / gsl5 工具
    - 若 patch 文件被 dsh 初始化成 `[]`，脚本会先归一化，避免 `settings/describe` 报 `gateway/internal` 导致模型同步失败
+   - **新增条目必须写成 `- insert:` 块**。裸 `- id: mcp-*` 会被 dsh 当成「修改已有条目」并报
+     `patch: entry "mcp-xxx" not found`，MCP 永远不会加载；脚本会自动把历史裸条目改写回 `insert` 块
+   - 脚本还会自检 `integrations/dsh/node_modules`：若 npm 镜像漏装
+     `@modelcontextprotocol/client/dist/index.mjs`，dsh 只在 stderr 打一行警告且不加载 MCP，
+     脚本会从官方源自动重装该包
 
 手动执行：`./scripts/setup-dsh-platform.sh`（Windows 用 `.\scripts\setup-dsh-platform.ps1`）。
 执行后按顺序重启：**平台**（让 8081 生效）→ **dsh**（加载 AGENTS 与 MCP）。
@@ -72,7 +87,10 @@ dsh:
 ### 1.5 注意事项
 
 - **token 每次 dsh 重启都会变化**：重启 dsh 后必须同步 `config.yaml` 的 `dsh.token` 并重启平台。
+  `deploy-dsh` 在复用已有 dsh 时会从 `dsh-run.log` 自动读取当前 token 并回写配置。
 - 平台只做反代，**不会**启动或守护 dsh；需要你自己把它跑起来（可用 systemd/pm2/计划任务）。
+- 一键部署后的预期状态：平台、dsh、GSL5、vShell、浏览器 MCP 桥全部已启动且互相连通，
+  唯一人工步骤是 Chrome 加载扩展。
 
 ### 1.6 排障
 
@@ -81,6 +99,8 @@ dsh:
 | 页面显示「Harness 暂未连接」 | ① 3080 是否监听 `ss -tlnp \| grep 3080`；② `config.yaml` 是否有 `dsh:` 段；③ 平台日志中 `/dsh/` 是否 401（token 过期） |
 | 502 / 空白 | dsh 进程已退出，重新 `dsh web --no-open` |
 | iframe 能开但 API 403 | 确认平台版本包含 Host 重写与 Origin 清理逻辑（`internal/handler/dsh_proxy.go`） |
+| agent 里没有任何 `mcp__*` / `chrome_*` 工具 | ① 看 `dsh-run.log` 或 stderr 是否有 `did not activate` / `ERR_MODULE_NOT_FOUND`；② 重跑 `scripts/setup-dsh-platform`（会自动修 insert 格式与缺失依赖）；③ 重启 dsh 后再让 agent 列工具 |
+| `dsh --profile web --dump-config` 报 `patch: entry "mcp-chana" not found` | patch 里是裸条目，重跑 `setup-dsh-platform` 自动改成 `- insert:` 块 |
 
 ---
 

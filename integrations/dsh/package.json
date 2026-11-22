@@ -4,6 +4,6 @@
   "private": true,
   "description": "Pinned DeepSeek Harness (dsh) runtime for ChanaAgent local/full deployment",
   "dependencies": {
-    "@deepseek-ai/dsh": "0.2.2-rc.1"
+    "@deepseek-ai/dsh": "0.2.2-rc.5"
   }
 }

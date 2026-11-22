@@ -49,8 +49,9 @@ fi
 
 LOG="$ROOT/dsh-run.log"
 if command -v ss >/dev/null 2>&1 && ss -tln 2>/dev/null | grep -q ":$PORT "; then
-  echo "[提示] 端口 $PORT 已被占用，假定 dsh 已在运行。若 token 变更请手动同步配置"
-  TOKEN=""
+  echo "[提示] 端口 $PORT 已被占用，复用现有 dsh 实例"
+  TOKEN="$(grep -oE 'token=[A-Za-z0-9_-]+' "$LOG" 2>/dev/null | tail -n1 | cut -d= -f2 || true)"
+  [ -n "$TOKEN" ] || echo "      未能从日志读取现有 token；如平台 Harness 连不上，请重启 dsh 后重跑本脚本"
 else
   echo "[2/3] 启动 dsh（端口 $PORT，日志: $LOG）..."
   nohup node "$DSH_DIR/node_modules/@deepseek-ai/dsh/lib/bin.js" web --no-open >"$LOG" 2>&1 &

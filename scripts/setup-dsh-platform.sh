@@ -73,11 +73,60 @@ ln -sfn "$ROOT/skills" "$HOME/skills"
 echo "[4/4] 注入 mcp-chana 到 dsh 配置"
 mkdir -p "$DSH_HOME/profiles/web"
 PATCH="$DSH_HOME/profiles/web/cordis.patch.yml"
+
+# MCP 客户端依赖自检：部分 npm 镜像的 @modelcontextprotocol/client 缺 dist/index.mjs，
+# 插件会 import 失败，dsh 只在 stderr 里报一行警告，MCP 工具全部不出现。这里自动修复。
+DSH_DIR="$ROOT/integrations/dsh"
+PLUGIN_ENTRY="$DSH_DIR/node_modules/@deepseek-ai/dsh-mcp-client/lib/index.js"
+MCP_CLIENT_MJS="$DSH_DIR/node_modules/@modelcontextprotocol/client/dist/index.mjs"
+if [ -f "$PLUGIN_ENTRY" ] && [ ! -f "$MCP_CLIENT_MJS" ]; then
+  echo "      [修复] @modelcontextprotocol/client 缺 dist/index.mjs，从官方源重装..."
+  ( cd "$DSH_DIR" && npm install '@modelcontextprotocol/client@2.2.0'       --registry="${MCP_CLIENT_REGISTRY:-https://registry.npmjs.org}" --no-save --ignore-scripts >/dev/null 2>&1 || true )
+fi
+if [ -f "$PLUGIN_ENTRY" ]; then
+  probe="$DSH_DIR/.mcp-probe.mjs"
+  printf "%s
+" "import('@deepseek-ai/dsh-mcp-client').then(()=>console.log('ok')).catch(e=>console.log('fail:'+e.message))" > "$probe"
+  probe_out=$( cd "$DSH_DIR" && node "$probe" 2>&1 || true )
+  rm -f "$probe"
+  case "$probe_out" in
+    *ok*) ;;
+    *) echo "      [警告] dsh-mcp-client 无法加载，MCP 不会连接：$probe_out" ;;
+  esac
+fi
 touch "$PATCH"
 # dsh 初始化会写入空数组 "[]"；直接追加会变成非法 YAML，这里先归一化
 if [ "$(tr -d '[:space:]' < "$PATCH")" = "[]" ] || [ ! -s "$PATCH" ]; then
   : > "$PATCH"
 fi
+# 兼容修复：新增条目必须是 `- insert:` 块；裸 `- id: mcp-*` 会被 dsh 当成"修改已有条目"而忽略。
+if grep -q '^- id: mcp-' "$PATCH" 2>/dev/null; then
+  python3 - "$PATCH" <<'PYFIX'
+import sys
+p=sys.argv[1]
+lines=open(p,encoding='utf-8').read().splitlines()
+kept=[]; rows=[]; collect=False
+for ln in lines:
+    if ln.startswith('- id: mcp-'):
+        collect=True; rows.append('    '+ln); continue
+    if collect:
+        if ln.startswith('- '):
+            collect=False
+        elif not ln.strip():
+            continue
+        else:
+            rows.append('    '+ln); continue
+    kept.append(ln)
+if rows:
+    kept.append('- insert:'); kept.extend(rows)
+    open(p,'w',encoding='utf-8',newline='
+').write('
+'.join(kept)+'
+')
+    print('      [修复] 已把裸 mcp 条目改写为 insert 块')
+PYFIX
+fi
+
 if grep -q 'mcp-chana' "$PATCH"; then
   echo "      已存在 mcp-chana 配置，跳过"
 else

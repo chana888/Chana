@@ -18,8 +18,18 @@
 ```
 
 It prepares the platform binary (local build, or prebuilt from Releases), config, dsh + platform wiring,
-GSL5, vShell, browser MCP, then starts and self-checks. The per-component sections below remain for
-manual steps and troubleshooting.
+GSL5, vShell, browser MCP, then starts and **verifies the whole stack**. The per-component sections below
+remain for manual steps and troubleshooting.
+
+Verification (also run automatically at the end of deploy-all):
+
+```bash
+node scripts/verify-stack.mjs
+```
+
+It checks the platform, dsh, the dsh MCP plugin, the live tool counts of `mcp-chana` / `mcp-gsl5` /
+`mcp-local-browser`, and vShell. Everything except "Chrome extension" should be ✓; the only manual
+step left is loading the extension in your local Chrome and clicking Connect.
 
 ## 1. DeepSeek Harness (dsh)
 
@@ -57,6 +67,12 @@ and dsh workspaces are mirrored into platform projects every 30s.
    plus an independent MCP entry (`mcp-<name>`) for every **enabled** server in platform `external_mcp.servers`
    (browser bridge, GSL5, ...), so the agent can call `chrome_*` tools directly.
    If dsh initialized the patch file as `[]`, it is normalized first to avoid `gateway/internal` errors.
+   New entries **must** be `- insert:` blocks; a bare `- id: mcp-*` is treated as an edit of a missing
+   entry (`patch: entry "mcp-xxx" not found`) and silently never loads. The setup script repairs
+   historical bare entries automatically.
+   It also verifies `integrations/dsh/node_modules`: some npm mirrors ship
+   `@modelcontextprotocol/client` without `dist/index.mjs`, which makes the plugin fail to import and
+   leaves the agent with zero MCP tools; the script reinstalls that package from the official registry.
 
   Restart **platform** then **dsh** afterwards (or run the script manually).
 
@@ -67,6 +83,8 @@ and dsh workspaces are mirrored into platform projects every 30s.
 | "Harness 暂未连接" | port 3080 listening; `dsh:` block present; `/dsh/` returning 401 means stale token |
 | 502/blank | dsh process died |
 | iframe loads but API 403 | platform build must include Host rewrite / Origin stripping in `internal/handler/dsh_proxy.go` |
+| agent exposes no `mcp__*` / `chrome_*` tools | check `dsh-run.log` stderr for `did not activate` / `ERR_MODULE_NOT_FOUND`; rerun `scripts/setup-dsh-platform` (repairs patch format and missing deps), then restart dsh |
+| `dsh --profile web --dump-config` prints `patch: entry "mcp-chana" not found` | bare patch entries; rerun `setup-dsh-platform` to rewrite them as `- insert:` blocks |
 
 ---
 

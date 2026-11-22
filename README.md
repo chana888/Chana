@@ -70,6 +70,15 @@ PowerShell 等价命令 `./init.ps1`。
 部署 dsh 并打通平台 MCP/AGENTS/skills → 部署 GSL5（缺 Java 时 Linux 自动装 / Windows 下载便携 JRE）→
 部署 vShell → 准备本地浏览器 MCP → 启动平台 → 自检并打印账号。
 
+脚本结束时会自动运行 `node scripts/verify-stack.mjs`，逐项确认**平台、dsh、dsh MCP 插件、
+chana/gsl5/local-browser 三个 MCP、vShell** 都已启动并连通。也可以随时单独执行：
+
+```bash
+node scripts/verify-stack.mjs
+```
+
+预期结果：除「Chrome 扩展」外全部为 ✓。**唯一需要人工做的一步**是在本机 Chrome 安装扩展并点 Connect。
+
 常用参数：`--no-dsh` `--no-gsl5` `--no-vshell` `--no-browser` `--no-start`（Windows 用 `-SkipDsh` 等）。
 
 唯一需要人工做一次的步骤：在 Chrome `chrome://extensions` 加载 `vps-browser/extension`（浏览器不允许静默安装未打包扩展）。

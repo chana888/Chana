@@ -134,6 +134,12 @@ if [ "$START" -eq 1 ]; then
     sleep 8
   fi
 fi
+if command -v node >/dev/null 2>&1; then
+  node "$ROOT/scripts/verify-stack.mjs" --config "$CONFIG" || true
+else
+  warn "未找到 node，跳过堆栈自检（安装 Node 后可运行 node scripts/verify-stack.mjs）"
+fi
+
 PASS=$(grep -a -A3 'ADMIN SETUP' "$ROOT/chana-run.log" 2>/dev/null | grep -a Password | tail -1 | awk '{print $2}' || true)
 printf '\n\033[1;32m部署完成\033[0m\n'
 printf '  平台:   https://127.0.0.1:%s/  账号 admin%s\n' "$PORT" "${PASS:+ / $PASS}"
