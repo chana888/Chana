@@ -62,8 +62,10 @@ fi
 LOG="$ROOT/vshell-run.log"
 if [ "$START" -eq 1 ]; then
   echo "[1/3] 启动 vShell（面板 $PORT / Agent $AGENT_PORT，日志: $LOG）..."
-  nohup "$BINARY" -a 127.0.0.1 -p "$PORT" -ap "$AGENT_PORT" -t "$TOKEN" >"$LOG" 2>&1 &
-  echo "      PID: $!"
+  # vShell 从工作目录读取 www/ 前端资源；必须在服务端所在目录启动
+  BIN_DIR="$(cd "$(dirname "$BINARY")" && pwd)"
+  ( cd "$BIN_DIR" && nohup "$BINARY" -a 127.0.0.1 -p "$PORT" -ap "$AGENT_PORT" -t "$TOKEN" >"$LOG" 2>&1 & echo $! > "$ROOT/vshell.pid" )
+  echo "      PID: $(cat "$ROOT/vshell.pid" 2>/dev/null || echo unknown)"
   READY=0
   for _ in $(seq 1 20); do
     sleep 1
