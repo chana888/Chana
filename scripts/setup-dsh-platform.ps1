@@ -107,25 +107,18 @@ if ($pLines -match '^- id: mcp-') {
         Write-Host '      [修复] 已把裸 mcp 条目改写为 insert 块'
     }
 }
-if (-not (Select-String -Path $patch -Pattern 'mcp-chana' -Quiet)) {
-    $block = @"
-
-- insert:
-    - id: mcp-chana
-      name: '@deepseek-ai/dsh-mcp-client'
-      config:
-        serverName: chana
-        transport: streamable-http
-        url: http://127.0.0.1:8081/mcp
-        headers:
-          X-MCP-Token: $token
-        toolCallTimeoutMs: 300000
-        failOnStartupError: false
-"@
-    [System.IO.File]::AppendAllText($patch, $block, $utf8)
+# 生成/更新 mcp-chana 条目（只替换条目块，保留外层 insert 容器）
+$itemChana = "    - id: mcp-chana`n      name: '@deepseek-ai/dsh-mcp-client'`n      config:`n        serverName: chana`n        transport: streamable-http`n        url: http://127.0.0.1:8081/mcp`n        headers:`n          X-MCP-Token: $token`n        toolCallTimeoutMs: 300000`n        failOnStartupError: false`n"
+$patchText = Get-Content $patch -Raw -Encoding utf8
+if ($null -eq $patchText) { $patchText = '' }
+$patternChana = '(?m)^    - id: mcp-chana\r?\n(?:(?:      |        |          |            )[^\r\n]*\r?\n)*'
+if ($patchText -match $patternChana) {
+    $patchText = [regex]::Replace($patchText, $patternChana, $itemChana, 1)
+} else {
+    $patchText = $patchText.TrimEnd() + "`n- insert:`n" + $itemChana
 }
 
-# 把平台已启用的外部 MCP（浏览器桥 / GSL5 等）也注入 dsh
+# 把平台已启用的外部 MCP（浏览器桥 / GSL5 等）同步进 dsh（新增或更新 URL/令牌）
 $cfgText = Get-Content $Config -Raw -Encoding utf8
 $mExt = [regex]::Match($cfgText, '(?ms)^external_mcp:\r?\n((?:  .*\r?\n)+)')
 if ($mExt.Success) {
@@ -144,9 +137,7 @@ if ($mExt.Success) {
             $i = $t.IndexOf(':'); if ($i -gt 0) { $servers[$cur].headers[$t.Substring(0,$i).Trim()] = $t.Substring($i+1).Trim().Trim("'`"") }
         }
     }
-    $patchText = Get-Content $patch -Raw -Encoding utf8
-    if ($null -eq $patchText) { $patchText = '' }
-    $extAdded = 0
+    $extSynced = 0
     foreach ($name in @($servers.Keys)) {
         $c = $servers[$name]
         $enabled = -not ($c.ContainsKey('external_mcp_enable') -and "$($c['external_mcp_enable'])" -eq 'false')
@@ -155,15 +146,22 @@ if ($mExt.Success) {
         $typ = if ($c.ContainsKey('type')) { "$($c['type'])" } else { 'http' }
         if (-not $enabled -or -not $url -or ($typ -notin @('http','sse'))) { continue }
         $mid = "mcp-$name"
-        if ($patchText -match [regex]::Escape("id: $mid")) { continue }
         $hdrLines = ''
         foreach ($hk in $c.headers.Keys) { $hdrLines += "`n          ${hk}: $($c.headers[$hk])" }
-        $blk = "`n- insert:`n    - id: $mid`n      name: '@deepseek-ai/dsh-mcp-client'`n      config:`n        serverName: $name`n        transport: streamable-http`n        url: $url`n        headers: $hdrLines`n        toolCallTimeoutMs: 300000`n        failOnStartupError: false`n"
-        [System.IO.File]::AppendAllText($patch, $blk, $utf8)
-        $patchText += $blk; $extAdded++
+        $itemExt = "    - id: $mid`n      name: '@deepseek-ai/dsh-mcp-client'`n      config:`n        serverName: $name`n        transport: streamable-http`n        url: $url`n        headers: $hdrLines`n        toolCallTimeoutMs: 300000`n        failOnStartupError: false`n"
+        $pat = '(?m)^    - id: ' + [regex]::Escape($mid) + '\r?\n(?:(?:      |        |          |            )[^\r\n]*\r?\n)*'
+        if ($patchText -match $pat) {
+            $patchText = [regex]::Replace($patchText, $pat, $itemExt, 1)
+        } else {
+            $patchText = $patchText.TrimEnd() + "`n- insert:`n" + $itemExt
+        }
+        $extSynced++
     }
-    Write-Host "      外部 MCP 注入 dsh: $extAdded 个"
+    $extAdded = $extSynced
+    Write-Host "      外部 MCP 同步到 dsh: $extSynced 个"
 }
+$utf8w = New-Object System.Text.UTF8Encoding($false)
+[System.IO.File]::WriteAllText($patch, $patchText, $utf8w)
 
 Write-Host '[完成] 请依次重启：平台（让 8081 生效）→ dsh'
 Write-Host "       平台 MCP Token: $token"

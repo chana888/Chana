@@ -44,6 +44,7 @@ node_modules/
 chana-run*.log
 dsh-run.log
 gsl5-run*.log
+gsl5-compat.log*
 *.exe
 !ammo/tools/*.exe~
 

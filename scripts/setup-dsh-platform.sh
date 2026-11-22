@@ -97,93 +97,76 @@ if [ -f "$PLUGIN_ENTRY" ]; then
   esac
 fi
 touch "$PATCH"
-# dsh 初始化会写入空数组 "[]"；直接追加会变成非法 YAML，这里先归一化
+# 归一化 dsh 初始化的空数组 "[]"，否则追加会变成非法 YAML
 if [ "$(tr -d '[:space:]' < "$PATCH")" = "[]" ] || [ ! -s "$PATCH" ]; then
   : > "$PATCH"
 fi
-# 兼容修复：新增条目必须是 `- insert:` 块；裸 `- id: mcp-*` 会被 dsh 当成"修改已有条目"而忽略。
-if grep -q '^- id: mcp-' "$PATCH" 2>/dev/null; then
-  python3 - "$PATCH" <<'PYFIX'
-import sys
-p=sys.argv[1]
-lines=open(p,encoding='utf-8').read().splitlines()
-kept=[]; rows=[]; collect=False
+
+# 注入/更新 mcp-chana 与平台已启用的外部 MCP（浏览器桥 / GSL5 等）。
+# 注意：新增条目必须是 `- insert:` 块；裸 `- id: mcp-*` 会被 dsh 当成修改不存在条目而静默忽略。
+python3 - "$CONFIG" "$PATCH" "$TOKEN" <<'PYX'
+import json,os,re,sys
+cfg,patch,token=sys.argv[1:4]
+s=open(patch,encoding='utf-8').read() if os.path.exists(patch) else ''
+if s.strip() in ('','[]'): s=''
+
+# 兼容修复：裸 mcp 条目 -> insert 块
+lines=s.splitlines(); kept=[]; rows=[]; collect=False
 for ln in lines:
     if ln.startswith('- id: mcp-'):
         collect=True; rows.append('    '+ln); continue
     if collect:
-        if ln.startswith('- '):
-            collect=False
-        elif not ln.strip():
-            continue
-        else:
-            rows.append('    '+ln); continue
+        if ln.startswith('- '): collect=False
+        elif not ln.strip(): continue
+        else: rows.append('    '+ln); continue
     kept.append(ln)
 if rows:
     kept.append('- insert:'); kept.extend(rows)
-    open(p,'w',encoding='utf-8',newline='
-').write('
-'.join(kept)+'
-')
+    s='\n'.join(kept)+'\n'
     print('      [修复] 已把裸 mcp 条目改写为 insert 块')
-PYFIX
-fi
 
-if grep -q 'mcp-chana' "$PATCH"; then
-  echo "      已存在 mcp-chana 配置，跳过"
-else
-  cat >> "$PATCH" <<EOF
+def upsert(s, mid, item):
+    pat=r'(?m)^    - id: '+re.escape(mid)+r'\r?\n(?:(?:      |        |          |            )[^\r\n]*\r?\n)*'
+    if re.search(pat,s):
+        return re.sub(pat,lambda m:item,s,count=1), False
+    return s.rstrip()+'\n- insert:\n'+item, True
 
-- insert:
-    - id: mcp-chana
-      name: '@deepseek-ai/dsh-mcp-client'
-      config:
-        serverName: chana
-        transport: streamable-http
-        url: http://127.0.0.1:8081/mcp
-        headers:
-          X-MCP-Token: $TOKEN
-        toolCallTimeoutMs: 300000
-        failOnStartupError: false
-EOF
-  echo "      已写入 mcp-chana"
-fi
+chana=("    - id: mcp-chana\n      name: '@deepseek-ai/dsh-mcp-client'\n      config:\n"
+       "        serverName: chana\n        transport: streamable-http\n        url: http://127.0.0.1:8081/mcp\n"
+       "        headers:\n          X-MCP-Token: %s\n        toolCallTimeoutMs: 300000\n        failOnStartupError: false\n" % token)
+s,_=upsert(s,'mcp-chana',chana)
 
-# 把平台已启用的外部 MCP（浏览器桥 / GSL5 等）也注入 dsh，让 agent 直接拿到 chrome_* 等工具
-python3 - "$CONFIG" "$PATCH" <<'PYX'
-import json,os,re,sys
-cfg,patch=sys.argv[1],sys.argv[2]
 text=open(cfg,encoding='utf-8').read()
-m=re.search(r'(?ms)^external_mcp:\n((?:  .*\n)+)',text)
+m=re.search(r'(?m)^external_mcp:\r?\n(?:(?:  )[^\r\n]*\r?\n)*',text)
 servers={}
 if m:
     cur=None; in_headers=False
-    for ln in m.group(1).splitlines():
+    for ln in m.group(0).splitlines()[1:]:
         if not ln.strip(): continue
-        indent=len(ln)-len(ln.lstrip()); s=ln.strip()
-        if indent==4 and s.endswith(':'):
-            cur=s[:-1].strip(); servers[cur]={'headers':{}}; in_headers=False; continue
+        indent=len(ln)-len(ln.lstrip()); t=ln.strip()
+        if indent==4 and t.endswith(':'):
+            cur=t[:-1].strip(); servers[cur]={'headers':{}}; in_headers=False; continue
         if cur is None: continue
         if indent==6:
-            if s.startswith('headers:'): in_headers=True; continue
+            if t.startswith('headers:'): in_headers=True; continue
             in_headers=False
-            if ':' in s:
-                k,v=s.split(':',1); servers[cur][k.strip()]=v.strip().strip("'\"")
-        elif indent==8 and in_headers and ':' in s:
-            k,v=s.split(':',1); servers[cur]['headers'][k.strip()]=v.strip().strip("'\"")
-existing=open(patch,encoding='utf-8').read() if os.path.exists(patch) else ''
-added=0
-for name,cfg2 in servers.items():
-    enabled=str(cfg2.get('external_mcp_enable','true')).lower()=='true' and str(cfg2.get('disabled','false')).lower()!='true'
-    typ=cfg2.get('type','http'); url=cfg2.get('url','')
+            if ':' in t:
+                k,v=t.split(':',1); servers[cur][k.strip()]=v.strip().strip("'\"")
+        elif indent==8 and in_headers and ':' in t:
+            k,v=t.split(':',1); servers[cur]['headers'][k.strip()]=v.strip().strip("'\"")
+synced=0
+for name,c in servers.items():
+    enabled=str(c.get('external_mcp_enable','true')).lower()=='true' and str(c.get('disabled','false')).lower()!='true'
+    typ=c.get('type','http'); url=c.get('url','')
     if not enabled or not url or typ not in ('http','sse'): continue
     mid='mcp-'+name
-    if 'id: '+mid in existing: continue
-    headers=''.join('\n          %s: %s' % (k,json.dumps(v)) for k,v in cfg2.get('headers',{}).items())
-    block='\n- insert:\n    - id: %s\n      name: \'@deepseek-ai/dsh-mcp-client\'\n      config:\n        serverName: %s\n        transport: streamable-http\n        url: %s\n        headers: %s\n        toolCallTimeoutMs: 300000\n        failOnStartupError: false\n' % (mid,name,url,headers)
-    with open(patch,'a',encoding='utf-8') as f: f.write(block)
-    existing+=block; added+=1
-print('      外部 MCP 注入 dsh: %d 个' % added)
+    headers=''.join('\n          %s: %s' % (k,json.dumps(v)) for k,v in c.get('headers',{}).items())
+    item=("    - id: %s\n      name: '@deepseek-ai/dsh-mcp-client'\n      config:\n        serverName: %s\n"
+          "        transport: streamable-http\n        url: %s\n        headers: %s\n"
+          "        toolCallTimeoutMs: 300000\n        failOnStartupError: false\n" % (mid,name,url,headers))
+    s,_=upsert(s,mid,item); synced+=1
+open(patch,'w',encoding='utf-8',newline='\n').write(s)
+print('      外部 MCP 同步到 dsh: %d 个' % synced)
 PYX
 
 echo "[完成] 请依次重启：平台（让 8081 生效）→ dsh（加载 AGENTS/MCP）"

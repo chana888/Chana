@@ -1,5 +1,5 @@
 ﻿param(
-    [Parameter(Mandatory = $true)][string]$Token,
+    [string]$Token = '',
     [string]$Url = 'http://127.0.0.1:9123/message',
     [string]$Config = 'config.yaml'
 )
@@ -7,7 +7,26 @@ $ErrorActionPreference = 'Stop'
 
 if (-not (Test-Path $Config)) { throw "找不到配置文件: $Config" }
 $content = Get-Content $Config -Raw -Encoding utf8
-if ($content -match '(?m)^    gsl5:\s*$') { Write-Host '[跳过] config.yaml 已存在 gsl5 条目'; exit 1 }
+if ($content -match '(?m)^    gsl5:\s*$') {
+    # 已存在：只更新本条目内的 url（以及提供了新 token 时的 Authorization）
+    $m = [regex]::Match($content, '(?m)^    gsl5:?
+(?:(?:      |        )[^
+]*?
+)*')
+    if ($m.Success) {
+        $rows = $m.Value -split "`n"
+        $urlDone = $false; $tokDone = $false
+        for ($i = 0; $i -lt $rows.Count; $i++) {
+            if (-not $urlDone -and $rows[$i] -match '^      url:') { $rows[$i] = "      url: $Url"; $urlDone = $true; continue }
+            if ($Token -and -not $tokDone -and $rows[$i] -match '^        Authorization:') { $rows[$i] = "        Authorization: Bearer $Token"; $tokDone = $true }
+        }
+        $content = $content.Substring(0, $m.Index) + ($rows -join "`n") + $content.Substring($m.Index + $m.Length)
+        $utf8u = New-Object System.Text.UTF8Encoding($false)
+        [System.IO.File]::WriteAllText((Resolve-Path $Config), $content, $utf8u)
+        Write-Host "[更新] 已更新 gsl5 条目: $Url"
+        exit 0
+    }
+}
 
 $bak = "$Config.bak-$(Get-Date -Format yyyyMMddHHmmss)"
 Copy-Item $Config $bak

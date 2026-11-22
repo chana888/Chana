@@ -224,7 +224,7 @@ external_mcp:
   servers:
     gsl5:
       type: http
-      url: http://127.0.0.1:9123/message
+      url: http://127.0.0.1:9124/message
       headers:
         Authorization: Bearer <token from the gsl5 banner>
       external_mcp_enable: true

@@ -254,7 +254,7 @@ external_mcp:
   servers:
     gsl5:
       type: http
-      url: http://127.0.0.1:9123/message
+      url: http://127.0.0.1:9124/message
       headers:
         Authorization: Bearer <gsl5 banner 中的 Token>
       external_mcp_enable: true
@@ -267,7 +267,8 @@ external_mcp:
 | 现象 | 排查 |
 |------|------|
 | 启动报 Java 错误 | 安装 JDK/JRE 17+ 并确认 `java` 在 PATH |
-| MCP 管理无 gsl5 | `config.yaml` 是否有 `external_mcp.servers.gsl5`；9123 是否监听 |
+| MCP 管理无 gsl5 | `config.yaml` 是否有 `external_mcp.servers.gsl5`；9123（GSL5 原始服务）与 9124（兼容代理）是否监听 |
+| 平台能看到 gsl5，但 dsh agent 里没有 `mcp__gsl5__*` 工具 | GSL5 对 POST 返回 `202`（旧版 HTTP+SSE 语义），dsh 的 MCP 客户端只认 `200`。确认 `scripts/mcp-http-compat.mjs` 代理在 9124 运行，且 config 中 gsl5 url 指向 `9124/message`；重跑 `deploy-gsl5` 会自动处理 |
 | 工具调用失败 | Token 与 banner 不一致（重启后可能变化，重跑脚本同步） |
 
 ---

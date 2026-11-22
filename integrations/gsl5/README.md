@@ -28,6 +28,9 @@ integrations/gsl5/
 
 1. 检查 Java；
 2. 启动 `java -jar integrations/gsl5/bin/gsl5.jar mcp 9123 127.0.0.1`，日志写入 `gsl5-run.log`；
+3. 启动兼容代理 `node scripts/mcp-http-compat.mjs --listen 127.0.0.1:9124 --upstream http://127.0.0.1:9123/message`：
+   GSL5 的 `/message` 对 POST 返回 `202 Accepted`（旧版 HTTP+SSE 语义），dsh 的 MCP 客户端只认 `200`，
+   直连会一直等到超时；代理把合法 JSON-RPC body 规范成 `200`。平台侧可直连 9123，dsh 走 9124。
 3. 从 banner 解析 `Token:`；
 4. 调用 `scripts/setup-gsl5.*` 把 `external_mcp.servers.gsl5` 写入 `config.yaml`。
 
@@ -40,7 +43,7 @@ external_mcp:
   servers:
     gsl5:
       type: http
-      url: http://127.0.0.1:9123/message
+      url: http://127.0.0.1:9124/message
       headers:
         Authorization: Bearer <banner 中的 Token>
       external_mcp_enable: true

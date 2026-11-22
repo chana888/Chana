@@ -18,9 +18,32 @@ while [ $# -gt 0 ]; do
   esac
 done
 
-[ -n "$TOKEN" ] || { echo "缺少 --token（gsl5 启动 banner 中的 Token）"; exit 1; }
 [ -f "$CONFIG" ] || { echo "找不到配置文件: $CONFIG"; exit 1; }
-grep -q '^    gsl5:' "$CONFIG" && { echo "[跳过] $CONFIG 已存在 gsl5 条目"; exit 1; }
+if grep -q '^    gsl5:' "$CONFIG"; then
+  python3 - "$CONFIG" "$URL" "$TOKEN" <<'PYUPD'
+import re,sys
+p,url,token=sys.argv[1:4]
+s=open(p,encoding='utf-8').read()
+m=re.search(r'(?ms)^    gsl5:
+?
+((?:      .*
+?
+|        .*
+?
+)+)',s)
+if m:
+    blk=re.sub(r'(?m)^      url:.*$','      url: '+url,m.group(0),count=1)
+    if token:
+        blk=re.sub(r'(?m)^        Authorization:.*$','        Authorization: Bearer '+token,blk,count=1)
+    s=s[:m.start()]+blk+s[m.end():]
+    open(p,'w',encoding='utf-8',newline='
+').write(s)
+    print('[更新] 已更新 gsl5 条目:',url)
+    sys.exit(0)
+PYUPD
+  exit $?
+fi
+[ -n "$TOKEN" ] || { echo "缺少 --token（gsl5 启动 banner 中的 Token）"; exit 1; }
 
 BAK="$CONFIG.bak-$(date +%Y%m%d%H%M%S)"
 cp "$CONFIG" "$BAK"
