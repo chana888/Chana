@@ -2,12 +2,12 @@
 # ChanaAgent 一键完整部署（Linux/macOS）
 # 覆盖：平台二进制 → 配置 → dsh(含平台联动) → GSL5 → vShell → 本地/浏览器栈 → 启动 → 自检
 # 用法: ./scripts/deploy-all.sh [--port 8080] [--no-dsh] [--no-gsl5] [--no-vshell] [--no-browser]
-#                              [--vps-browser] [--no-start] [--deps-dir .deps]
+#                              [--vps-browser] [--no-start] [--deps-dir .deps] [--vshell-binary <path>]
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 PORT=8080
-WITH_DSH=1; WITH_GSL5=1; WITH_VSHELL=1; WITH_BROWSER=1; VPS_BROWSER=0; START=1
+WITH_DSH=1; WITH_GSL5=1; WITH_VSHELL=1; WITH_BROWSER=1; VPS_BROWSER=0; START=1; VSHELL_BINARY=""
 DEPS="$ROOT/.deps"
 API_RELEASE="https://github.com/chana888/Chana/releases/latest/download"
 
@@ -20,6 +20,7 @@ while [ $# -gt 0 ]; do
     --no-browser) WITH_BROWSER=0; shift ;;
     --vps-browser) VPS_BROWSER=1; shift ;;
     --no-start) START=0; shift ;;
+    --vshell-binary) VSHELL_BINARY="$2"; shift 2 ;;
     --deps-dir) DEPS="$2"; shift 2 ;;
     -h|--help) sed -n '2,6p' "$0"; exit 0 ;;
     *) echo "未知参数: $1"; exit 1 ;;
@@ -98,13 +99,13 @@ if [ "$WITH_GSL5" -eq 1 ]; then
     if need_cmd apt-get; then sudo apt-get install -y openjdk-17-jre-headless || true
     elif need_cmd dnf; then sudo dnf install -y java-17-openjdk-headless || true; fi
   fi
-  if need_cmd java; then bash "$ROOT/scripts/deploy-gsl5.sh"; else warn "缺 Java，跳过 GSL5"; fi
+  if need_cmd java; then bash "$ROOT/scripts/deploy-gsl5.sh" || warn "GSL5 部署失败（可稍后重试）"; else warn "缺 Java，跳过 GSL5"; fi
 else warn "跳过 GSL5"; fi
 
 step "6/7 vShell 与浏览器 MCP"
 if [ "$WITH_VSHELL" -eq 1 ]; then
   if [ "$(uname -s)" = "Linux" ]; then
-    bash "$ROOT/scripts/deploy-vshell.sh" || warn "vShell 部署失败（可稍后重试）"
+    if [ -n "$VSHELL_BINARY" ]; then bash "$ROOT/scripts/deploy-vshell.sh" --binary "$VSHELL_BINARY" || warn "vShell 部署失败（可稍后重试）"; else bash "$ROOT/scripts/deploy-vshell.sh" || warn "vShell 部署失败（可稍后重试）"; fi
   else
     warn "仓库内置 vShell 为 Linux 版；macOS 请使用官方对应版本并 --no-vshell"
   fi

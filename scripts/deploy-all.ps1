@@ -5,6 +5,7 @@
     [switch]$SkipVShell,
     [switch]$SkipBrowser,
     [switch]$NoStart,
+    [string]$VShellBinary = '',
     [string]$Proxy = ''
 )
 $ErrorActionPreference = 'Stop'
@@ -85,13 +86,23 @@ if (-not $SkipGsl5) {
         $env:PATH = "$javaHome\bin;$env:PATH"
     }
     if (Get-Command java -ErrorAction SilentlyContinue) {
-        & (Join-Path $PSScriptRoot 'deploy-gsl5.ps1')
+        try { & (Join-Path $PSScriptRoot 'deploy-gsl5.ps1') } catch { Warn2 "GSL5 部署失败：$($_.Exception.Message)" }
     } else { Warn2 '缺 Java，跳过 GSL5' }
 } else { Warn2 '跳过 GSL5' }
 
 Step '6/7 vShell 与浏览器 MCP'
-if (-not $SkipVShell) { & (Join-Path $PSScriptRoot 'deploy-vshell.ps1') }
-if (-not $SkipBrowser) { & (Join-Path $PSScriptRoot 'setup-local-browser.ps1') }
+if (-not $SkipVShell) {
+    try {
+        $vsArgs = @{}
+        if ($VShellBinary) { $vsArgs['Binary'] = $VShellBinary }
+        & (Join-Path $PSScriptRoot 'deploy-vshell.ps1') @vsArgs
+    }
+    catch { Warn2 "vShell 未部署：$($_.Exception.Message)"; Warn2 '把服务端放到 integrations/vshell/server/ 后重跑 deploy-vshell 即可' }
+}
+if (-not $SkipBrowser) {
+    try { & (Join-Path $PSScriptRoot 'setup-local-browser.ps1') }
+    catch { Warn2 "本地浏览器 MCP 准备失败：$($_.Exception.Message)" }
+}
 
 Step '6.5/7 dsh + 平台联动（AGENTS/skills/MCP）'
 if (-not $SkipDsh) {
