@@ -91,6 +91,10 @@ dsh:
 - 平台只做反代，**不会**启动或守护 dsh；需要你自己把它跑起来（可用 systemd/pm2/计划任务）。
 - 一键部署后的预期状态：平台、dsh、GSL5、vShell、浏览器 MCP 桥全部已启动且互相连通，
   唯一人工步骤是 Chrome 加载扩展。
+- **任务中反复弹审批**：dsh 默认权限模式是 `workspace-write` + `approval: ask`，命令/写工作区外/联网都会询问。
+  `deploy-dsh` 现在默认以 `DSH_PERMISSION_MODE=danger-full-access` 启动（不再审批）；需要恢复时：
+  `./scripts/deploy-dsh.sh --permission-mode workspace-write`（Windows 用 `-PermissionMode workspace-write`），
+  改动后需重启 dsh 并按提示同步平台 token。该环境变量也控制会话内的默认权限预设。
 
 ### 1.6 排障
 

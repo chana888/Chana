@@ -9,6 +9,7 @@ PORT=3080
 INSTALL_ONLY=0
 WRITE_CONFIG=1
 WITH_PLATFORM=1
+PERMISSION_MODE="danger-full-access"
 # 依赖里有较新的 @earendil-works/pi-schema，国内镜像可能尚未同步；默认走官方源，可用 --registry 覆盖
 REGISTRY="https://registry.npmjs.org"
 
@@ -20,7 +21,8 @@ while [ $# -gt 0 ]; do
     --install-only) INSTALL_ONLY=1; shift ;;
     --no-config) WRITE_CONFIG=0; shift ;;
     --no-platform) WITH_PLATFORM=0; shift ;;
-    -h|--help) echo "用法: $0 [--config config.yaml] [--port 3080] [--registry https://registry.npmjs.org] [--install-only] [--no-config] [--no-platform]"; exit 0 ;;
+    --permission-mode) PERMISSION_MODE="$2"; shift 2 ;;
+    -h|--help) echo "用法: $0 [--config config.yaml] [--port 3080] [--registry https://registry.npmjs.org] [--install-only] [--no-config] [--no-platform] [--permission-mode danger-full-access]"; exit 0 ;;
     *) echo "未知参数: $1"; exit 1 ;;
   esac
 done
@@ -38,7 +40,7 @@ echo "[1/3] 安装 dsh 依赖（首次约几十秒）..."
 ( cd "$DSH_DIR" && npm install --omit=dev --no-audit --no-fund --registry="$REGISTRY" )
 
 if [ "$INSTALL_ONLY" -eq 1 ]; then
-  echo "[完成] 仅安装。启动命令: node \"$DSH_DIR/node_modules/@deepseek-ai/dsh/lib/bin.js\" web --no-open"
+  echo "[完成] 仅安装。启动命令: DSH_PERMISSION_MODE=$PERMISSION_MODE node \"$DSH_DIR/node_modules/@deepseek-ai/dsh/lib/bin.js\" web --no-open"
   exit 0
 fi
 
@@ -50,11 +52,13 @@ fi
 LOG="$ROOT/dsh-run.log"
 if command -v ss >/dev/null 2>&1 && ss -tln 2>/dev/null | grep -q ":$PORT "; then
   echo "[提示] 端口 $PORT 已被占用，复用现有 dsh 实例"
+  echo "      若任务仍频繁要求审批：停止 dsh 后用 --permission-mode danger-full-access 重启"
   TOKEN="$(grep -oE 'token=[A-Za-z0-9_-]+' "$LOG" 2>/dev/null | tail -n1 | cut -d= -f2 || true)"
   [ -n "$TOKEN" ] || echo "      未能从日志读取现有 token；如平台 Harness 连不上，请重启 dsh 后重跑本脚本"
 else
   echo "[2/3] 启动 dsh（端口 $PORT，日志: $LOG）..."
-  nohup node "$DSH_DIR/node_modules/@deepseek-ai/dsh/lib/bin.js" web --no-open >"$LOG" 2>&1 &
+  echo "      权限模式: $PERMISSION_MODE（danger-full-access = 不再逐步审批；可用 --permission-mode workspace-write 恢复）"
+  DSH_PERMISSION_MODE="$PERMISSION_MODE" nohup node "$DSH_DIR/node_modules/@deepseek-ai/dsh/lib/bin.js" web --no-open >"$LOG" 2>&1 &
   echo "      PID: $!"
   TOKEN=""
   for _ in $(seq 1 180); do
@@ -62,7 +66,7 @@ else
     TOKEN="$(grep -oE 'token=[A-Za-z0-9_-]+' "$LOG" 2>/dev/null | head -n1 | cut -d= -f2 || true)"
     [ -n "$TOKEN" ] && break
   done
-  [ -n "$TOKEN" ] || { echo "[错误] 30 秒内未从日志解析到 token，请查看 $LOG"; exit 1; }
+  [ -n "$TOKEN" ] || { echo "[错误] 180 秒内未从日志解析到 token，请查看 $LOG"; exit 1; }
 fi
 
 if [ -n "$TOKEN" ] && [ "$WRITE_CONFIG" -eq 1 ]; then

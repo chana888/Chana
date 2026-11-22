@@ -6,6 +6,7 @@
     [switch]$SkipBrowser,
     [switch]$NoStart,
     [string]$VShellBinary = '',
+    [ValidateSet('read-only','workspace-write','danger-full-access')][string]$PermissionMode = 'danger-full-access',
     [string]$Proxy = ''
 )
 $ErrorActionPreference = 'Stop'
@@ -106,7 +107,7 @@ if (-not $SkipBrowser) {
 
 Step '6.5/7 dsh + 平台联动（AGENTS/skills/MCP）'
 if (-not $SkipDsh) {
-    & (Join-Path $PSScriptRoot 'deploy-dsh.ps1') -Config $Config
+    & (Join-Path $PSScriptRoot 'deploy-dsh.ps1') -Config $Config -PermissionMode $PermissionMode
 } else {
     Warn2 '跳过 dsh，仅配置平台联动'
     & (Join-Path $PSScriptRoot 'setup-dsh-platform.ps1') -Config $Config

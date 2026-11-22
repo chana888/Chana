@@ -81,6 +81,9 @@ node scripts/verify-stack.mjs
 
 常用参数：`--no-dsh` `--no-gsl5` `--no-vshell` `--no-browser` `--no-start`（Windows 用 `-SkipDsh` 等）。
 
+dsh 工具权限默认 `danger-full-access`（不再逐步弹审批，适合授权渗透作业）；需要恢复逐步审批时用
+`-PermissionMode workspace-write`（Windows）或 `--permission-mode workspace-write`（Linux/macOS）。
+
 唯一需要人工做一次的步骤：在 Chrome `chrome://extensions` 加载扩展。扩展包会自动生成在
 `dist/chana-browser-extension-<版本>.zip`，或直接下载 [chana-browser-extension.zip](https://github.com/chana888/Chana/releases/latest/download/chana-browser-extension.zip)，**解压后**选择解压目录；
 Chrome 不接受直接选 zip，也不允许静默安装未打包扩展。

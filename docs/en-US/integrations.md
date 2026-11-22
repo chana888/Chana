@@ -58,6 +58,9 @@ and dsh workspaces are mirrored into platform projects every 30s.
 ### Notes
 
 - The dsh token **changes on every restart**; update `config.yaml` and restart the platform.
+- **Approval prompts on every tool call**: dsh defaults to `workspace-write` + `approval: ask`. `deploy-dsh`
+  now starts it with `DSH_PERMISSION_MODE=danger-full-access` (no per-call approval). Restore prompting with
+  `--permission-mode workspace-write` (`-PermissionMode` on Windows), then restart dsh and sync the platform token.
 - The platform proxies but never starts or supervises dsh.
 - `deploy-dsh.sh` / `.ps1` runs `scripts/setup-dsh-platform.sh`, which:
   1. enables the platform MCP server (`127.0.0.1:8081` + static token),

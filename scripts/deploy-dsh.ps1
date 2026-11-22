@@ -4,7 +4,8 @@
     [string]$Registry = 'https://registry.npmjs.org',
     [switch]$InstallOnly,
     [switch]$NoConfig,
-    [switch]$NoPlatform
+    [switch]$NoPlatform,
+    [ValidateSet('read-only','workspace-write','danger-full-access')][string]$PermissionMode = 'danger-full-access'
 )
 $ErrorActionPreference = 'Stop'
 $Root = Split-Path -Parent $PSScriptRoot
@@ -34,7 +35,7 @@ $bin = Join-Path $DshDir 'node_modules\@deepseek-ai\dsh\lib\bin.js'
 if (-not (Test-Path $bin)) { throw "未找到 dsh 入口: $bin" }
 
 if ($InstallOnly) {
-    Write-Host "[完成] 仅安装。启动命令: node `"$bin`" web --no-open"
+    Write-Host "[完成] 仅安装。启动命令: `$env:DSH_PERMISSION_MODE='$PermissionMode'; node `"$bin`" web --no-open"
     exit 0
 }
 
@@ -50,6 +51,8 @@ if (-not $NoPlatform -and (Test-Path $Config)) {
 
 if (-not $listening) {
     Write-Host "[2/3] 启动 dsh（端口 $Port，日志: $Log）..."
+    Write-Host "      权限模式: $PermissionMode（danger-full-access = 不再逐步审批；可用 -PermissionMode workspace-write 恢复）"
+    $env:DSH_PERMISSION_MODE = $PermissionMode
     $p = Start-Process -FilePath (Get-Command node).Source -ArgumentList @($bin, 'web', '--no-open') `
         -WorkingDirectory $Root -RedirectStandardOutput $Log -RedirectStandardError "$Log.err" -WindowStyle Hidden -PassThru
     Write-Host "      PID: $($p.Id)"
@@ -61,9 +64,10 @@ if (-not $listening) {
             if ($m) { $token = $m.Matches[0].Groups[1].Value; break }
         }
     }
-    if (-not $token) { throw "30 秒内未解析到 token，请查看 $Log" }
+    if (-not $token) { throw "180 秒内未解析到 token，请查看 $Log" }
 } else {
     Write-Host "[提示] 端口 $Port 已被占用，复用现有 dsh 实例"
+    Write-Host "      若任务仍频繁要求审批：停止 dsh 后用 -PermissionMode danger-full-access 重启"
     if (Test-Path $Log) {
         $m = Select-String -Path $Log -Pattern 'token=([A-Za-z0-9_-]+)' -ErrorAction SilentlyContinue | Select-Object -Last 1
         if ($m) { $token = $m.Matches[0].Groups[1].Value }

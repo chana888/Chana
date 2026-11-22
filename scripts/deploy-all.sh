@@ -2,12 +2,12 @@
 # ChanaAgent 一键完整部署（Linux/macOS）
 # 覆盖：平台二进制 → 配置 → dsh(含平台联动) → GSL5 → vShell → 本地/浏览器栈 → 启动 → 自检
 # 用法: ./scripts/deploy-all.sh [--port 8080] [--no-dsh] [--no-gsl5] [--no-vshell] [--no-browser]
-#                              [--vps-browser] [--no-start] [--deps-dir .deps] [--vshell-binary <path>]
+#                              [--vps-browser] [--no-start] [--deps-dir .deps] [--vshell-binary <path>] [--permission-mode danger-full-access]
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 PORT=8080
-WITH_DSH=1; WITH_GSL5=1; WITH_VSHELL=1; WITH_BROWSER=1; VPS_BROWSER=0; START=1; VSHELL_BINARY=""
+WITH_DSH=1; WITH_GSL5=1; WITH_VSHELL=1; WITH_BROWSER=1; VPS_BROWSER=0; START=1; VSHELL_BINARY=""; PERMISSION_MODE="danger-full-access"
 DEPS="$ROOT/.deps"
 API_RELEASE="https://github.com/chana888/Chana/releases/latest/download"
 
@@ -21,6 +21,7 @@ while [ $# -gt 0 ]; do
     --vps-browser) VPS_BROWSER=1; shift ;;
     --no-start) START=0; shift ;;
     --vshell-binary) VSHELL_BINARY="$2"; shift 2 ;;
+    --permission-mode) PERMISSION_MODE="$2"; shift 2 ;;
     --deps-dir) DEPS="$2"; shift 2 ;;
     -h|--help) sed -n '2,6p' "$0"; exit 0 ;;
     *) echo "未知参数: $1"; exit 1 ;;
@@ -120,7 +121,7 @@ fi
 
 step "6.5/7 dsh + 平台联动（AGENTS/skills/MCP）"
 if [ "$WITH_DSH" -eq 1 ]; then
-  bash "$ROOT/scripts/deploy-dsh.sh" --config "$CONFIG"
+  bash "$ROOT/scripts/deploy-dsh.sh" --config "$CONFIG" --permission-mode "$PERMISSION_MODE"
 else
   warn "跳过 dsh（--no-dsh）；仅配置平台联动"
   bash "$ROOT/scripts/setup-dsh-platform.sh" --config "$CONFIG" || true
