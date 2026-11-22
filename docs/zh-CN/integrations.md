@@ -306,7 +306,8 @@ external_mcp:
 .\scripts\deploy-browser.ps1         # Windows
 ```
 
-1. Chrome 打开 `chrome://extensions` → 开发者模式 → 「加载已解压的扩展」→ 选 `vps-browser/extension`（只需一次）
+1. Chrome 打开 `chrome://extensions` → 开发者模式 → 「加载已解压的扩展」→ 选解压后的扩展目录
+   （`setup-local-browser` 会生成 `dist/chana-browser-extension-<版本>.zip`，也可直接下载 [chana-browser-extension.zip](https://github.com/chana888/Chana/releases/latest/download/chana-browser-extension.zip)；Chrome 不能直接选 zip，必须先解压）
 2. 运行 `./scripts/setup-local-browser.sh`（Windows 用 `.ps1`）：自动安装 12306 native host、注册并修正
    `allowed_origins`、启动 18862 桥并自检
 3. 扩展里点 Connect（native host 会拉起 12306）

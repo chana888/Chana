@@ -81,7 +81,9 @@ node scripts/verify-stack.mjs
 
 常用参数：`--no-dsh` `--no-gsl5` `--no-vshell` `--no-browser` `--no-start`（Windows 用 `-SkipDsh` 等）。
 
-唯一需要人工做一次的步骤：在 Chrome `chrome://extensions` 加载 `vps-browser/extension`（浏览器不允许静默安装未打包扩展）。
+唯一需要人工做一次的步骤：在 Chrome `chrome://extensions` 加载扩展。扩展包会自动生成在
+`dist/chana-browser-extension-<版本>.zip`，或直接下载 [chana-browser-extension.zip](https://github.com/chana888/Chana/releases/latest/download/chana-browser-extension.zip)，**解压后**选择解压目录；
+Chrome 不接受直接选 zip，也不允许静默安装未打包扩展。
 
 ### 可选集成（不随仓库分发）
 

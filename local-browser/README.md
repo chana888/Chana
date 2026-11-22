@@ -18,11 +18,21 @@
 
 ### 1. 本机 Chrome 加载扩展（只需一次，必须手动）
 
+扩展就是一个 zip/文件夹，不需要去商店：
+
+- **方式 A（推荐，分发包）**：运行 `setup-local-browser` 时会自动生成
+  `dist/chana-browser-extension-<版本>.zip`（也可直接下载 [chana-browser-extension.zip](https://github.com/chana888/Chana/releases/latest/download/chana-browser-extension.zip)），
+  解压到任意目录。
+- **方式 B（仓库源码）**：直接使用仓库里的 `vps-browser/extension/` 目录。
+
+然后在 Chrome 里：
+
 1. 打开 `chrome://extensions/`，右上角开启**开发者模式**
-2. 「加载已解压的扩展程序」→ 选择仓库的 `vps-browser/extension/` 目录
+2. 「加载已解压的扩展程序」→ 选择**解压后的文件夹**（或 `vps-browser/extension/`）
 3. 记下扩展卡片上的 ID（脚本会按 manifest key 自动配置，无需手工填）
 
-> Chrome 不允许程序静默安装“未打包扩展”，所以这一步无法自动完成；其余全部由脚本处理。
+> Chrome 不接受直接选择 zip，必须先解压；也不允许程序静默安装“未打包扩展”，
+> 所以这一步无法自动完成，其余全部由脚本处理。
 
 ### 2. 运行一键准备脚本
 

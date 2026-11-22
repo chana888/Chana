@@ -113,6 +113,8 @@ echo "[4/4] 自检..."
 sleep 1
 curl -s --noproxy '*' -H "X-Chana-Vps-Token: $TOKEN" "http://127.0.0.1:18862/status" | python3 -c "import sys,json;d=json.load(sys.stdin);print('      browserConnected:',d.get('browserConnected'))" 2>/dev/null || echo "      （自检失败，稍后重试）"
 
+bash "$ROOT/scripts/pack-extension.sh" >/dev/null 2>&1 || true
+
 cat <<EOF
 
 完成。最后一步（必须手动做一次）：

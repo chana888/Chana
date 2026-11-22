@@ -83,6 +83,9 @@ try {
     Write-Host "[4/4] browserConnected: $($st.browserConnected)"
 } catch { Write-Host '[4/4] 自检失败（稍后重试）' }
 
+# 同时生成可直接分发的扩展 zip（Chrome 只能加载解压后的文件夹）
+try { & (Join-Path $PSScriptRoot 'pack-extension.ps1') -OutDir (Join-Path $Root 'dist') | Out-Null } catch { }
+
 Write-Host ''
 Write-Host '完成。最后一步（必须手动做一次）：'
 Write-Host '  1. Chrome 打开 chrome://extensions 并开启开发者模式'
