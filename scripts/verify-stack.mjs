@@ -6,8 +6,8 @@
 import { readFileSync, existsSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'; // 平台本地自签证书
+import http from 'node:http';
+import https from 'node:https';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..');
@@ -110,9 +110,18 @@ async function mcpToolCount(url, headers) {
   return n;
 }
 
-async function httpStatus(url) {
-  const r = await fetch(url, { redirect: 'manual', signal: AbortSignal.timeout(8000) });
-  return r.status;
+function httpStatus(url) {
+  return new Promise((resolve, reject) => {
+    const u = new URL(url);
+    const mod = u.protocol === 'https:' ? https : http;
+    const req = mod.request(u, { method: 'GET', rejectUnauthorized: false, timeout: 8000 }, (res) => {
+      res.resume();
+      resolve(res.statusCode || 0);
+    });
+    req.on('timeout', () => req.destroy(new Error('timeout')));
+    req.on('error', reject);
+    req.end();
+  });
 }
 
 const failures = [];
