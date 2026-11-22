@@ -66,3 +66,9 @@ integrations/gsl5/profile/
 
 # local browser native host install dir
 .chrome-mcp-host/
+
+# 本地部署产物
+.deps/
+*.exe~
+*-run.log.err
+setup-local-browser.log
