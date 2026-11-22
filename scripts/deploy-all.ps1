@@ -57,7 +57,7 @@ Step '3/7 Node 24（dsh 要求 >=24.9）'
 $nodeOk = $false
 $n = Get-Command node -ErrorAction SilentlyContinue
 if ($n) {
-    try { $maj = [int](& node -p 'process.versions.node.split(".")[0]'); if ($maj -ge 24) { $nodeOk = $true } } catch {}
+    try { $nv = (& node -v).Trim().TrimStart('v'); $maj = [int]($nv.Split('.')[0]); if ($maj -ge 24) { $nodeOk = $true } } catch {}
 }
 if ($nodeOk) { Ok "node $(& node -v)" }
 else {

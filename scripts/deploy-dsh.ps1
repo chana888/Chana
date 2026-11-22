@@ -11,7 +11,7 @@ $Root = Split-Path -Parent $PSScriptRoot
 if (-not $Config) { $Config = Join-Path $Root 'config.yaml' }
 
 function Get-NodeMajor {
-    try { return [int]((& node -p 'process.versions.node.split(".")[0]').Trim()) } catch { return 0 }
+    try { $v = (& node -v).Trim().TrimStart('v'); return [int]($v.Split('.')[0]) } catch { return 0 }
 }
 if (-not (Get-Command node -ErrorAction SilentlyContinue)) { throw '需要 Node.js >= 20，请先安装' }
 if ((Get-NodeMajor) -lt 20) { throw "Node.js 版本过低: $(& node -v)，需要 >= 20" }
