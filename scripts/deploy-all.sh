@@ -91,14 +91,6 @@ else
   ok "node $(node -v)"
 fi
 
-step "4/7 dsh + 平台联动（AGENTS/skills/MCP）"
-if [ "$WITH_DSH" -eq 1 ]; then
-  bash "$ROOT/scripts/deploy-dsh.sh" --config "$CONFIG"
-else
-  warn "跳过 dsh（--no-dsh）；仅配置平台联动"
-  bash "$ROOT/scripts/setup-dsh-platform.sh" --config "$CONFIG" || true
-fi
-
 step "5/7 GSL5（WebShell MCP，需 Java 17+）"
 if [ "$WITH_GSL5" -eq 1 ]; then
   if ! need_cmd java; then
@@ -123,6 +115,14 @@ if [ "$WITH_BROWSER" -eq 1 ]; then
   else
     bash "$ROOT/scripts/setup-local-browser.sh" || warn "本地浏览器 MCP 准备失败（可稍后重试）"
   fi
+fi
+
+step "6.5/7 dsh + 平台联动（AGENTS/skills/MCP）"
+if [ "$WITH_DSH" -eq 1 ]; then
+  bash "$ROOT/scripts/deploy-dsh.sh" --config "$CONFIG"
+else
+  warn "跳过 dsh（--no-dsh）；仅配置平台联动"
+  bash "$ROOT/scripts/setup-dsh-platform.sh" --config "$CONFIG" || true
 fi
 
 step "7/7 启动平台并自检"

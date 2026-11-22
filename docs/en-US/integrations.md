@@ -53,7 +53,10 @@ and dsh workspaces are mirrored into platform projects every 30s.
   1. enables the platform MCP server (`127.0.0.1:8081` + static token),
   2. installs `AGENTS-TEMPLATE.md` as `~/.dsh/AGENTS.md`,
   3. links the skills library into `~/.dsh/skills` and `~/skills`,
-  4. injects an `mcp-chana` client into `~/.dsh/profiles/web/cordis.patch.yml`.
+  4. injects an `mcp-chana` client into `~/.dsh/profiles/web/cordis.patch.yml`,
+   plus an independent MCP entry (`mcp-<name>`) for every **enabled** server in platform `external_mcp.servers`
+   (browser bridge, GSL5, ...), so the agent can call `chrome_*` tools directly.
+   If dsh initialized the patch file as `[]`, it is normalized first to avoid `gateway/internal` errors.
 
   Restart **platform** then **dsh** afterwards (or run the script manually).
 

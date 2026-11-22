@@ -98,5 +98,42 @@ EOF
   echo "      已写入 mcp-chana"
 fi
 
+# 把平台已启用的外部 MCP（浏览器桥 / GSL5 等）也注入 dsh，让 agent 直接拿到 chrome_* 等工具
+python3 - "$CONFIG" "$PATCH" <<'PYX'
+import json,os,re,sys
+cfg,patch=sys.argv[1],sys.argv[2]
+text=open(cfg,encoding='utf-8').read()
+m=re.search(r'(?ms)^external_mcp:\n((?:  .*\n)+)',text)
+servers={}
+if m:
+    cur=None; in_headers=False
+    for ln in m.group(1).splitlines():
+        if not ln.strip(): continue
+        indent=len(ln)-len(ln.lstrip()); s=ln.strip()
+        if indent==4 and s.endswith(':'):
+            cur=s[:-1].strip(); servers[cur]={'headers':{}}; in_headers=False; continue
+        if cur is None: continue
+        if indent==6:
+            if s.startswith('headers:'): in_headers=True; continue
+            in_headers=False
+            if ':' in s:
+                k,v=s.split(':',1); servers[cur][k.strip()]=v.strip().strip("'\"")
+        elif indent==8 and in_headers and ':' in s:
+            k,v=s.split(':',1); servers[cur]['headers'][k.strip()]=v.strip().strip("'\"")
+existing=open(patch,encoding='utf-8').read() if os.path.exists(patch) else ''
+added=0
+for name,cfg2 in servers.items():
+    enabled=str(cfg2.get('external_mcp_enable','true')).lower()=='true' and str(cfg2.get('disabled','false')).lower()!='true'
+    typ=cfg2.get('type','http'); url=cfg2.get('url','')
+    if not enabled or not url or typ not in ('http','sse'): continue
+    mid='mcp-'+name
+    if 'id: '+mid in existing: continue
+    headers=''.join('\n          %s: %s' % (k,json.dumps(v)) for k,v in cfg2.get('headers',{}).items())
+    block='\n- insert:\n    - id: %s\n      name: \'@deepseek-ai/dsh-mcp-client\'\n      config:\n        serverName: %s\n        transport: streamable-http\n        url: %s\n        headers: %s\n        toolCallTimeoutMs: 300000\n        failOnStartupError: false\n' % (mid,name,url,headers)
+    with open(patch,'a',encoding='utf-8') as f: f.write(block)
+    existing+=block; added+=1
+print('      外部 MCP 注入 dsh: %d 个' % added)
+PYX
+
 echo "[完成] 请依次重启：平台（让 8081 生效）→ dsh（加载 AGENTS/MCP）"
 echo "       平台 MCP Token: $TOKEN"

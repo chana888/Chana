@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # 一条命令部署 DeepSeek Harness：安装固定版本 → 启动 dsh → 解析 token → 写入 config.yaml
-# 用法: ./scripts/deploy-dsh.sh [--config config.yaml] [--port 3080] [--install-only] [--no-config]
+# 用法: ./scripts/deploy-dsh.sh [--config config.yaml] [--port 3080] [--install-only] [--no-config] [--no-platform]
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -8,6 +8,7 @@ CONFIG="$ROOT/config.yaml"
 PORT=3080
 INSTALL_ONLY=0
 WRITE_CONFIG=1
+WITH_PLATFORM=1
 # 依赖里有较新的 @earendil-works/pi-schema，国内镜像可能尚未同步；默认走官方源，可用 --registry 覆盖
 REGISTRY="https://registry.npmjs.org"
 
@@ -18,7 +19,8 @@ while [ $# -gt 0 ]; do
     --registry) REGISTRY="$2"; shift 2 ;;
     --install-only) INSTALL_ONLY=1; shift ;;
     --no-config) WRITE_CONFIG=0; shift ;;
-    -h|--help) echo "用法: $0 [--config config.yaml] [--port 3080] [--registry https://registry.npmjs.org] [--install-only] [--no-config]"; exit 0 ;;
+    --no-platform) WITH_PLATFORM=0; shift ;;
+    -h|--help) echo "用法: $0 [--config config.yaml] [--port 3080] [--registry https://registry.npmjs.org] [--install-only] [--no-config] [--no-platform]"; exit 0 ;;
     *) echo "未知参数: $1"; exit 1 ;;
   esac
 done
@@ -38,6 +40,11 @@ echo "[1/3] 安装 dsh 依赖（首次约几十秒）..."
 if [ "$INSTALL_ONLY" -eq 1 ]; then
   echo "[完成] 仅安装。启动命令: node \"$DSH_DIR/node_modules/@deepseek-ai/dsh/lib/bin.js\" web --no-open"
   exit 0
+fi
+
+if [ "$WITH_PLATFORM" -eq 1 ] && [ -f "$CONFIG" ]; then
+  echo "[联动] 配置平台 MCP / AGENTS.md / skills / 外部 MCP ..."
+  "$ROOT/scripts/setup-dsh-platform.sh" --config "$CONFIG"
 fi
 
 LOG="$ROOT/dsh-run.log"

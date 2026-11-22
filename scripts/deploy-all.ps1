@@ -72,14 +72,6 @@ else {
     Ok "node $(& node -v)"
 }
 
-Step '4/7 dsh + 平台联动（AGENTS/skills/MCP）'
-if (-not $SkipDsh) {
-    & (Join-Path $PSScriptRoot 'deploy-dsh.ps1') -Config $Config
-} else {
-    Warn2 '跳过 dsh，仅配置平台联动'
-    & (Join-Path $PSScriptRoot 'setup-dsh-platform.ps1') -Config $Config
-}
-
 Step '5/7 GSL5（需 Java 17+）'
 if (-not $SkipGsl5) {
     if (-not (Get-Command java -ErrorAction SilentlyContinue)) {
@@ -100,6 +92,14 @@ if (-not $SkipGsl5) {
 Step '6/7 vShell 与浏览器 MCP'
 if (-not $SkipVShell) { & (Join-Path $PSScriptRoot 'deploy-vshell.ps1') }
 if (-not $SkipBrowser) { & (Join-Path $PSScriptRoot 'setup-local-browser.ps1') }
+
+Step '6.5/7 dsh + 平台联动（AGENTS/skills/MCP）'
+if (-not $SkipDsh) {
+    & (Join-Path $PSScriptRoot 'deploy-dsh.ps1') -Config $Config
+} else {
+    Warn2 '跳过 dsh，仅配置平台联动'
+    & (Join-Path $PSScriptRoot 'setup-dsh-platform.ps1') -Config $Config
+}
 
 Step '7/7 启动平台并自检'
 $base = "https://127.0.0.1:$Port"

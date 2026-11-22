@@ -11,8 +11,16 @@ if (-not (Test-Path $Config)) {
 
 $content = Get-Content $Config -Raw -Encoding utf8
 if ($content -match '(?m)^dsh:\s*$') {
-    Write-Host '[跳过] config.yaml 已存在 dsh 段，请手动修改'
-    exit 1
+    $content = [regex]::Replace($content, '(?m)^(dsh:?
+(?:  .*?
+)*?  )base_url:.*$', '${1}base_url: ' + $BaseUrl, 1)
+    $content = [regex]::Replace($content, '(?m)^(dsh:?
+(?:  .*?
+)*?  )token:.*$', '${1}token: ' + $Token, 1)
+    $utf81 = New-Object System.Text.UTF8Encoding($false)
+    [System.IO.File]::WriteAllText((Resolve-Path $Config), $content, $utf81)
+    Write-Host '      dsh 段已更新 token'
+    exit 0
 }
 
 $bak = "$Config.bak-$(Get-Date -Format yyyyMMddHHmmss)"

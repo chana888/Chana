@@ -63,6 +63,8 @@ dsh:
 2. 把 `AGENTS-TEMPLATE.md` 安装为 `~/.dsh/AGENTS.md`（平台作业流程：S/D0-D3、台账门禁、漏洞落库）
 3. 软链技能库：`~/.dsh/skills`、`~/skills` → 仓库 `skills/`
 4. 向 dsh 的 `~/.dsh/profiles/web/cordis.patch.yml` 注入 `mcp-chana` 客户端
+   - 同时把平台 `external_mcp.servers` 中**已启用**的条目（如 `local-browser` 浏览器桥、`gsl5`）一并注入为独立 MCP（`mcp-<名称>`），agent 可直接调用 `chrome_*` / gsl5 工具
+   - 若 patch 文件被 dsh 初始化成 `[]`，脚本会先归一化，避免 `settings/describe` 报 `gateway/internal` 导致模型同步失败
 
 手动执行：`./scripts/setup-dsh-platform.sh`（Windows 用 `.\scripts\setup-dsh-platform.ps1`）。
 执行后按顺序重启：**平台**（让 8081 生效）→ **dsh**（加载 AGENTS 与 MCP）。

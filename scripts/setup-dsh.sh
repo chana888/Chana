@@ -23,7 +23,22 @@ done
 
 [ -n "$TOKEN" ] || { echo "缺少 --token（dsh 启动 banner 中的 token）"; exit 1; }
 [ -f "$CONFIG" ] || { echo "找不到配置文件: $CONFIG"; exit 1; }
-grep -q '^dsh:' "$CONFIG" && { echo "[跳过] $CONFIG 已存在 dsh 段，请手动修改"; exit 1; }
+if grep -q '^dsh:' "$CONFIG"; then
+  python3 - "$CONFIG" "$BASE_URL" "$TOKEN" <<'PYX'
+import re,sys
+p,base,token=sys.argv[1:4]
+s=open(p,encoding='utf-8').read()
+m=re.search(r'(?ms)^dsh:\n((?:  .*\n)+)',s)
+if m:
+    blk=m.group(1)
+    blk=re.sub(r'(?m)^  base_url:.*$', '  base_url: '+base, blk, count=1)
+    blk=re.sub(r'(?m)^  token:.*$', '  token: '+token, blk, count=1)
+    s=s[:m.start(1)]+blk+s[m.end(1):]
+    open(p,'w',encoding='utf-8').write(s)
+    print('      dsh 段已更新 token')
+PYX
+  exit 0
+fi
 
 BAK="$CONFIG.bak-$(date +%Y%m%d%H%M%S)"
 cp "$CONFIG" "$BAK"
