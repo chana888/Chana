@@ -293,7 +293,7 @@ external_mcp:
 |------|------|------|
 | Chrome 扩展 | `vps-browser/extension/` | 必须在目标 Chrome 里「加载已解压的扩展」 |
 | MCP 桥 | `vps-browser/server/chrome-bridge.cjs` | 默认 `127.0.0.1:18862/mcp`，连扩展的 12306 端口 |
-| 平台预置 | 启动时自动注册 | 「MCP 管理」里的 `local-browser` / `vps-browser`（默认停用，令牌自动发现） |
+| 平台预置 | 启动时自动注册 | 「MCP 管理」里的 `local-browser` / `vps-browser`；`deploy-all` / `setup-local-browser` 会写入并启用 `local-browser` |
 
 ### 本地模式（控制本机日常 Chrome）
 
@@ -309,7 +309,7 @@ external_mcp:
 2. 运行 `./scripts/setup-local-browser.sh`（Windows 用 `.ps1`）：自动安装 12306 native host、注册并修正
    `allowed_origins`、启动 18862 桥并自检
 3. 扩展里点 Connect（native host 会拉起 12306）
-4. 平台「MCP 管理」→ 启用 `local-browser`（令牌自动读取）
+4. `deploy-all` / `setup-local-browser` 已自动把 `local-browser` 写入 `config.yaml` 并启用；重启平台后生效（手动部署时需要重启一次平台）
 5. 验证：`curl -H "X-Chana-Vps-Token: <token>" http://127.0.0.1:18862/status` 返回 `browserConnected: true`
 
 ### VPS 模式（远程桌面 + Agent 共享登录态）

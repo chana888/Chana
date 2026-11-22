@@ -17,7 +17,7 @@ ChanaAgent 的前身是 [CyberStrike](https://github.com/CyberStrikeus/cyberstri
   外加项目黑板、事实库、骨架库的多层记忆；[`ammo/`](ammo/README.md) 自包含弹药库
   （shirokit 反序列化一体化 / DNSLog / srcwiki POC 4700+ / payload 集，第三方工具一键安装）
 - **MCP 联邦** — GSL5 (GodzillaSuper) WebShell 管理、任意外部 MCP 服务器接入
-- **浏览器控制（双模式）** — **VPS 模式**：常驻虚拟桌面 Chrome，人工远程桌面 + agent MCP 共享登录态（[`vps-browser/`](vps-browser/README.md)）；**本地模式**：直接控制本机日常 Chrome，三步接入（[`local-browser/`](local-browser/README.md)）。两种模式均自动预置进平台 MCP 管理页（默认停用，桥就绪后一键启用）
+- **浏览器控制（双模式）** — **VPS 模式**：常驻虚拟桌面 Chrome，人工远程桌面 + agent MCP 共享登录态（[`vps-browser/`](vps-browser/README.md)）；**本地模式**：直接控制本机日常 Chrome，三步接入（[`local-browser/`](local-browser/README.md)）。两种模式均自动预置进平台 MCP 管理页；一键部署会直接写入并启用 `local-browser`，无需再手动点启用
 - **HITL AI 围栏** — 高危动作人工审批兜底
 - **漏洞管理** — 按站点自动分组、复现包铁律（Burp 原始请求包，可直接重放）
 - **平台能力** — RBAC 权限、独立登录页与会话管理、机器人接入、代码审计管线、视觉分析

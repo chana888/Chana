@@ -57,6 +57,27 @@ Write-Host '[3/4] 启动 18862 MCP 桥...'
 
 $cfg = Join-Path $Root 'vps-browser\server\.runtime\config.json'
 $token = (Get-Content $cfg -Raw | ConvertFrom-Json).token
+
+# 自动写入平台外部 MCP 并启用，省去「MCP 管理」里再手动启用一步
+$Config = Join-Path $Root 'config.yaml'
+if (Test-Path $Config) {
+    $content = Get-Content $Config -Raw -Encoding utf8
+    if ($content -notmatch '(?m)^    local-browser:\s*$') {
+        $blk = "    local-browser:`n      type: http`n      url: http://127.0.0.1:$Port/mcp`n      headers:`n        X-Chana-Vps-Token: $token`n      external_mcp_enable: true`n"
+        if ($content -match '(?m)^external_mcp:[ 	]*$') {
+            if ($content -match '(?m)^  servers:[ 	]*$') {
+                $content = [regex]::Replace($content, '(?m)^(external_mcp:[ 	]*?
+  servers:[ 	]*?
+)', [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $m.Value + $blk }, 1)
+            } else { Write-Host '[警告] external_mcp 段缺少 servers，跳过自动接入' }
+        } else {
+            $content = $content.TrimEnd() + "`n`n# 本地浏览器 MCP（由 scripts/setup-local-browser.ps1 写入）`nexternal_mcp:`n  servers:`n" + $blk
+        }
+        $utf8n = New-Object System.Text.UTF8Encoding($false)
+        [System.IO.File]::WriteAllText($Config, $content, $utf8n)
+        Write-Host '      已自动写入 config.yaml: external_mcp.servers.local-browser（已启用）'
+    }
+}
 try {
     $st = Invoke-RestMethod -Uri "http://127.0.0.1:$Port/status" -Headers @{ 'X-Chana-Vps-Token' = $token } -TimeoutSec 5
     Write-Host "[4/4] browserConnected: $($st.browserConnected)"
@@ -66,4 +87,4 @@ Write-Host ''
 Write-Host '完成。最后一步（必须手动做一次）：'
 Write-Host '  1. Chrome 打开 chrome://extensions 并开启开发者模式'
 Write-Host "  2. 加载已解压的扩展程序 -> 选择 $ExtDir"
-Write-Host '  3. 点扩展图标 Connect；再到平台「MCP 管理」启用 local-browser'
+Write-Host '  3. 点扩展图标 Connect（平台侧已自动启用 local-browser；若平台已在运行，重启后生效）'

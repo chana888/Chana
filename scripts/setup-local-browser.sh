@@ -74,6 +74,41 @@ try: print(json.load(open("$ROOT/vps-browser/server/.runtime/config.json"))['tok
 except Exception: pass
 PY
 )
+# 自动写入平台外部 MCP 并启用，省去「MCP 管理」里再手动启用一步
+if [ -f "$ROOT/config.yaml" ]; then
+  python3 - "$ROOT/config.yaml" "$PORT" "$TOKEN" <<'PYCFG'
+import re,sys
+p,port,token=sys.argv[1:4]
+s=open(p,encoding='utf-8').read()
+if re.search(r'(?m)^    local-browser:[ 	]*$',s):
+    sys.exit(0)
+block=f"    local-browser:
+      type: http
+      url: http://127.0.0.1:{port}/mcp
+      headers:
+        X-Chana-Vps-Token: {token}
+      external_mcp_enable: true
+"
+m=re.search(r'(?ms)^external_mcp:[ 	]*
+  servers:[ 	]*
+',s)
+if m:
+    s=s[:m.end()]+block+s[m.end():]
+elif re.search(r'(?m)^external_mcp:[ 	]*$',s):
+    print('[警告] external_mcp 段缺少 servers，跳过自动接入'); sys.exit(0)
+else:
+    s=s.rstrip()+"
+
+# 本地浏览器 MCP（由 scripts/setup-local-browser.sh 写入）
+external_mcp:
+  servers:
+"+block
+open(p,'w',encoding='utf-8',newline='
+').write(s)
+print('      已自动写入 config.yaml: external_mcp.servers.local-browser（已启用）')
+PYCFG
+fi
+
 echo "[4/4] 自检..."
 sleep 1
 curl -s --noproxy '*' -H "X-Chana-Vps-Token: $TOKEN" "http://127.0.0.1:18862/status" | python3 -c "import sys,json;d=json.load(sys.stdin);print('      browserConnected:',d.get('browserConnected'))" 2>/dev/null || echo "      （自检失败，稍后重试）"
@@ -83,5 +118,5 @@ cat <<EOF
 完成。最后一步（必须手动做一次）：
   1. Chrome 打开 chrome://extensions → 开启开发者模式
   2. 加载已解压的扩展程序 → 选择 $EXT_DIR
-  3. 点扩展图标 Connect；再回到平台「MCP 管理」启用 local-browser
+  3. 点扩展图标 Connect（平台侧已自动启用 local-browser；若平台已在运行，重启后生效）
 EOF

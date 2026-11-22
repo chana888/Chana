@@ -262,7 +262,7 @@ Components: Chrome extension `vps-browser/extension/`, MCP bridge `vps-browser/s
 
 Load `vps-browser/extension` once in `chrome://extensions`, then run `scripts/setup-local-browser.sh`
 (or the `.ps1`): it installs the 12306 native host, fixes `allowed_origins`, starts the 18862 bridge and
-self-checks. Finally enable `local-browser` under platform MCP management. Verify with:
+self-checks. `deploy-all` / `setup-local-browser` writes and enables `local-browser` automatically; just restart the platform if it was already running. Verify with:
 `curl -H "X-Chana-Vps-Token: <token from vps-browser/server/.runtime/config.json>" http://127.0.0.1:18862/status`.
 
 For a VPS deployment with remote desktop and shared login state, run `vps-browser/install.sh`.
