@@ -52,11 +52,26 @@ fi
 command -v node >/dev/null 2>&1 || { echo "缺少 Node.js (>=18)。请先安装，例如: curl -fsSL https://rpm.nodesource.com/setup_20.x | bash - && dnf install -y nodejs"; exit 1; }
 NODE_MAJOR=$(node -p 'process.versions.node.split(".")[0]')
 (( NODE_MAJOR >= 18 )) || { echo "Node 版本过低 (当前 $(node -v))，需要 >=18"; exit 1; }
+# systemd 服务以 chana-browser 用户运行，不能依赖 /home 下的便携 Node（目录不可穿越）
+NODE_BIN=$(command -v node)
+if [[ "$NODE_BIN" == /home/* ]]; then
+  NODE_ROOT=$(cd "$(dirname "$NODE_BIN")/.." && pwd)
+  mkdir -p /opt/chana-node
+  cp -a "$NODE_ROOT/." /opt/chana-node/
+  chmod -R a+rX /opt/chana-node
+  ln -sfn /opt/chana-node/bin/node /usr/local/bin/node
+  [ -x /opt/chana-node/bin/npm ] && ln -sfn /opt/chana-node/bin/npm /usr/local/bin/npm
+  [ -x /opt/chana-node/bin/npx ] && ln -sfn /opt/chana-node/bin/npx /usr/local/bin/npx
+  NODE_BIN=/usr/local/bin/node
+  echo "      已将便携 Node 安装到 /opt/chana-node 并暴露到 /usr/local/bin"
+fi
 
 # ---------- 2. 运行用户与目录 ----------
 log "2/9 创建运行用户与目录"
 id "$RUN_USER" >/dev/null 2>&1 || useradd -r -m -d "$RUN_HOME" -s /sbin/nologin "$RUN_USER"
 mkdir -p "$INSTALL_DIR" "$EXT_PARENT" "$RUN_HOME"
+chown "$RUN_USER:$RUN_USER" "$RUN_HOME"
+chmod 700 "$RUN_HOME"
 cp -r "$SRC_DIR/server/." "$INSTALL_DIR/"
 rm -rf "$INSTALL_DIR/.runtime" "$INSTALL_DIR/node_modules"
 mkdir -p "$INSTALL_DIR/.runtime"
@@ -71,7 +86,7 @@ log "4/9 获取 Chrome for Testing"
 if [[ ! -x "$INSTALL_DIR/chrome-linux64/chrome" ]]; then
   ( cd "$INSTALL_DIR" && npx -y @puppeteer/browsers install chrome@${CHROME_VERSION} --base-url https://cdn.npmmirror.com/binaries/chrome-for-testing --path "$INSTALL_DIR/.chrome-dl" ) \
   || ( cd "$INSTALL_DIR" && npx -y @puppeteer/browsers install chrome@${CHROME_VERSION} --path "$INSTALL_DIR/.chrome-dl" )
-  CHROME_DIR=$(find "$INSTALL_DIR/.chrome-dl" -maxdepth 2 -type d -name 'chrome-linux64' | head -1)
+  CHROME_DIR=$(find "$INSTALL_DIR/.chrome-dl" -maxdepth 6 -type d -name 'chrome-linux64' | head -1)
   [[ -n "$CHROME_DIR" ]] || { echo "Chrome 下载失败，请手动解压 chrome-linux64 到 $INSTALL_DIR/"; exit 1; }
   ln -sfn "$CHROME_DIR" "$INSTALL_DIR/chrome-linux64"
 fi
@@ -101,7 +116,6 @@ chmod 700 "$RUN_HOME"
 # ---------- 6. systemd 服务 ----------
 log "6/9 安装 systemd 服务"
 cp "$SRC_DIR"/units/*.service "$SRC_DIR"/units/*.timer /etc/systemd/system/ 2>/dev/null || true
-NODE_BIN=$(command -v node)
 sed -i "s|/usr/local/bin/node|$NODE_BIN|g" /etc/systemd/system/chana-browser-*.service
 for d in "$SRC_DIR"/units/*.service.d; do
   [[ -d "$d" ]] && { mkdir -p "/etc/systemd/system/$(basename "$d")"; cp "$d"/* "/etc/systemd/system/$(basename "$d")"/; }

@@ -321,13 +321,26 @@ external_mcp:
 ### VPS 模式（远程桌面 + Agent 共享登录态）
 
 ```bash
-sudo ./vps-browser/install.sh        # systemd 服务 + 网关 + viewer + 夜间清理定时器
+# 1) 平台先监听回环端口（示例 8082）
+./chana --https            # config.yaml server.port=8082
+
+# 2) 安装 VPS 浏览器栈：Xvfb + Chrome 127（扩展自动加载）+ 18862 网关
+sudo PLATFORM_TLS=1 ./vps-browser/install.sh   --origin https://<IP或域名>[:端口] --platform-port 8082 --with-nginx
+
+# 3) 同源 HTTPS 入口（平台 + /browser/ 共用端口）
+sudo bash vps-browser/nginx/install-same-origin.sh   --server-name <IP或域名> --port 443   --platform-upstream https://127.0.0.1:8082   --cert /etc/nginx/ssl/chana.crt --key /etc/nginx/ssl/chana.key
+
+# 4) 接入 agent：token 在 /opt/chana-vps-browser/.runtime/config.json
+#    config.yaml -> external_mcp.servers.vps-browser（url http://127.0.0.1:18862/mcp + X-Chana-Vps-Token），
+#    然后重跑 setup-dsh-platform 并重启 dsh / 平台
 ```
 
-详见 [`vps-browser/README.md`](../../vps-browser/README.md)。
+- `install.sh` 会打印 `vps-browser` 的配置片段和 Token；`browserConnected: true` 表示扩展已连上 12306。
+- 云厂商安全组只放行 80 时，可把第 3 步改成 `--port 80 --origin https://<IP>:80`，
+  入口为 `https://<IP>:80/`（TLS 仍生效；浏览器会提示自签证书）。
+- 需要人工看/操作远程桌面时访问 `https://<入口>/browser/`，与平台共用登录 Cookie。
 
-> 想让 `/browser/` 与平台**同域同端口**：见 README「同源入口」一节，模板在
-> `vps-browser/nginx/chana_same_origin_server.conf.example`，可用 `nginx/install-same-origin.sh` 自动生成。
+详见 [`vps-browser/README.md`](../../vps-browser/README.md)。
 
 ### 排障
 
