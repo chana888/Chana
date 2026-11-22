@@ -53,8 +53,9 @@ if (-not $listening) {
     $p = Start-Process -FilePath (Get-Command node).Source -ArgumentList @($bin, 'web', '--no-open') `
         -WorkingDirectory $Root -RedirectStandardOutput $Log -RedirectStandardError "$Log.err" -WindowStyle Hidden -PassThru
     Write-Host "      PID: $($p.Id)"
-    for ($i = 0; $i -lt 30; $i++) {
+    for ($i = 0; $i -lt 180; $i++) {
         Start-Sleep -Seconds 1
+        if ($i -gt 0 -and $i % 20 -eq 0) { Write-Host "      等待 dsh 初始化（首次启动需安装 profile 依赖，已等 $i 秒）..." }
         if (Test-Path $Log) {
             $m = Select-String -Path $Log -Pattern 'token=([A-Za-z0-9_-]+)' -ErrorAction SilentlyContinue | Select-Object -First 1
             if ($m) { $token = $m.Matches[0].Groups[1].Value; break }

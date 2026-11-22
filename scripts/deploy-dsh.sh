@@ -57,7 +57,7 @@ else
   nohup node "$DSH_DIR/node_modules/@deepseek-ai/dsh/lib/bin.js" web --no-open >"$LOG" 2>&1 &
   echo "      PID: $!"
   TOKEN=""
-  for _ in $(seq 1 30); do
+  for _ in $(seq 1 180); do
     sleep 1
     TOKEN="$(grep -oE 'token=[A-Za-z0-9_-]+' "$LOG" 2>/dev/null | head -n1 | cut -d= -f2 || true)"
     [ -n "$TOKEN" ] && break
