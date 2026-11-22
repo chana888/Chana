@@ -81,7 +81,9 @@ PLUGIN_ENTRY="$DSH_DIR/node_modules/@deepseek-ai/dsh-mcp-client/lib/index.js"
 MCP_CLIENT_MJS="$DSH_DIR/node_modules/@modelcontextprotocol/client/dist/index.mjs"
 if [ -f "$PLUGIN_ENTRY" ] && [ ! -f "$MCP_CLIENT_MJS" ]; then
   echo "      [修复] @modelcontextprotocol/client 缺 dist/index.mjs，从官方源重装..."
-  ( cd "$DSH_DIR" && npm install '@modelcontextprotocol/client@2.2.0'       --registry="${MCP_CLIENT_REGISTRY:-https://registry.npmjs.org}" --no-save --ignore-scripts >/dev/null 2>&1 || true )
+  rm -rf "$DSH_DIR/node_modules/@modelcontextprotocol/client"
+  ( cd "$DSH_DIR" && npm install '@modelcontextprotocol/client@2.2.0'       --registry="${MCP_CLIENT_REGISTRY:-https://registry.npmjs.org}" --no-save --ignore-scripts --force >/dev/null 2>&1 || true )
+  [ -f "$MCP_CLIENT_MJS" ] || echo "      [警告] 自动重装失败，请手动执行: cd integrations/dsh && npm install @modelcontextprotocol/client@2.2.0 --force"
 fi
 if [ -f "$PLUGIN_ENTRY" ]; then
   probe="$DSH_DIR/.mcp-probe.mjs"

@@ -65,8 +65,11 @@ $pluginEntry = Join-Path $dshDir 'node_modules\@deepseek-ai\dsh-mcp-client\lib\i
 $mcpClientMjs = Join-Path $dshDir 'node_modules\@modelcontextprotocol\client\dist\index.mjs'
 if ((Test-Path $pluginEntry) -and -not (Test-Path $mcpClientMjs)) {
     Write-Host '      [修复] @modelcontextprotocol/client 缺 dist/index.mjs，从官方源重装...'
+    $mcpClientDir = Join-Path $dshDir 'node_modules\@modelcontextprotocol\client'
+    if (Test-Path $mcpClientDir) { Remove-Item $mcpClientDir -Recurse -Force -ErrorAction SilentlyContinue }
     $oldEap = $ErrorActionPreference; $ErrorActionPreference = 'Continue'
-    try { Push-Location $dshDir; & npm install '@modelcontextprotocol/client@2.2.0' --registry=https://registry.npmjs.org --no-save --ignore-scripts 2>&1 | Out-Null } catch { } finally { Pop-Location; $ErrorActionPreference = $oldEap }
+    try { Push-Location $dshDir; & npm install '@modelcontextprotocol/client@2.2.0' --registry=https://registry.npmjs.org --no-save --ignore-scripts --force 2>&1 | Out-Null } catch { } finally { Pop-Location; $ErrorActionPreference = $oldEap }
+    if (-not (Test-Path $mcpClientMjs)) { Write-Host '      [警告] 自动重装失败，请手动执行: cd integrations/dsh; npm install @modelcontextprotocol/client@2.2.0 --force' }
 }
 if (Test-Path $pluginEntry) {
     $probe = Join-Path $dshDir '.mcp-probe.mjs'
