@@ -14,10 +14,13 @@ $cli = Join-Path $HostDir 'node_modules\mcp-chrome-bridger\dist\cli.js'
 if (-not (Test-Path $cli)) {
     Push-Location $HostDir
     try {
-        if (-not (Test-Path 'package.json')) { & npm init -y | Out-Null }
-        & npm i mcp-chrome-bridger --registry=https://registry.npmmirror.com --no-audit --no-fund
-        if ($LASTEXITCODE -ne 0) { & npm i mcp-chrome-bridger --no-audit --no-fund }
-        if ($LASTEXITCODE -ne 0) { throw 'mcp-chrome-bridger 安装失败' }
+        $oldEap = $ErrorActionPreference; $ErrorActionPreference = 'Continue'
+        if (-not (Test-Path 'package.json')) { & npm init -y 2>&1 | Out-Null }
+        & npm i mcp-chrome-bridger --registry=https://registry.npmmirror.com --no-audit --no-fund 2>&1 | Out-Host
+        if ($LASTEXITCODE -ne 0) { & npm i mcp-chrome-bridger --no-audit --no-fund 2>&1 | Out-Host }
+        $code = $LASTEXITCODE
+        $ErrorActionPreference = $oldEap
+        if ($code -ne 0) { throw 'mcp-chrome-bridger 安装失败' }
     } finally { Pop-Location }
 }
 

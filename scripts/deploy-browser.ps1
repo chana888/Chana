@@ -11,8 +11,13 @@ if (-not (Test-Path (Join-Path $ServerDir 'chrome-bridge.cjs'))) { throw "缺少
 
 Write-Host '[1/3] 安装桥依赖...'
 Push-Location $ServerDir
-try { & npm install --omit=dev --no-audit --no-fund --registry=https://registry.npmjs.org; if ($LASTEXITCODE -ne 0) { throw "npm install 失败" } }
-finally { Pop-Location }
+try {
+    $oldEap = $ErrorActionPreference; $ErrorActionPreference = 'Continue'
+    & npm install --omit=dev --no-audit --no-fund --registry=https://registry.npmjs.org 2>&1 | Out-Host
+    $code = $LASTEXITCODE
+    $ErrorActionPreference = $oldEap
+    if ($code -ne 0) { throw "npm install 失败 (exit $code)" }
+} finally { Pop-Location }
 
 $Runtime = Join-Path $ServerDir '.runtime'
 New-Item -ItemType Directory -Force $Runtime | Out-Null

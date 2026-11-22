@@ -22,8 +22,13 @@ if (-not (Test-Path (Join-Path $DshDir 'package.json'))) { throw "缺少 $DshDir
 
 Write-Host '[1/3] 安装 dsh 依赖（首次约几十秒）...'
 Push-Location $DshDir
-try { & npm install --omit=dev --no-audit --no-fund --registry=$Registry; if ($LASTEXITCODE -ne 0) { throw "npm install 失败 (exit $LASTEXITCODE)" } }
-finally { Pop-Location }
+try {
+    $oldEap = $ErrorActionPreference; $ErrorActionPreference = 'Continue'
+    & npm install --omit=dev --no-audit --no-fund --registry=$Registry 2>&1 | Out-Host
+    $code = $LASTEXITCODE
+    $ErrorActionPreference = $oldEap
+    if ($code -ne 0) { throw "npm install 失败 (exit $code)" }
+} finally { Pop-Location }
 
 $bin = Join-Path $DshDir 'node_modules\@deepseek-ai\dsh\lib\bin.js'
 if (-not (Test-Path $bin)) { throw "未找到 dsh 入口: $bin" }
