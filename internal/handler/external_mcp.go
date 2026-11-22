@@ -198,21 +198,10 @@ func (h *ExternalMCPHandler) AddOrUpdateExternalMCP(c *gin.Context) {
 	h.mu.Lock()
 	defer h.mu.Unlock()
 
-	// 添加或更新配置
-	if err := h.manager.AddOrUpdateConfig(name, req.Config); err != nil {
-		h.logger.Error("添加或更新外部MCP配置失败", zap.Error(err))
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "添加或更新配置失败: " + err.Error()})
-		return
-	}
-
-	// 更新内存中的配置
-	if h.config.ExternalMCP.Servers == nil {
-		h.config.ExternalMCP.Servers = make(map[string]config.ExternalMCPServerConfig)
-	}
-
 	cfg := req.Config
 
-	// 官方 disabled 字段 → ExternalMCPEnable 取反
+	// 官方 disabled 字段 → ExternalMCPEnable 取反（必须在交给 manager 之前完成，
+	// 否则 manager 里保存的仍是旧 enable 值，出现“保存成功但状态仍为 disabled”）
 	if cfg.Disabled {
 		cfg.ExternalMCPEnable = false
 	} else if !cfg.ExternalMCPEnable {
@@ -223,6 +212,17 @@ func (h *ExternalMCPHandler) AddOrUpdateExternalMCP(c *gin.Context) {
 	// 展开 ${VAR} 环境变量
 	config.ExpandConfigEnv(&cfg)
 
+	// 添加或更新配置（用归一化后的 cfg）
+	if err := h.manager.AddOrUpdateConfig(name, cfg); err != nil {
+		h.logger.Error("添加或更新外部MCP配置失败", zap.Error(err))
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "添加或更新配置失败: " + err.Error()})
+		return
+	}
+
+	// 更新内存中的配置
+	if h.config.ExternalMCP.Servers == nil {
+		h.config.ExternalMCP.Servers = make(map[string]config.ExternalMCPServerConfig)
+	}
 	h.config.ExternalMCP.Servers[name] = cfg
 
 	// 保存到配置文件
