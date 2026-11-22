@@ -25,7 +25,9 @@ if (-not (Test-Path $cli)) {
 }
 
 Write-Host '[2/4] 注册 native host 到本机 Chrome...'
-& node $cli register -b chrome -f | Out-Null
+$oldEap = $ErrorActionPreference; $ErrorActionPreference = 'Continue'
+& node $cli register -b chrome -f 2>&1 | Out-Host
+$ErrorActionPreference = $oldEap
 
 $manifest = Get-Content (Join-Path $ExtDir 'manifest.json') -Raw | ConvertFrom-Json
 $key = $manifest.key
