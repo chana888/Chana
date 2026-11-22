@@ -59,6 +59,9 @@ $prof = Join-Path $DshHome 'profiles\web'
 New-Item -ItemType Directory -Force $prof | Out-Null
 $patch = Join-Path $prof 'cordis.patch.yml'
 if (-not (Test-Path $patch)) { New-Item -ItemType File $patch | Out-Null }
+$existing = (Get-Content $patch -Raw -ErrorAction SilentlyContinue)
+if ($null -eq $existing) { $existing = '' }
+if ($existing.Trim() -eq '[]' -or $existing.Trim() -eq '') { Set-Content -Path $patch -Value '' -Encoding utf8 }
 if (-not (Select-String -Path $patch -Pattern 'mcp-chana' -Quiet)) {
     $block = @"
 

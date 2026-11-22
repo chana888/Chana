@@ -74,6 +74,10 @@ echo "[4/4] 注入 mcp-chana 到 dsh 配置"
 mkdir -p "$DSH_HOME/profiles/web"
 PATCH="$DSH_HOME/profiles/web/cordis.patch.yml"
 touch "$PATCH"
+# dsh 初始化会写入空数组 "[]"；直接追加会变成非法 YAML，这里先归一化
+if [ "$(tr -d '[:space:]' < "$PATCH")" = "[]" ] || [ ! -s "$PATCH" ]; then
+  : > "$PATCH"
+fi
 if grep -q 'mcp-chana' "$PATCH"; then
   echo "      已存在 mcp-chana 配置，跳过"
 else
