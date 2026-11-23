@@ -22,6 +22,16 @@ ChanaAgent 的前身是 [CyberStrike](https://github.com/CyberStrikeus/cyberstri
 - **漏洞管理** — 按站点自动分组、复现包铁律（Burp 原始请求包，可直接重放）
 - **平台能力** — RBAC 权限、独立登录页与会话管理、机器人接入、代码审计管线、视觉分析
 
+### 🖥 VPS 浏览器远程操作
+
+部署到 VPS 后，浏览器访问 `https://<VPS地址>/browser/` 即可直接操作云上 Chrome：
+
+![VPS 浏览器远程桌面](docs/assets/vps-browser-viewer.png)
+
+- 人工与 AI 共用同一个浏览器和登录态：人工完成扫码/登录后点「交给 agent」，AI 即可继续做功能点测试、表单交互与验证；需要接管时点「我要操作」
+- 支持自动同步、剪贴板直通、快捷键、全屏与窗口缩放
+- 相关部署：[`vps-browser/install.sh`](vps-browser/install.sh)（Xvfb + Chrome 127 + noVNC + 同源 `/browser/` 鉴权）
+
 ## 🚀 快速开始
 
 ### 构建
